@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/build-learning-macos.yml'
       - 'scripts/package-learning-macos.py'
+      - 'v2rayN/v2rayN.Desktop/Views/LimitedLearningWindow.axaml'
 permissions:
   contents: read
 jobs:

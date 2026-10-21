@@ -52,7 +52,7 @@
                 <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="16">
                         <TextBlock FontSize="20" FontWeight="SemiBold" Text="Codex 连接设置"/>
-                        <TextBlock Margin="0,10,0,12" TextWrapping="Wrap" Text="启用 Codex 的 Windows 系统代理支持，并检测 WebSocket 连接。OpenAI 域名的分流由现有规则决定。"/>
+                        <TextBlock Margin="0,10,0,12" TextWrapping="Wrap" Text="启用 Codex 的系统代理支持，并检测 WebSocket 连接。OpenAI 域名的分流由现有规则决定。"/>
                         <TextBlock x:Name="SystemProxyState" Margin="0,0,0,8" TextWrapping="Wrap"/>
                         <Button Content="刷新系统代理状态" Click="RefreshSystemProxy_Click" HorizontalAlignment="Left" Margin="0,0,0,12"/>
                         <TextBlock Text="Codex 配置目录"/><TextBox x:Name="CodexHome" Margin="0,5,0,12"/>
