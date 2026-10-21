@@ -29,6 +29,11 @@ public partial class MainWindow
         menuCheckUpdate.Click += MenuCheckUpdate_Click;
         btnNewUpdate.Click += MenuCheckUpdate_Click;
         menuBackupAndRestore.Click += MenuBackupAndRestore_Click;
+        menuLimitedLearning.Click += async (_, _) =>
+        {
+            var window = new LimitedLearningWindow(_config) { Owner = this };
+            if (window.ShowDialog() == true) await ViewModel.Reload();
+        };
 
         pbTheme.Content ??= new ThemeSettingView();
 
@@ -143,7 +148,7 @@ public partial class MainWindow
              .DisposeWith(disposables);
         });
 
-        Title = $"{Utils.GetVersion()} - {(Utils.IsAdministrator() ? ResUI.RunAsAdmin : ResUI.NotRunAsAdmin)}";
+        Title = $"{Utils.GetVersion()} · 开发版 - {(Utils.IsAdministrator() ? ResUI.RunAsAdmin : ResUI.NotRunAsAdmin)}";
         if (_config.UiItem.AutoHideStartup)
         {
             WindowState = WindowState.Minimized;

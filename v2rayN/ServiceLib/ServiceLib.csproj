@@ -98,6 +98,7 @@
 	</ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\AdaptiveRouting\AdaptiveRouting.csproj" />
         <ProjectReference Include="..\ServiceLib.UdpTest\ServiceLib.UdpTest.csproj" />
     </ItemGroup>
 

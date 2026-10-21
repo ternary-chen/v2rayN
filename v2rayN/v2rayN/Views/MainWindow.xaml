@@ -194,6 +194,8 @@
                                     x:Name="menuRoutingSetting"
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="{x:Static resx:ResUI.menuRoutingSetting}" />
+                                <MenuItem x:Name="menuLimitedLearning" Height="{StaticResource MenuItemHeight}"
+                                          Header="自动分流与 Codex 代理" />
                                 <MenuItem
                                     x:Name="menuDNSSetting"
                                     Height="{StaticResource MenuItemHeight}"

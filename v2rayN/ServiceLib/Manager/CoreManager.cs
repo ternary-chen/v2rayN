@@ -91,7 +91,17 @@ public class CoreManager
             await WindowsUtils.RemoveTunDevice();
         }
 
+        try
+        {
+            LimitedLearningRuntime.Start(mainContext, msg => { _ = UpdateFunc(false, msg); });
+        }
+        catch (Exception ex)
+        {
+            await UpdateFunc(true, $"有限学习启动失败：{ex.Message}");
+            return;
+        }
         await CoreStart(mainContext);
+        if (_processService is null) await LimitedLearningRuntime.StopAsync();
         await WaitForProxyPort(preContext);
         await CoreStartPreService(preContext);
 
@@ -146,6 +156,7 @@ public class CoreManager
 
     public async Task CoreStop()
     {
+        await LimitedLearningRuntime.StopAsync();
         try
         {
             if (_linuxSudo)
