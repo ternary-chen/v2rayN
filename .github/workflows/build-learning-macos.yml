@@ -10,7 +10,7 @@ permissions:
   contents: read
 jobs:
   macos-arm64:
-    runs-on: macos-15
+    runs-on: macos-latest
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7
