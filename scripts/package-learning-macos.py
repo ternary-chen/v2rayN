@@ -79,6 +79,15 @@ def package(publish, dependencies, output, commit):
         shutil.copy2(dependencies / "xray", core_bin / "xray" / "xray")
         for name in ("geoip.dat", "geosite.dat"):
             shutil.copy2(dependencies / name, core_bin / name)
+        frameworks = contents / "Frameworks"
+        frameworks.mkdir()
+        # Use the documented bundle layout, retaining relative links for .NET probing.
+        for file in list(macos.iterdir()):
+            if not file.is_file() or file.is_symlink() or file.name == "v2rayN":
+                continue
+            destination = frameworks if file.suffix == ".dylib" else resources
+            shutil.move(file, destination / file.name)
+            file.symlink_to(Path("..") / destination.name / file.name)
         info = {
             "CFBundleName": "v2rayN Learning", "CFBundleDisplayName": "v2rayN Learning",
             "CFBundleIdentifier": "com.ternarychen.v2rayn.learning", "CFBundleExecutable": "v2rayN",
@@ -91,14 +100,14 @@ def package(publish, dependencies, output, commit):
         entitlements.write_bytes(plistlib.dumps({"com.apple.security.cs.allow-jit": True}))
         # Ad-hoc signing ensures ARM64 code integrity; this is not Developer ID/notarization.
         for binary in sorted(contents.rglob("*"), key=lambda p: p == macos / "v2rayN"):
-            if not binary.is_file():
+            if not binary.is_file() or binary.is_symlink():
                 continue
             with binary.open("rb") as stream:
                 magic = stream.read(4)
             if magic in (b"\xcf\xfa\xed\xfe", b"\xfe\xed\xfa\xcf", b"\xca\xfe\xba\xbe", b"\xca\xfe\xba\xbf"):
                 binary.chmod(0o755)
                 subprocess.run(["codesign", "--force", "--sign", "-", "--entitlements", str(entitlements), str(binary)], check=True)
-        subprocess.run(["codesign", "--force", "--deep", "--sign", "-", "--entitlements", str(entitlements), str(app)], check=True)
+        subprocess.run(["codesign", "--force", "--sign", "-", "--entitlements", str(entitlements), str(app)], check=True)
         subprocess.run(["codesign", "--verify", "--deep", "--strict", "--verbose=2", str(app)], check=True)
         shutil.copytree(repo / ".agents", stage / ".agents")
         shutil.copytree(repo / "docs", stage / "docs")
