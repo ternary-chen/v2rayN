@@ -61,7 +61,7 @@ public sealed class ConnectionLogFormatter(string defaultNode, string? aiNode, I
             "limited-learning" => ("自动检测", "待检测，尚未选择出口"),
             _ => ("其他出口 " + Safe(entry.Outbound), "未知（未映射节点）")
         };
-        var role = entry.Inbound == "limited-learning-proxy" ? " | 用途:学习内部探测/转发，非原应用连接" : "";
+        var role = entry.Inbound == "limited-learning-proxy" ? " | 入口:专用代理入口，固定使用默认策略" : "";
         return $"{entry.Raw} [进程:{process} | 策略:{policy} | 节点:{node} | 状态:路由选择{role}]";
     }
 

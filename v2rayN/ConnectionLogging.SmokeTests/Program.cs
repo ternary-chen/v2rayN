@@ -64,7 +64,10 @@ await Test("Learning logs distinguish pending, chosen and connected routes witho
     Check(line.Contains("学习连接#7") && line.Contains("节点:无（直连）") && line.Contains("未携带原进程"),"Learning origin or direct wrong");
     Check(formatter.FormatLearning(new(8,"example.com:443",ConnectionRoute.Proxy,"隧道已建立")).Contains("节点:日常香港"),"Learning used AI");
     var internalLine=formatter.Format(ConnectionLogFormatter.Parse(Raw(inbound:"limited-learning-proxy"))!,[]);
-    Check(internalLine.Contains("学习内部探测/转发"),"Internal probe masquerades as user app");
+    Check(internalLine.Contains("专用代理入口，固定使用默认策略") && !internalLine.Contains("非原应用连接"),"Dedicated inlet misclassified as learning-only traffic");
+    var toolOwner=owner with { Name="gh.exe",Remote=new(IPAddress.Loopback,17881) };
+    var toolLine=formatter.Format(ConnectionLogFormatter.Parse(Raw(inbound:"limited-learning-proxy"))!,[toolOwner]);
+    Check(toolLine.Contains("gh.exe (PID 42)") && toolLine.Contains("节点:日常香港"),"Explicit tool proxy request lost its process or node");
     return Task.CompletedTask;
 });
 await Test("Asynchronous diagnostics preserve entries on query failure and bounded queue overflow", async () =>
