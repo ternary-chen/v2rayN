@@ -1,0 +1,8596 @@
+[
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:openai.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:chatgpt.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:chat.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:chatgpt.site"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:oaistatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:oaiusercontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:oaistatsig.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sora.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:chatgpt.livekit.cloud"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:host.livekit.cloud"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:turn.livekit.cloud"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:openai.com.cdn.cloudflare.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:openaiapi-site.azureedge.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:openaiassets.blob.core.windows.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:openaicom-api-bdcpf8c6d2e9atf6.z01.azurefd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:openaicomproductionae4b.blob.core.windows.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:production-openaicom-storage.azureedge.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:openaicom.imgix.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:cdn.openaimerge.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:cdn.workos.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:challenges.cloudflare.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:featureassets.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:forwarder.workos.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:humb.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:images.workoscdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:js.intercomcdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:js.stripe.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:o207216.ingest.sentry.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:o33249.ingest.sentry.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:browser-intake-datadoghq.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:rum.browser-intake-datadoghq.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:events.statsigapi.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:prodregistryv2.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:statsigapi.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:setup.workos.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "full:workos.imgix.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ping0.cc"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "port": "8080"
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:localhost"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:localhost.localdomain"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:local"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:internal"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:intranet"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:corp"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:private"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:router.asus.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tplinkwifi.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tplogin.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tendawifi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:miwifi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:router.ctc"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:my.router"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:fritz.box"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:myrouter.local"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:netgear.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:routerlogin.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:linksyssmartwifi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:synology.me"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:myqnapcloud.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:test"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:example"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:invalid"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:localhost"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:dev.local"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:test.local"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:localdomain"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "keyword:.local"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "keyword:localhost"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:test-01-cn.gladns.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:test-01-cn.gladns.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:glados.vip"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:glados.work"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ipinfo.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ip-api.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ipapi.co"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ipify.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:api.ipify.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:icanhazip.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ifconfig.me"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ifconfig.co"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:checkip.amazonaws.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ipecho.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:myip.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:whatismyip.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:whatismyipaddress.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:whoer.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ipleak.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ipleak.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ip.me"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ip.sb"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ip.gs"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ip138.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ipip.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cip.cc"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:myip.la"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ip.skk.moe"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ip.tool.lu"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dnsleaktest.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dnsleak.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:browserleaks.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:bash.ws"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:webrtc-leak.glitch.me"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ip2location.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:maxmind.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:geoiplookup.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:db-ip.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ipgeolocation.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ipstack.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ipdata.co"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:abstractapi.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ip-score.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:speedtest.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fast.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:speedof.me"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:whatismyip"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:myipaddress"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:ipleak"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:ipcheck"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:checkip"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:microsoft.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:microsoftonline.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:msftauth.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:msauth.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:msauthimages.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:msftauthimages.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:msn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:live.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:office.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:office365.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:sharepoint.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:outlook.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:hotmail.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:windows.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:windows.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:azure.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:azure.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:azureedge.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:azurewebsites.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bing.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bing.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:skype.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:linkedin.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:licdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:onenote.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:onenote.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:onedrive.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:onedrive.live.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:teams.microsoft.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:visualstudio.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:xbox.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:xboxlive.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:windowsupdate.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:msedge.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:msftconnecttest.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:exp-tas.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "keyword:microsoft"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "keyword:msft"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:apple.com.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cdn-apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:icloud.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:icloud-content.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:me.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:appsto.re"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:apps.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:mzstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:itunes.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:iosapps.itunes.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:osxapps.itunes.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:music.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:apple-cloudkit.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:apple-livephotoskit.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:appleid.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:appleid.cdn-apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:appleiphonecell.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:apzones.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:swcdn.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:swdist.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:swdownload.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:updates.cdn-apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:updates-http.cdn-apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:appldnld.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:xp.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:gdmf.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:mesu.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:osrecovery.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tv.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:news.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:apple.news"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:push.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:setup.icloud.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:www.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:aaplimg.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:apple.co"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:applimg.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "keyword:apple"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "keyword:icloud"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "keyword:itunes"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:telegram.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:t.me"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:telegram.me"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:telegra.ph"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:telesco.pe"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:discord.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:discord.gg"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:discordapp.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:discordapp.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:discord.media"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:whatsapp.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:whatsapp.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:wa.me"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:telegram"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:discord"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:twitter.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:x.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:twimg.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:t.co"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:twittercdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:facebook.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fbcdn.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fb.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fb.me"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fbsbx.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:facebook.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tfbnw.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:instagram.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cdninstagram.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:instagr.am"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:reddit.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:redd.it"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:redditmedia.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:redditstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:twitter"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:facebook"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:instagram"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:longbridge.global"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:lbctrl.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:lbkrs.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:wbrks.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:lbkg.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:lb-static.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:longportapp.cn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:longportapp.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:longportapp.hk"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:longbridgeapp.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:longbridge.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:longbridge.cloud"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:longbridge.cn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:longbridgehk.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:longbridge.hk"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:longbridge.sg"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:longbridge-inc.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuhk.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futusg.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu.link"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futunn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futunn.cn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuhn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futusign.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuinc.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu0.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu1.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu2.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu3.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu4.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu5.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu6.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu7.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu8.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu9.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuniuniu.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu.cn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futufin.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuhk2.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuholdings.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuesop.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuau.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuhk1.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuhkapp.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuoa.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futubull.cn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuchain.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuone.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuclean.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ftnndn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futuweb.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futures.hk"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:moomoo.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:moomoo-us.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:moomooequity.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:moomootrustee.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fututrade.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futusecurities.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futumkt.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu.sg"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futu.au"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:futustatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:atigrpulse.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:atigrzen.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:itigergrowth.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:itigergrowtha.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:skytigris.cn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:skytigris.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tigrdw.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tigrwd.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tigerbrokers.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tigerbrokers.com.au"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tigerbrokers.com.hk"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tigerbrokers.com.sg"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tigerbrokers.nz"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tigersecurities.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tradeup.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:laohu8.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tigerbbs.cn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tigerbbs.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:xiaohu8.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:zhijianfengyi.cn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:zhijianfengyi.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:futunn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:futubull"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:futuhk"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:futufin"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:futuholdings"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:futuniuniu"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:futuesop"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:moomoo"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:tigerbrokers"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:huggingface.co"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cdn-lfs.huggingface.co"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cdn-lfs-us-1.huggingface.co"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cdn-lfs-eu-1.huggingface.co"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:s3.amazonaws.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:hf.co"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cdn.openai.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:oaistatic.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:files.oaiusercontent.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:civitai.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:image.civitai.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:model.civitai.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:replicate.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:replicate.delivery"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:wandb.ai"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:api.wandb.ai"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:kaggle.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:storage.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:modelzoo.co"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:download.pytorch.org"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:download.tensorflow.org"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ngc.nvidia.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:api.ngc.nvidia.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ollama.ai"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ollama.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:registry.ollama.ai"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:lmstudio.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:chat.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:chatgpt.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:chatgpt.site"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:crixet.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:oaistatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:oaistatsig.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:oaiusercontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:openai.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sora.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:anthropic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:claude.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:claude.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:clau.de"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:claude.dev"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:claudeusercontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:claudemcpclient.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:claudemcpcontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gemini.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:bard.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:deepmind.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:deepmind.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aistudio.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:makersuite.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:flow.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:notebook.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:labstailwind.pa.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gemini.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:chat.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ai.studio"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:generativeai.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:generativelanguage.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ai.google.dev"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aiplatform.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aicode.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ai.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ai.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gemini.gstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:labs.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:labs.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:jules.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:jules.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:antigravity.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:flow.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:stitch.withgoogle.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cloud.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:notebooklm.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:notebooklm.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:notebook.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:perplexity.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:mistral.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cohere.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cohere.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:groq.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:x.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:grok.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cursor.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cursor.sh"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cursorapi.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cursor-cdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:together.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:replicate.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:stability.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:midjourney.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:poe.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:character.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:inflection.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pi.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:openai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:claude"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:anthropic"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:gemini.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:generativelanguage"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:cursor"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:youtube.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ytimg.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:googlevideo.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:youtu.be"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:youtube-nocookie.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:yt.be"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:youtube"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:google.com.hk"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:google.co.jp"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:googleapis.cn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ggpht.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:googleusercontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:googlesyndication.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:googleadservices.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:google-analytics.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:play.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:play.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:android.clients.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:android.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:googleplay.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:play-fe.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:play-games.googleusercontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:play-lh.googleusercontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:xn--ngstr-lra8j.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:arxiv.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:biorxiv.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:medrxiv.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ssrn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:philpapers.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:zenodo.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:figshare.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:osf.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:springer.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:springerlink.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:link.springer.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sciencedirect.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:elsevier.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nature.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:science.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sciencemag.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:wiley.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:onlinelibrary.wiley.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tandfonline.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sagepub.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cambridge.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:oxfordjournals.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:academic.oup.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:oup.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pnas.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cell.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:thelancet.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:bmj.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nejm.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:acs.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pubs.acs.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:rsc.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:iop.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:iopscience.iop.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aip.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aps.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:mdpi.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:frontiersin.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:plos.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:plosone.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hindawi.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:degruyter.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:karger.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:emerald.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ingentaconnect.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:annualreviews.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ieee.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ieeexplore.ieee.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:acm.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dl.acm.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:jstor.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:muse.jhu.edu"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:projecteuclid.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:mathscinet.ams.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ams.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:siam.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:doi.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:crossref.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:orcid.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:scopus.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:webofscience.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:clarivate.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dimensions.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:lens.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nih.gov"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ncbi.nlm.nih.gov"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pubmed.gov"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pubmedcentral.nih.gov"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:clinicaltrials.gov"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cochranelibrary.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:uptodate.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:medscape.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:webmd.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:scholar.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:semanticscholar.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:academia.edu"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:researchgate.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:mendeley.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:zotero.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:connectedpapers.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:scite.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:litmaps.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:inciteful.xyz"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:base-search.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:core.ac.uk"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:worldcat.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:loc.gov"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:proquest.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ebsco.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ebscohost.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gale.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dblp.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:paperswithcode.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:openreview.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aclweb.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aclanthology.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:neurips.cc"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:icml.cc"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:iclr.cc"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cvpr.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:thecvf.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:wolfram.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:wolframalpha.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:mathworld.wolfram.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:overleaf.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sharelatex.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:authorea.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hypothes.is"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gmail.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:googlemail.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:mail.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gemini.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:bard.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:deepmind.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:deepmind.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aistudio.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:makersuite.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:flow.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:notebook.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:labstailwind.pa.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:scholar.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:netflix.com.edgesuite.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:us-west-2.amazonaws.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:netflix.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:netflix.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nflximg.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nflximg.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nflxvideo.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nflxso.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nflxext.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:twitch.tv"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:twitchcdn.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:twitchsvc.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:jtvnw.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:twitchcon.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:spotify.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:spotifycdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:scdn.co"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:spoti.fi"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:spotify.link"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:disneyplus.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:disney-plus.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dssott.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:bamgrid.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:disney.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:disneystreaming.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:disneyaccount.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:disneyplus.bn5x.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hulu.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:huluim.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hulustream.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pornhub.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pornhubpremium.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:phncdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:xvideos.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:xvideos-cdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:xnxx.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:xhamster.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:xhamsterlive.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:xhcdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:redtube.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:redtubefiles.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:youporn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ypncdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tube8.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:spankbang.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:spankbang.party"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sb-cd.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:eporner.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:eporner.sex"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tnaflix.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:empflix.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:txxx.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hdzog.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hclips.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:upornia.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:vjav.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:jav.guru"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:javhd.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:javlibrary.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:r18.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dmm.co.jp"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:stripchat.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:chaturbate.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cam4.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:livejasmin.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:bongacams.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:myfreecams.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:camsoda.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:streamate.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:flirt4free.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:imlive.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:rule34.xxx"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:rule34.paheal.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:e-hentai.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:exhentai.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ehgt.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nhentai.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hitomi.la"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gelbooru.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:danbooru.donmai.us"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sankakucomplex.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:konachan.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:yande.re"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sex.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:imagefap.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fapello.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:coomer.party"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:kemono.party"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:simpcity.su"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:f95zone.to"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:lewdzone.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:leakedbb.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:avgle.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:thisav.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:missav.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:supjav.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:jable.tv"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:91porn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:caoliu.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sexinsex.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:t66y.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:xart.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:brazzers.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:realitykings.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:mofos.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:bangbros.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:naughtyamerica.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:digitalplayground.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fakehub.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:teamskeet.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:vixen.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:blacked.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tushy.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:vixengroup.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:blackedraw.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tushyraw.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:deeper.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:milfy.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:slayed.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:onlyfans.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fansly.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fanvue.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:patreon.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gumroad.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:loyalfans.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:justfor.fans"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:manyvids.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:clips4sale.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:iwantclips.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pstatp.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:rncdn1.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:rncdn2.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:rncdn3.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:rncdn7.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hbomax.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:max.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hbo.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hbo"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:h264.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:netflix"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:twitch"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:porn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:xxx"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:xnxx"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:hentai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:adult"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:arxiv.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:biorxiv.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:medrxiv.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ssrn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:philpapers.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:zenodo.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:figshare.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:osf.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:springer.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:springerlink.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:link.springer.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sciencedirect.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:elsevier.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nature.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:science.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sciencemag.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:wiley.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:onlinelibrary.wiley.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tandfonline.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sagepub.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cambridge.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:oxfordjournals.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:academic.oup.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:oup.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pnas.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cell.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:thelancet.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:bmj.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nejm.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:acs.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pubs.acs.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:rsc.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:iop.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:iopscience.iop.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aip.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aps.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:mdpi.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:frontiersin.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:plos.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:plosone.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hindawi.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:degruyter.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:karger.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:emerald.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ingentaconnect.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:annualreviews.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ieee.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ieeexplore.ieee.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:acm.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dl.acm.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:jstor.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:muse.jhu.edu"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:projecteuclid.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:mathscinet.ams.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ams.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:siam.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:doi.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:crossref.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:orcid.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:scopus.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:webofscience.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:clarivate.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dimensions.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:lens.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nih.gov"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ncbi.nlm.nih.gov"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pubmed.gov"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pubmedcentral.nih.gov"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:clinicaltrials.gov"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cochranelibrary.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:uptodate.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:medscape.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:webmd.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:scholar.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:semanticscholar.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:academia.edu"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:researchgate.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:mendeley.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:zotero.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:connectedpapers.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:scite.ai"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:litmaps.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:inciteful.xyz"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:base-search.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:core.ac.uk"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:worldcat.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:loc.gov"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:proquest.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ebsco.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ebscohost.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gale.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dblp.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:paperswithcode.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:openreview.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aclweb.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aclanthology.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:neurips.cc"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:icml.cc"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:iclr.cc"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cvpr.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:thecvf.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:wolfram.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:wolframalpha.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:mathworld.wolfram.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:overleaf.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sharelatex.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:authorea.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hypothes.is"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:scholar.google"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:github.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:github.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:githubusercontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:githubassets.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ghcr.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:github.dev"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:copilot.github.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ghe.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:githubsupport.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gitlab.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gitlab.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:npmjs.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:npmjs.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:yarnpkg.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:unpkg.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:jsdelivr.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:esm.sh"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pypi.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:pythonhosted.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:python.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:docker.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:docker.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dockerhub.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:registry-1.docker.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:auth.docker.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:index.docker.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:production.cloudflare.docker.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:vercel.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:vercel.app"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:netlify.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:netlify.app"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:heroku.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:railway.app"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:render.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fly.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:replit.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:glitch.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:supabase.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:supabase.co"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:planetscale.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:neon.tech"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:codepen.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:codesandbox.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:jsfiddle.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:stackblitz.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:v2ex.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:stackoverflow.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:stackexchange.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dev.to"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hashnode.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:medium.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:figma.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:notion.so"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:notion.site"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:linear.app"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:trello.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:asana.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:slack.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:atlassian.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:atlassian.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:jira.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:confluence.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:airtable.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:clickup.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:monday.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:github"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:download.microsoft.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:windowsupdate.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:update.microsoft.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:wustat.windows.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ntservicepack.microsoft.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:go.microsoft.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dl.delivery.mp.microsoft.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:emdl.ws.microsoft.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:msftconnecttest.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:msftncsi.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:swcdn.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:swdist.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:swdownload.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:updates.cdn-apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:appldnld.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:iosapps.itunes.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:osxapps.itunes.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:updates-http.cdn-apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:xp.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gdmf.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:mesu.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:osrecovery.apple.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ccmdl.adobe.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ccmdls.adobe.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:adobedownloads.edgesuite.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ardownload.adobe.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:armdl.adobe.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:download.jetbrains.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:plugins.jetbrains.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:update.code.visualstudio.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:az764295.vo.msecnd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:vscode.download.prss.microsoft.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dl.google.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:edgedl.me.gvt1.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:redirector.gvt1.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:update.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:download.mozilla.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:archive.mozilla.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:aus5.mozilla.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:wetransfer.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:we.tl"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:send-anywhere.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:sendgb.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:transfer.sh"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:file.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gofile.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:anonfiles.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:bayfiles.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fileditch.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:archive.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ia600.us.archive.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ia800.us.archive.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ia900.us.archive.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:web.archive.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:catbox.moe"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:files.catbox.moe"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:litter.catbox.moe"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:imgur.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:i.imgur.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:streamable.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ufile.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:uploadfiles.io"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:zippyshare.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:1fichier.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:rapidgator.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:uploaded.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ul.to"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:turbobit.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:nitroflare.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:store.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamgames.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:valvesoftware.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:s.team"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamcommunity.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamusercontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamcdn-a.akamaihd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cdn.cloudflare.steamstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cdn.akamai.steamstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steam-chat.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamcontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steampipe.akamaized.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:lancache.steamcontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:edgecast.steamstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steambroadcast.akamaized.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamtv.cloud"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:api.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:partner.steamgames.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:help.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:support.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:login.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:checkout.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamuserimages-a.akamaihd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamvideo-a.akamaihd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamcommunity-a.akamaihd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamstore-a.akamaihd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:media.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:video.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:workshop.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cloud.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamcloud-us-west1.storage.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamcloud-eu-west1.storage.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cache.steamcontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:content-origin.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:valve.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamconnecttest.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dota2.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamchina.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:csgo.wmsj.cn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:wmsjsteam.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:epicgames.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:epicgames.dev"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:unrealengine.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fortnite.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fortnite-vod.akamaized.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:steamcdn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:steamcontent"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:steampowered"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:steamcommunity"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:store.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamgames.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:valvesoftware.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:s.team"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamcommunity.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamusercontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamcdn-a.akamaihd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cdn.cloudflare.steamstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cdn.akamai.steamstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steam-chat.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamcontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steampipe.akamaized.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:lancache.steamcontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:edgecast.steamstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steambroadcast.akamaized.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamtv.cloud"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:api.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:partner.steamgames.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:help.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:support.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:login.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:checkout.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamuserimages-a.akamaihd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamvideo-a.akamaihd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamcommunity-a.akamaihd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamstore-a.akamaihd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:media.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:video.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:workshop.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cloud.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamcloud-us-west1.storage.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamcloud-eu-west1.storage.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cache.steamcontent.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:content-origin.steampowered.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:valve.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamconnecttest.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:dota2.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:steamchina.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:csgo.wmsj.cn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:wmsjsteam.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:steamcdn"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:steamcontent"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:steampowered"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:steamcommunity"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:akamai.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:akamaized.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:akamaihd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:akamaitechnologies.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:akadns.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:akam.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:edgesuite.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:edgekey.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cloudflare.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cloudflare-dns.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cdnjs.cloudflare.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cloudflareinsights.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fastly.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fastlylb.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:fastly.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cloudfront.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:azureedge.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:msecnd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:azure.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:blob.core.windows.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:vo.msecnd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:gstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:stackpath.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:stackpathdns.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:maxcdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:netdna-cdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:netdna-ssl.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:kxcdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:keycdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cdn77.org"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cdn77.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:limelight.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:llnwd.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:llnw.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:hwcdn.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cachefly.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:b-cdn.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:bunnycdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:jsdelivr.net"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:unpkg.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:cdnjs.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:bootstrapcdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ajax.googleapis.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:cloudflare"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:fastly"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:jsdelivr"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tiktok.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tiktokcdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tiktokv.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:byteoversea.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:muscdn.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:musical.ly"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:tiktokcdn-us.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ttcdn-us.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "domain:ibytedtos.com"
+    ]
+  },
+  {
+    "outboundTag": "proxy",
+    "domain": [
+      "keyword:tiktok"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:com.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:net.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:org.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:gov.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:edu.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ip111.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ip.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qq.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tencent.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:weixin.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:wechat.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:wx.qq.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:weixin.qq.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qpic.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:gtimg.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:gtimg.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:idqqimg.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qlogo.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:myqcloud.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tenpay.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tengxun.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:taobao.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tmall.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:alipay.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:aliyun.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:alicdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:alibaba.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:alibabacloud.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:aliyuncs.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:1688.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:aliexpress.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:alimama.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:alipayobjects.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:mmstat.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tbcdn.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:taobaocdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cainiao.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ele.me"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:elemecdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:amap.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:autonavi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:dingtalk.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:dingtalkapps.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:xiami.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:youku.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ykimg.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tudou.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cibntv.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ucweb.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:baidu.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:baidubce.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:baidustatic.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bdstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bdimg.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bcebos.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:baiducontent.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:baidupcs.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:baifubao.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:hao123.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:nuomi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tieba.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:pan.baidu.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bytedance.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bytedance.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bytecdn.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:byteimg.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bytegoofy.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:douyin.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:douyincdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:douyinpic.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:douyinstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:amemv.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:snssdk.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:toutiao.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:toutiaocdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:toutiaoimg.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:pstatp.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ixigua.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ixiguavideo.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:huoshan.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:huoshanzhibo.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:feiliao.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:zjurl.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:zijieapi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:feishu.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:feishucdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:larkoffice.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bilibili.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bilivideo.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bilivideo.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:biliapi.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:biliapi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:hdslb.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:acgvideo.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:im9.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:163.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:126.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:netease.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:netease.im"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ntes.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ydstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:youdao.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:163yun.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:neteasegames.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:nie.netease.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:yeah.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:jd.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:jd.hk"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:jdcloud.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:jdpay.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:360buyimg.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:jcloudcache.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:jcloudcdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:jddebug.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:jdcache.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:iqiyi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:iqiyipic.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qiyi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qiyipic.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:pps.tv"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ppstream.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qy.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qiyipic.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:sina.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:sina.com.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:sinaimg.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:sinajs.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:sina.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:weibo.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:weibo.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:weibocdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:miaopai.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:zhihu.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:zhimg.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:xiaomi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:xiaomi.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:mi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:miui.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:miwifi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:xiaomiyoupin.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:duokan.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:huawei.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:vmall.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:huaweicloud.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:hicloud.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:hichina.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:dbankcloud.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:kuaishou.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:gifshow.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:yxixy.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:kwimgs.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:kuaishouzt.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:pinduoduo.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:yangkeduo.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:pinduoduo.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:meituan.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:meituan.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:dianping.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:dpfile.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:maoyan.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:didiglobal.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:didialift.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:xiaojukeji.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:udache.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:sohu.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:sogou.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:sogoucdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:sogo.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:so.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:360.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:360.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qihoo.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qhimg.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qhimgs.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:douban.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:doubanio.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ctrip.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:c-ctrip.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ly.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qunar.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:fliggy.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tuniu.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:suning.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:suning.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:vip.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:vipstatic.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:gome.com.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:xunlei.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:sandai.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:wandoujia.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:coolapk.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:oppo.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:vivo.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:meizu.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:flyme.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:lenovo.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:zol.com.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ccb.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:icbc.com.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:boc.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:abchina.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:psbc.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cmbchina.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:unionpay.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bankcomm.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:spdb.com.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cebbank.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cmbc.com.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ifeng.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:thepaper.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:caixin.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:yicai.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:jiemian.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cctv.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cctv.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:xinhuanet.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:people.com.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:chinadaily.com.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:huanqiu.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:guancha.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cankaoxiaoxi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bjnews.com.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:csdn.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:oschina.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:gitee.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:iteye.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:infoq.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:51cto.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cnblogs.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:jianshu.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:juejin.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:segmentfault.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:xuetangx.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:icourse163.org"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:mooc.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:study.163.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:yuketang.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:taptap.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:taptapdada.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:37.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:4399.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:7k7k.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:yy.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:duowan.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:huya.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:douyu.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:douyucdn.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:douyutv.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:aliyuncdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:alikunlun.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:kunlunaq.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:kunlunca.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:kunlunsl.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:kunlunpi.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:kunlungr.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cdnhwc2.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cdnhwc3.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:hwcloudcdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:baishan.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:baishancloud.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:baishancdnx.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qiniucdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qiniudn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qbox.me"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:upyun.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:upaiyun.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:clouddn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ksyuncdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ksyun.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ks-cdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:kscdnx.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:chinanetcenter.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:wangsu.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:wscdns.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:wsglb0.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cdn20.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cdn30.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:staticdn.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bdydns.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:bdydns.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tencentcloudcdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:dnsv1.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tdnsv5.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:tdnsv6.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cdntip.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cdntips.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cdnle.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:txcdns.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qcloud.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qcloudcdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qcloudimg.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:qcloudcos.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:myqcloud.cos"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cloudfront.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:mtyun.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ctcdn.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ctyun.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ctyunapi.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:chinacache.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:chinacache.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ccgslb.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:ccgslb.net"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:lxdns.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:lxcdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:fastweb.com.cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:fastcdn.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cloudglb.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "domain": [
+      "domain:cloudgslb.com"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "ip": [
+      "geoip:cn"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "ip": [
+      "geoip:private"
+    ]
+  },
+  {
+    "outboundTag": "direct",
+    "network": "tcp,udp"
+  }
+]
