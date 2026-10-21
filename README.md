@@ -6,7 +6,7 @@
 
 **Windows x64 定制版下载：[v7.25.6-learning.1](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.1)。** 客户端为便携压缩包，解压到独立目录后运行 `v2rayN.exe`；Release 同时提供配置 skill 和 SHA-256 校验文件。无需自行编译。
 
-**macOS：本定制功能尚未完成适配和实机验证。** 跨平台客户端目前没有自动学习/Codex 代理设置界面，不能将此 Windows 包用于 Mac，也不能把上游的 macOS 支持视为本定制功能已经可用。
+**macOS Apple Silicon：已移植设置界面，提供 M1/M2/M3/M4 的 ARM64 测试版。** [Mac 使用与验收说明](docs/macos-learning.md)；[Mac 测试版 Release](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.2-macos-arm64)。要求 macOS 15 或更新版本；测试包采用 ad-hoc 签名，未经 Apple 公证，实际代理与 Codex 会话需要目标 Mac 验收。Windows 包不能用于 Mac。
 
 下载此分支，在仓库目录中打开 Codex，然后发送：
 

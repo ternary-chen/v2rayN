@@ -1,6 +1,6 @@
 # 自动分流与 Codex 系统代理
 
-本分支基于 v2rayN 7.25.6。Windows WPF 客户端的“设置 → 自动分流与 Codex 代理”提供入口。默认关闭学习，保留官方节点、订阅和 Xray 内核更新方式。Avalonia 客户端暂未增加此设置窗口。
+本分支基于 v2rayN 7.25.6。Windows WPF 与 Avalonia 客户端均在“设置 → 自动分流与 Codex 代理”提供入口。默认关闭学习，保留官方节点、订阅和 Xray 内核更新方式。macOS Apple Silicon 测试版的安装、签名和实机验收边界见 [Mac 说明](macos-learning.md)。
 
 ## 分流语义
 
@@ -32,9 +32,9 @@
 
 此页不添加 OpenAI 域名名单；由现有社区 OpenAI 规则处理。
 
-- 显示当前 Windows 系统代理与 v2rayN 本地端口。
-- 优先检测正在运行的 Codex 桌面版子进程，找不到时允许选择 `codex.exe`。
-- 备份 `config.toml` 后，只将 `[features] respect_system_proxy` 设置为 `true`。不更改 `.env`、认证信息、提供商、其他配置或 Windows 系统代理。
+- 显示当前系统代理与 v2rayN 本地端口。macOS 使用只读 `scutil --proxy`，显示 HTTP/HTTPS/SOCKS/PAC 状态，不显示 PAC URL 或凭据。
+- 优先检测正在运行的 Codex 桌面版子进程，找不到时允许选择实际 `codex` / `codex.exe`；macOS 支持选择包含唯一运行时的 Codex/ChatGPT `.app`。
+- 备份 `config.toml` 后，只将 `[features] respect_system_proxy` 设置为 `true`。不更改 `.env`、认证信息、提供商、其他配置或系统代理。Unix 上保留原配置文件权限，新建文件和备份默认仅用户可读写。
 - 配置改写是保守的：多行 TOML 字符串、重复段、内联/带引号的特殊 features 写法会被拒绝，提示手动修改，而不是猜测解析结果。
 - 重复启用不会覆盖原恢复记录。恢复前核对文件摘要，存在后续用户修改时拒绝覆盖。
 - 诊断调用选中的运行时 `doctor --json`，不发起模型任务；最多 60 秒，关闭窗口取消并结束诊断子进程。仅展示网络诊断的安全字段。清除诊断进程继承的代理变量，但保留 Codex 自身 `.env`，若检测到其中含代理变量会提示。

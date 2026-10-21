@@ -24,6 +24,11 @@ public partial class MainWindow : WindowBase<MainWindowViewModel>
 
         KeyDown += MainWindow_KeyDown;
         menuSettingsSetUWP.Click += MenuSettingsSetUWP_Click;
+        menuLimitedLearning.Click += async (_, _) =>
+        {
+            var window = new LimitedLearningWindow(_config);
+            if (await window.ShowDialog<bool>(this) && ViewModel is not null) await ViewModel.Reload();
+        };
         menuPromotion.Click += MenuPromotion_Click;
         menuCheckUpdate.Click += MenuCheckUpdate_Click;
         btnNewUpdate.Click += MenuCheckUpdate_Click;

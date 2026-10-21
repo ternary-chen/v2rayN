@@ -351,6 +351,74 @@ if(Environment.GetEnvironmentVariable("TEST_XRAY_EXE") is {Length:>0} xray)
         await process.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(10));
         Assert(process.ExitCode==0,(await stdout)+(await stderr));
     });
+await Test("macOS system proxy display ignores scoped overrides and redacts PAC credentials", () =>
+{
+    var status = SystemProxyStatus.FormatMacProxyStatus("""
+        <dictionary> {
+          HTTPEnable : 1
+          HTTPProxy : 127.0.0.1
+          HTTPPort : 10808
+          HTTPSEnable : 1
+          HTTPSProxy : user:password@proxy.example
+          HTTPSPort : 10808
+          ProxyAutoConfigEnable : 1
+          ProxyAutoConfigURLString : https://example.com/pac?token=private
+          __SCOPED__ : <dictionary> {
+            en0 : <dictionary> {
+              HTTPEnable : 0
+              HTTPProxy : wrong.example
+            }
+          }
+        }
+        """);
+    Assert(status.Contains("HTTP：已开启 127.0.0.1:10808"), "Scoped proxy replaced effective settings");
+    Assert(status.Contains("PAC：已开启") && status.Contains("HTTPS：已开启 地址已隐藏"), "Proxy mode missing");
+    Assert(!status.Contains("password") && !status.Contains("private") && !status.Contains("wrong.example"), "Sensitive/scoped proxy leaked");
+    try { SystemProxyStatus.FormatMacProxyStatus("permission denied"); throw new Exception("Invalid status accepted"); }
+    catch (IOException) { }
+    return Task.CompletedTask;
+});
+await Test("macOS runtime selection accepts app bundle and rejects ambiguous or non-runtime files", () =>
+{
+    var app = Path.Combine(root, "Codex.app");
+    var resources = Path.Combine(app, "Contents", "Resources");
+    Directory.CreateDirectory(resources);
+    var binary = Path.Combine(resources, "codex"); File.WriteAllText(binary, "fixture");
+    Assert(CodexProxySupport.ResolveRuntimeSelection(app) == binary, "Bundle runtime not found");
+    Assert(CodexProxySupport.ResolveRuntimeSelection(binary) == binary, "Explicit runtime not found");
+    var desktop = Path.Combine(resources, "ChatGPT"); File.WriteAllText(desktop, "fixture");
+    Assert(CodexProxySupport.ResolveRuntimeSelection(desktop) is null, "Desktop GUI selected as CLI runtime");
+    File.Delete(binary);
+    foreach (var arch in new[] { "arm64", "x64" })
+    { var dir = Path.Combine(resources, arch); Directory.CreateDirectory(dir); File.WriteAllText(Path.Combine(dir, "codex"), "fixture"); }
+    Assert(CodexProxySupport.ResolveRuntimeSelection(app) is null, "Ambiguous bundle guessed an architecture");
+    return Task.CompletedTask;
+});
+if (!OperatingSystem.IsWindows())
+    await Test("Codex config edits and backups preserve Unix file privacy and restore permissions", () =>
+    {
+        var home = Path.Combine(root, "unix-codex"); Directory.CreateDirectory(home);
+        var path = Path.Combine(home, "config.toml"); File.WriteAllText(path, "model = \"example\"\n");
+        var original = File.ReadAllBytes(path);
+        var mode = UnixFileMode.UserRead | UnixFileMode.UserWrite;
+        File.SetUnixFileMode(path, mode);
+        var change = CodexProxySupport.Apply(home)!;
+        Assert(File.GetUnixFileMode(path) == mode && File.GetUnixFileMode(change.BackupPath) == mode, "Config mode broadened");
+        CodexProxySupport.Undo(home, change);
+        Assert(File.GetUnixFileMode(path) == mode && File.ReadAllBytes(path).SequenceEqual(original), "Restore lost mode/content");
+        File.Delete(path);
+        var created = CodexProxySupport.Apply(home)!;
+        Assert(File.GetUnixFileMode(path) == mode, "New config exposed to other users");
+        CodexProxySupport.Undo(home, created);
+        Assert(!File.Exists(path), "Undo did not remove newly created config");
+        return Task.CompletedTask;
+    });
+if (OperatingSystem.IsMacOS())
+    await Test("Read actual macOS system proxy without mutating network settings", async () =>
+    {
+        var status = await SystemProxyStatus.ReadAsync(10808, CancellationToken.None);
+        Assert(status.Contains("macOS 系统代理") && status.Contains("10808"), "Native scutil status missing");
+    });
 Console.WriteLine($"{passed} targeted checks passed.");
 
 static int FreePort()

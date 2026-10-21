@@ -1,13 +1,17 @@
 ---
 name: setup-v2rayn-learning
-description: 在 Windows 上将 Clash/Clash Verge 切换到本仓库的 v2rayN 定制版，导入用户已有的订阅或专用节点，启用随附的默认分流规则与自动学习，配置并验证 Codex 系统代理。适用于安装和迁移客户端，不包含 VPS 服务器搭建。
+description: 在 Windows 或 macOS Apple Silicon 上将 Clash/Clash Verge 切换到本仓库的 v2rayN 定制版，导入用户已有的订阅或专用节点，启用随附的默认分流规则与自动学习，配置并验证 Codex 系统代理。适用于安装和迁移客户端，不包含 VPS 服务器搭建。
 ---
 
 # 配置 v2rayN 定制版
 
-使用用户已有的订阅或节点，完成 Windows WPF 客户端安装、默认分流、自动学习和 Codex 系统代理验证。服务器可能由用户自建，不需要登录服务器、安装 Xray 服务端或改动服务器配置。
+使用用户已有的订阅或节点，完成 Windows WPF 或 macOS Avalonia 客户端安装、默认分流、自动学习和 Codex 系统代理验证。服务器可能由用户自建，不需要登录服务器、安装 Xray 服务端或改动服务器配置。
 
 先读取仓库根目录的 `docs/limited-learning.md`，核对当前版本能力；该文件与本 skill 随同仓库分发。这里的路径均相对当前下载的仓库或本 skill，不能套用作者电脑的安装目录、端口或节点名。
+
+## 平台选择
+
+先识别操作系统与架构。Windows 使用下文流程。macOS Apple Silicon（M1/M2/M3/M4，`arm64`）先读仓库 `docs/macos-learning.md`，下载 [ARM64 测试版](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.2-macos-arm64)，按该文档安装、配置和验收；以下订阅索取、默认规则、学习逻辑、备份与不断网切换原则同样适用。Mac 不执行 Windows 注册表/计划任务步骤，不复制 Windows 路径和进程名，不下载安装 Windows ZIP。核实 macOS 15 或更新系统，确认包摘要，保留原代理直到测试通过；不关闭系统安全策略。包为 ad-hoc 签名而非 Apple 公证版本。Intel Mac 不使用此 ARM64 包，先说明当前没有该架构的定制发布包。
 
 ## 输入与适用范围
 

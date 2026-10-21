@@ -1,0 +1,36 @@
+name: Build learning macOS ARM64 test package
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/limited-learning-codex-proxy]
+    paths:
+      - '.github/workflows/build-learning-macos.yml'
+permissions:
+  contents: read
+jobs:
+  macos-arm64:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+      - name: Download pinned core and geo data
+        run: python3 scripts/package-learning-macos.py download --directory "$RUNNER_TEMP/learning-dependencies"
+      - name: Run targeted routing checks on macOS
+        env:
+          TEST_XRAY_EXE: ${{ runner.temp }}/learning-dependencies/xray
+        run: dotnet run --project v2rayN/AdaptiveRouting.SmokeTests/AdaptiveRouting.SmokeTests.csproj
+      - name: Publish Apple Silicon client
+        run: dotnet publish v2rayN/v2rayN.Desktop/v2rayN.Desktop.csproj -c Release -r osx-arm64 --self-contained true -o "$RUNNER_TEMP/learning-publish"
+      - name: Package and ad-hoc sign application
+        run: python3 scripts/package-learning-macos.py package --publish "$RUNNER_TEMP/learning-publish" --dependencies "$RUNNER_TEMP/learning-dependencies" --output "$RUNNER_TEMP/learning-release" --commit "$GITHUB_SHA"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: learning-macos-arm64
+          path: ${{ runner.temp }}/learning-release/*
+          if-no-files-found: error
+          retention-days: 14
