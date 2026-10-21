@@ -31,13 +31,14 @@ public class CoreConfigContextBuilder
     ///     Builds a <see cref="CoreConfigContext" /> for the given node, resolves its proxy map,
     ///     and processes outbound nodes referenced by routing rules.
     /// </summary>
-    public static async Task<CoreConfigContextBuilderResult> Build(Config config, ProfileItem node)
+    public static async Task<CoreConfigContextBuilderResult> Build(Config config, ProfileItem node, bool applyTrafficPolicies = true)
     {
         var runCoreType = AppManager.Instance.GetCoreType(node, node.ConfigType);
         var coreType = runCoreType == ECoreType.sing_box ? ECoreType.sing_box : ECoreType.Xray;
         var context = new CoreConfigContext
         {
             Node = node,
+            ApplyTrafficPolicies = applyTrafficPolicies && config.AiPolicy?.Enabled == true,
             RunCoreType = runCoreType,
             AllProxiesMap = [],
             AppConfig = config,
@@ -61,6 +62,30 @@ public class CoreConfigContextBuilder
         }
         context = context with { Node = actNode };
         validatorResult.Warnings.AddRange(nodeValidatorResult.Warnings);
+        if (context.ApplyTrafficPolicies)
+        {
+            if (runCoreType != ECoreType.Xray || context.IsTunEnabled ||
+                !ServiceLib.Services.TrafficPolicyService.IsSupportedNode(actNode))
+            {
+                validatorResult.Errors.Add("双策略仅支持标准 Xray 非 TUN 模式，请为默认策略选择单个节点。");
+                return new(context, validatorResult);
+            }
+            var aiNode = await AppManager.Instance.GetProfileItem(config.AiPolicy!.AiProfileId);
+            if (aiNode is null || !ServiceLib.Services.TrafficPolicyService.IsSupportedNode(aiNode))
+            {
+                validatorResult.Errors.Add("AI 策略节点不存在或不支持，请重新选择专线；不会自动改走默认策略。");
+                return new(context, validatorResult);
+            }
+            var (resolvedAi, aiValidation) = await ResolveNodeAsync(context, aiNode);
+            validatorResult.Warnings.AddRange(aiValidation.Warnings);
+            if (!aiValidation.Success || !ServiceLib.Services.TrafficPolicyService.IsSupportedNode(resolvedAi))
+            {
+                validatorResult.Errors.Add("AI 策略节点校验失败，或订阅包含链式代理；请重新选择标准 Xray 节点。");
+                validatorResult.Errors.AddRange(aiValidation.Errors);
+                return new(context, validatorResult);
+            }
+            context = context with { AiPolicyNode = resolvedAi };
+        }
         if (!(context.RoutingItem?.RuleSet.IsNullOrEmpty() ?? true))
         {
             var rules = JsonUtils.Deserialize<List<RulesItem>>(context.RoutingItem?.RuleSet) ?? [];
@@ -196,7 +221,7 @@ public class CoreConfigContextBuilder
         var preSocksItem = ConfigHandler.GetPreSocksItem(config, node, coreType);
         if (preSocksItem != null)
         {
-            var preSocksResult = await Build(nodeContext.AppConfig, preSocksItem);
+            var preSocksResult = await Build(nodeContext.AppConfig, preSocksItem, false);
 
             var protectCoreTypeList = new HashSet<ECoreType>(nodeContext.ProtectCoreTypeList) { nodeContext.RunCoreType };
 

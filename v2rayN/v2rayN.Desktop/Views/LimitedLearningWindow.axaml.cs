@@ -29,8 +29,42 @@ public partial class LimitedLearningWindow : Window
         CodexExecutable.Text = CodexProxySupport.FindDesktopRuntime() ?? "";
         SystemProxyState.Text = "正在读取系统代理状态…";
         Opened += async (_, _) => await RefreshSystemProxyAsync();
+        EnableAiPolicy.IsChecked = config.AiPolicy?.Enabled == true;
+        AiCatalogState.Text = AiDomainCatalog.Summary;
+        Loaded += async (_, _) => await LoadPoliciesAsync();
         RefreshRecords();
         Closed += (_, _) => _closed.Cancel();
+    }
+
+    private bool _policiesLoaded;
+    private async Task LoadPoliciesAsync()
+    {
+        if (_policiesLoaded) return;
+        try
+        {
+            var choices = await TrafficPolicyService.ChoicesAsync();
+            AiPolicyNode.ItemsSource = choices;
+            DefaultPolicyNode.ItemsSource = choices;
+            var aiId = string.IsNullOrEmpty(_config.AiPolicy?.AiProfileId) ? _config.IndexId : _config.AiPolicy.AiProfileId;
+            AiPolicyNode.SelectedItem = choices.FirstOrDefault(x => x.Id == aiId);
+            DefaultPolicyNode.SelectedItem = choices.FirstOrDefault(x => x.Id == _config.IndexId);
+            _policiesLoaded = true;
+            SavePoliciesButton.IsEnabled = true;
+        }
+        catch (Exception ex) { Status.Text = "读取策略节点失败：" + ex.Message; }
+    }
+    private async void SavePolicies_Click(object sender, RoutedEventArgs e)
+    {
+        SavePoliciesButton.IsEnabled = false;
+        try
+        {
+            await TrafficPolicyService.SaveAsync(_config, EnableAiPolicy.IsChecked == true,
+                (AiPolicyNode.SelectedItem as TrafficPolicyChoice)?.Id,
+                (DefaultPolicyNode.SelectedItem as TrafficPolicyChoice)?.Id);
+            Close(true);
+        }
+        catch (Exception ex) { Status.Text = ex.Message; }
+        finally { SavePoliciesButton.IsEnabled = true; }
     }
 
     private async void SaveLearning_Click(object sender, RoutedEventArgs e)

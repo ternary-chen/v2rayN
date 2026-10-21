@@ -6,6 +6,25 @@
     <Grid Margin="20">
         <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
         <TabControl>
+            <TabItem Header="策略组">
+                <ScrollViewer>
+                    <StackPanel Margin="16">
+                        <TextBlock FontSize="20" FontWeight="SemiBold" Text="AI 与默认代理节点"/>
+                        <TextBlock Margin="0,10,0,16" TextWrapping="Wrap" Text="AI 服务使用专线；其他需要代理的网站和自动学习记录使用默认策略。明确直连规则及受保护程序保持直连。"/>
+                        <CheckBox x:Name="EnableAiPolicy" Content="启用 AI 与默认双策略"/>
+                        <TextBlock Margin="0,20,0,8" Text="AI 策略 · 专线节点"/>
+                        <ComboBox x:Name="AiPolicyNode" HorizontalAlignment="Stretch"/>
+                        <TextBlock Margin="0,20,0,8" Text="默认策略 · 日常节点"/>
+                        <ComboBox x:Name="DefaultPolicyNode" HorizontalAlignment="Stretch"/>
+                        <TextBlock Margin="0,8,0,16" TextWrapping="Wrap" Text="在默认策略中选择日常使用的节点。主窗口切换节点也只改变默认策略；AI 专线选择单独保留。两组都由你手动选择，不自动测速切换。"/>
+                        <TextBlock x:Name="AiCatalogState" Margin="0,8,0,12" TextWrapping="Wrap"/>
+                        <TextBlock TextWrapping="Wrap" Text="社区分类覆盖 OpenAI、Claude、Google AI、GitHub Copilot、Cursor、Windsurf、Perplexity、Grok、Poe、DeepSeek，另保留已整理的 Copilot、Mistral 等精确补充。请通过客户端的 Geo 数据更新维护社区名单。"/>
+                        <TextBlock Margin="0,8,0,12" TextWrapping="Wrap" Text="自动学习只使用默认策略验证并记录；更换默认节点后使用该节点自己的学习记录。更换 AI 节点不影响默认策略的计数。"/>
+                        <Button x:Name="SavePoliciesButton" Content="保存策略并重载" IsEnabled="False" HorizontalAlignment="Left" Margin="0,16,0,0" Padding="18,8" Click="SavePolicies_Click"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
             <TabItem Header="自动分流">
                 <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="16">
@@ -32,7 +51,7 @@
             <TabItem Header="学习记录">
                 <Grid Margin="16">
                     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-                    <TextBlock Margin="0,0,0,12" TextWrapping="Wrap" Text="记录仅用于未匹配现有规则的网站，按主机名、端口和节点分别累计。临时记录到期后保留次数并重新检测；达到 5 次后永久代理。删除记录会清零次数。"/>
+                    <TextBlock Margin="0,0,0,12" TextWrapping="Wrap" Text="记录归默认策略，仅用于未匹配现有规则的网站，按主机名、端口和默认节点分别累计。临时记录到期后保留次数并重新检测；达到 5 次后永久代理。删除记录会清零次数。"/>
                     <DataGrid x:Name="Records" Grid.Row="1" IsReadOnly="True" AutoGenerateColumns="False" SelectionMode="Single" >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="主机名" Binding="{Binding Host}" Width="*"/>

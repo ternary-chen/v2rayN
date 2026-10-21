@@ -19,7 +19,7 @@ public static class LimitedLearningRuntime
         var proxy = new LearningProxy(options, StoragePath, identity);
         proxy.Message += text =>
         {
-            var entry = $"[自动分流] {text}";
+            var entry = $"[自动分流] [默认策略] {text}";
             Logging.SaveLog(entry);
             message(entry);
         };

@@ -30,8 +30,42 @@ public partial class LimitedLearningWindow : Window
         // Do not display embedded proxy credentials.
         if (server.Contains('@')) server = "含凭据的代理地址（已隐藏）";
         SystemProxyState.Text = $"Windows 系统代理：{(registry?.GetValue("ProxyEnable") is int value && value == 1 ? "已开启" : "未开启")}；地址：{server}；v2rayN 本地端口：{config.Inbound?.FirstOrDefault()?.LocalPort}";
+        EnableAiPolicy.IsChecked = config.AiPolicy?.Enabled == true;
+        AiCatalogState.Text = AiDomainCatalog.Summary;
+        Loaded += async (_, _) => await LoadPoliciesAsync();
         RefreshRecords();
         Closed += (_, _) => _closed.Cancel();
+    }
+
+    private bool _policiesLoaded;
+    private async Task LoadPoliciesAsync()
+    {
+        if (_policiesLoaded) return;
+        try
+        {
+            var choices = await TrafficPolicyService.ChoicesAsync();
+            AiPolicyNode.ItemsSource = choices;
+            DefaultPolicyNode.ItemsSource = choices;
+            var aiId = string.IsNullOrEmpty(_config.AiPolicy?.AiProfileId) ? _config.IndexId : _config.AiPolicy.AiProfileId;
+            AiPolicyNode.SelectedItem = choices.FirstOrDefault(x => x.Id == aiId);
+            DefaultPolicyNode.SelectedItem = choices.FirstOrDefault(x => x.Id == _config.IndexId);
+            _policiesLoaded = true;
+            SavePoliciesButton.IsEnabled = true;
+        }
+        catch (Exception ex) { Status.Text = "读取策略节点失败：" + ex.Message; }
+    }
+    private async void SavePolicies_Click(object sender, RoutedEventArgs e)
+    {
+        SavePoliciesButton.IsEnabled = false;
+        try
+        {
+            await TrafficPolicyService.SaveAsync(_config, EnableAiPolicy.IsChecked == true,
+                (AiPolicyNode.SelectedItem as TrafficPolicyChoice)?.Id,
+                (DefaultPolicyNode.SelectedItem as TrafficPolicyChoice)?.Id);
+            DialogResult = true;
+        }
+        catch (Exception ex) { Status.Text = ex.Message; }
+        finally { SavePoliciesButton.IsEnabled = true; }
     }
 
     private async void SaveLearning_Click(object sender, RoutedEventArgs e)

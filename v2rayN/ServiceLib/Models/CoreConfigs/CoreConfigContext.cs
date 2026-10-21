@@ -3,6 +3,8 @@ namespace ServiceLib.Models.CoreConfigs;
 public record CoreConfigContext
 {
     public required ProfileItem Node { get; init; }
+    public ProfileItem? AiPolicyNode { get; init; }
+    public bool ApplyTrafficPolicies { get; init; }
     public required ECoreType RunCoreType { get; init; }
     public RoutingItem? RoutingItem { get; init; }
     public DNSItem? RawDnsItem { get; init; }

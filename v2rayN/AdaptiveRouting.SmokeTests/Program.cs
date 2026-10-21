@@ -419,6 +419,62 @@ if (OperatingSystem.IsMacOS())
         var status = await SystemProxyStatus.ReadAsync(10808, CancellationToken.None);
         Assert(status.Contains("macOS 系统代理") && status.Contains("10808"), "Native scutil status missing");
     });
+await Test("AI routing precedes broad site rules while protected apps and learned routes keep their exits", () =>
+{
+    var original = JsonNode.Parse(Config(Rule("direct", "domain:google.com"), Rule("proxy", "domain:example.org"), Rule("direct")))!;
+    original["outbounds"]!.AsArray().Add(new JsonObject { ["tag"] = XrayAiPolicyConfig.OutboundTag, ["protocol"] = "freedom" });
+    var result = JsonNode.Parse(XrayLearningConfig.Apply(XrayAiPolicyConfig.Apply(original.ToJsonString()), Options()))!;
+    var rules = result["routing"]!["rules"]!.AsArray();
+    var ai = rules.Single(x => x?["ruleTag"]?.ToString() == "ai-services")!;
+    var protectedApp = rules.Single(x => x?["process"] is not null)!;
+    var forcedProbe = rules.Single(x => x?["inboundTag"]?.ToJsonString().Contains(XrayLearningConfig.ForcedProxyTag) == true)!;
+    Assert(rules.IndexOf(protectedApp) < rules.IndexOf(ai), "AI bypassed process protection");
+    Assert(ai["outboundTag"]!.ToString() == "ai-policy", "AI used default proxy");
+    Assert(forcedProbe["outboundTag"]!.ToString() == "proxy", "Learning probe used AI dedicated line");
+    Assert(rules.IndexOf(ai) < rules.ToList().FindIndex(x => x?["domain"]?.ToJsonString().Contains("domain:google.com") == true), "Broad direct rule shadowed Gemini");
+    Assert(rules[^1]!["outboundTag"]!.ToString() == "direct", "Default direct fallback changed");
+    Assert(rules.Single(x => x?["domain"]?.ToJsonString().Contains("domain:example.org") == true)!["outboundTag"]!.ToString() == "proxy", "Ordinary proxy changed to AI");
+    return Task.CompletedTask;
+});
+await Test("AI missing or duplicate exits fail instead of silently using the default node", () =>
+{
+    try { XrayAiPolicyConfig.Apply(Config(Rule("direct"))); throw new Exception("Missing AI exit accepted"); }
+    catch (InvalidOperationException) { }
+    var config = JsonNode.Parse(Config(Rule("direct")))!;
+    for (var i = 0; i < 2; i++) config["outbounds"]!.AsArray().Add(new JsonObject { ["tag"] = "ai-policy", ["protocol"] = "freedom" });
+    try { XrayAiPolicyConfig.Apply(config.ToJsonString()); throw new Exception("Duplicate AI exit accepted"); }
+    catch (InvalidOperationException) { }
+    return Task.CompletedTask;
+});
+await Test("AI catalog references named providers and preserves narrow local supplements", () =>
+{
+    Assert(AiDomainCatalog.Supplements.Count == 96 && AiDomainCatalog.Categories.Contains("anthropic") && AiDomainCatalog.Categories.Contains("cursor"), "Catalog missing required providers");
+    var all = AiDomainCatalog.Domains;
+    Assert(all.Count == all.Distinct().Count(), "Duplicate catalog entries");
+    Assert(!all.Any(x => x.Contains("category-ai") || x.StartsWith("keyword:")), "Broad aggregate/keyword inserted");
+    foreach (var host in new[] { "google.com", "googleapis.com", "microsoft.com", "apple.com", "cloudflare.com", "arxiv.org", "nature.com" })
+        Assert(!all.Contains("domain:" + host), "Broad/shared/research root routed to AI: " + host);
+    Assert(all.Contains("full:challenges.cloudflare.com") && all.Contains("domain:mistral.ai"), "Audited supplements lost");
+    return Task.CompletedTask;
+});
+if (Environment.GetEnvironmentVariable("TEST_XRAY_EXE") is { Length: > 0 } aiXray &&
+    Environment.GetEnvironmentVariable("TEST_XRAY_GEOSITE") is { Length: > 0 } geoDirectory)
+    await Test("Installed Xray accepts both policy exits with actual community AI geosite categories", async () =>
+    {
+        var config = JsonNode.Parse(Config(Rule("direct", "domain:google.com"), Rule("direct")))!;
+        config["outbounds"]![0]!["protocol"] = "freedom";
+        config["outbounds"]![1]!["protocol"] = "freedom";
+        config["outbounds"]!.AsArray().Add(new JsonObject { ["tag"] = "ai-policy", ["protocol"] = "freedom" });
+        var path = Path.Combine(root, "two-policies.json");
+        File.WriteAllText(path, XrayLearningConfig.Apply(XrayAiPolicyConfig.Apply(config.ToJsonString()), Options()));
+        var start = new ProcessStartInfo(aiXray) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };
+        foreach (var arg in new[] { "run", "-test", "-config", path }) start.ArgumentList.Add(arg);
+        start.Environment["XRAY_LOCATION_ASSET"] = geoDirectory;
+        using var process = Process.Start(start)!;
+        var stdout = process.StandardOutput.ReadToEndAsync(); var stderr = process.StandardError.ReadToEndAsync();
+        await process.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(15));
+        Assert(process.ExitCode == 0, (await stdout) + (await stderr));
+    });
 Console.WriteLine($"{passed} targeted checks passed.");
 
 static int FreePort()

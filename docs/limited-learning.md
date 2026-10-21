@@ -2,6 +2,8 @@
 
 本分支基于 v2rayN 7.25.6。Windows WPF 与 Avalonia 客户端均在“设置 → 自动分流与 Codex 代理”提供入口。默认关闭学习，保留官方节点、订阅和 Xray 内核更新方式。macOS Apple Silicon 测试版的安装、签名和实机验收边界见 [Mac 说明](macos-learning.md)。
 
+双策略配置与持续更新的厂商名单见 [AI 与默认策略](ai-policies.md)。
+
 ## 分流语义
 
 1. 配置的强制直连进程优先于网站规则。默认包含向日葵、UU 远程与异环主进程及服务。该名单在关闭学习后仍保留；可以在窗口中编辑。需要覆盖辅助程序时，可以增加应用的绝对目录（使用 `/` 并以 `/` 结尾）。
@@ -30,7 +32,7 @@
 
 ## Codex 系统代理
 
-此页不添加 OpenAI 域名名单；由现有社区 OpenAI 规则处理。
+Codex 代理页本身不修改域名名单；启用双策略后由 AI 厂商规则指定出口，未启用时仍由现有社区规则处理。
 
 - 显示当前系统代理与 v2rayN 本地端口。macOS 使用只读 `scutil --proxy`，显示 HTTP/HTTPS/SOCKS/PAC 状态，不显示 PAC URL 或凭据。
 - 优先检测正在运行的 Codex 桌面版子进程，找不到时允许选择实际 `codex` / `codex.exe`；macOS 支持选择包含唯一运行时的 Codex/ChatGPT `.app`。

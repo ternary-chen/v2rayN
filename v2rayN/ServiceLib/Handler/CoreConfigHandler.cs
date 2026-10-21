@@ -37,6 +37,8 @@ public static class CoreConfigHandler
         {
             try
             {
+                if (context.ApplyTrafficPolicies)
+                    result.Data = AdaptiveRouting.XrayAiPolicyConfig.Apply(result.Data.ToString());
                 var options = context.AppConfig.LimitedLearning ?? new();
                 if (options.Enabled && context.IsTunEnabled)
                     throw new InvalidOperationException("有限学习第一版仅支持 Xray 非 TUN 模式，请关闭学习或 TUN。");

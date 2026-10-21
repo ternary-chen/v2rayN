@@ -6,6 +6,12 @@ public partial class CoreConfigV2rayService
     {
         var proxyOutboundList = BuildAllProxyOutbounds();
         _coreConfig.outbounds.InsertRange(0, proxyOutboundList);
+        if (context.AiPolicyNode is { } aiNode)
+        {
+            var aiOutbounds = new CoreConfigV2rayService(context with { Node = aiNode, AiPolicyNode = null })
+                .BuildAllProxyOutbounds(AdaptiveRouting.XrayAiPolicyConfig.OutboundTag);
+            _coreConfig.outbounds.AddRange(aiOutbounds);
+        }
         if (proxyOutboundList.Count(n => n.tag.StartsWith(Global.ProxyTag)) > 1)
         {
             var multipleLoad = _node.GetProtocolExtra().MultipleLoad ?? EMultipleLoad.LeastPing;

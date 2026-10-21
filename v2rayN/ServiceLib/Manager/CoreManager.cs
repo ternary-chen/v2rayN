@@ -142,7 +142,7 @@ public class CoreManager
 
         var fileName = string.Format(Global.CoreSpeedtestConfigFileName, Utils.GetGuid(false));
         var configPath = Utils.GetBinConfigPath(fileName);
-        var (context, _) = await CoreConfigContextBuilder.Build(_config, node);
+        var (context, _) = await CoreConfigContextBuilder.Build(_config, node, false);
         var result = await CoreConfigHandler.GenerateClientSpeedtestConfig(_config, context, testItem, configPath);
         if (result.Success != true)
         {
