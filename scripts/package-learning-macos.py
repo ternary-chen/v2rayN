@@ -72,10 +72,13 @@ def package(publish, dependencies, output, commit):
         resources.mkdir()
         shutil.copy2(macos / "v2rayN.icns", resources / "AppIcon.icns")
         (macos / "NotStoreConfigHere.txt").write_text("Store configuration outside the application bundle.\n", encoding="utf-8")
-        (macos / "bin" / "xray").mkdir(parents=True, exist_ok=True)
-        shutil.copy2(dependencies / "xray", macos / "bin" / "xray" / "xray")
+        # Keep data out of Contents/MacOS, where codesign treats subdirectories as code.
+        core_bin = resources / "bin"
+        (core_bin / "xray").mkdir(parents=True, exist_ok=True)
+        (macos / "bin").symlink_to("../Resources/bin", target_is_directory=True)
+        shutil.copy2(dependencies / "xray", core_bin / "xray" / "xray")
         for name in ("geoip.dat", "geosite.dat"):
-            shutil.copy2(dependencies / name, macos / "bin" / name)
+            shutil.copy2(dependencies / name, core_bin / name)
         info = {
             "CFBundleName": "v2rayN Learning", "CFBundleDisplayName": "v2rayN Learning",
             "CFBundleIdentifier": "com.ternarychen.v2rayn.learning", "CFBundleExecutable": "v2rayN",
@@ -87,7 +90,7 @@ def package(publish, dependencies, output, commit):
         entitlements = stage / "entitlements.plist"
         entitlements.write_bytes(plistlib.dumps({"com.apple.security.cs.allow-jit": True}))
         # Ad-hoc signing ensures ARM64 code integrity; this is not Developer ID/notarization.
-        for binary in macos.rglob("*"):
+        for binary in sorted(contents.rglob("*"), key=lambda p: p == macos / "v2rayN"):
             if not binary.is_file():
                 continue
             with binary.open("rb") as stream:

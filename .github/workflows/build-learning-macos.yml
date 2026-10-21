@@ -5,6 +5,7 @@ on:
     branches: [feature/limited-learning-codex-proxy]
     paths:
       - '.github/workflows/build-learning-macos.yml'
+      - 'scripts/package-learning-macos.py'
 permissions:
   contents: read
 jobs:
