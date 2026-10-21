@@ -17,7 +17,12 @@ public static class LimitedLearningRuntime
         // Hash identity rather than storing node credentials in the learning database.
         var identity = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(JsonUtils.Serialize(context.Node))));
         var proxy = new LearningProxy(options, StoragePath, identity);
-        proxy.Message += message;
+        proxy.Message += text =>
+        {
+            var entry = $"[自动分流] {text}";
+            Logging.SaveLog(entry);
+            message(entry);
+        };
         try { proxy.Start(); _proxy = proxy; }
         catch { proxy.DisposeAsync().AsTask().GetAwaiter().GetResult(); throw; }
     }
@@ -29,11 +34,15 @@ public static class LimitedLearningRuntime
     }
 
     public static IReadOnlyList<LearnedHost> Records() =>
-        _proxy?.Store.Snapshot() ?? new LearningStore(StoragePath).Snapshot();
+        _proxy?.Store.Snapshot(includeExpired: true) ?? new LearningStore(StoragePath).Snapshot(includeExpired: true);
 
     public static void Forget(LearnedHost host)
     {
         if (_proxy is not null) _proxy.Forget(host);
-        else new LearningStore(StoragePath).Forget(host.Host, host.Port, host.RouteIdentity);
+        else
+        {
+            new LearningStore(StoragePath).Forget(host.Host, host.Port, host.RouteIdentity);
+            Logging.SaveLog($"[自动分流] {host.Host}:{host.Port}: 已手动删除所选节点的记录并清零次数。");
+        }
     }
 }

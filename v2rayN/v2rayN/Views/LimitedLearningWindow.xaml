@@ -11,7 +11,7 @@
                     <StackPanel Margin="16">
                         <TextBlock FontSize="20" FontWeight="SemiBold" Text="未匹配网站处理" />
                         <TextBlock Margin="0,10,0,18" TextWrapping="Wrap"
-                                   Text="未匹配现有规则的网站先检测直连；直连失败后检测代理。代理检测成功后，保存该主机名的代理记录。"/>
+                                   Text="未匹配现有规则的网站先检测直连；直连失败后检测代理。代理检测成功后，保存该主机名的代理记录。累计 5 次独立确认后转为永久记录；有效期内的重复访问不计数。"/>
                         <CheckBox x:Name="EnableLearning" Content="启用自动检测与代理记录"/>
                         <TextBlock Margin="0,12,0,16" TextWrapping="Wrap" Foreground="DimGray"
                                    Text="适用于标准 Xray 配置的非 TUN 模式，仅检测 TCP 80/443。HTTPS 检测 TLS 连接，HTTP 检测响应；检测结果表示连接是否可用，不判断网页内容。"/>
@@ -19,7 +19,7 @@
                             <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
                             <StackPanel Margin="0,0,16,0"><TextBlock Text="直连检测限时（毫秒）"/><TextBox x:Name="DirectTimeout" Margin="0,8,0,0"/></StackPanel>
                             <StackPanel Grid.Column="1" Margin="0,0,16,0"><TextBlock Text="代理检测限时（毫秒）"/><TextBox x:Name="ProxyTimeout" Margin="0,8,0,0"/></StackPanel>
-                            <StackPanel Grid.Column="2"><TextBlock Text="学习记录有效期（小时）"/><TextBox x:Name="Lifetime" Margin="0,8,0,0"/></StackPanel>
+                            <StackPanel Grid.Column="2"><TextBlock Text="临时记录有效期（小时）"/><TextBox x:Name="Lifetime" Margin="0,8,0,0"/></StackPanel>
                         </Grid>
                         <TextBlock Margin="0,20,0,8" FontWeight="SemiBold" Text="强制直连程序"/>
                         <TextBlock TextWrapping="Wrap" Text="这些程序始终直连，关闭自动检测后仍生效。每行填写一个不含 .exe 的进程名，或使用 / 分隔且以 / 结尾的绝对目录。默认包含向日葵、UU 远程和异环的主程序及服务。"/>
@@ -32,18 +32,19 @@
             <TabItem Header="学习记录">
                 <Grid Margin="16">
                     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-                    <TextBlock Margin="0,0,0,12" TextWrapping="Wrap" Text="记录仅用于未匹配现有规则的网站，按节点分别保存。到期或删除后，下次访问会重新检测。"/>
+                    <TextBlock Margin="0,0,0,12" TextWrapping="Wrap" Text="记录仅用于未匹配现有规则的网站，按主机名、端口和节点分别累计。临时记录到期后保留次数并重新检测；达到 5 次后永久代理。删除记录会清零次数。"/>
                     <DataGrid x:Name="Records" Grid.Row="1" IsReadOnly="True" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="主机名" Binding="{Binding Host}" Width="*"/>
                             <DataGridTextColumn Header="端口" Binding="{Binding Port}" Width="55"/>
-                            <DataGridTextColumn Header="到期时间" Binding="{Binding ExpiresAt}" Width="175"/>
+                            <DataGridTextColumn Header="确认次数" Binding="{Binding ConfirmationDisplay}" Width="75"/>
+                            <DataGridTextColumn Header="有效期" Binding="{Binding ExpiryDisplay}" Width="175"/>
                             <DataGridTextColumn Header="检测依据" Binding="{Binding Reason}" Width="2*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                     <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,12,0,0">
                         <Button Content="刷新" Click="RefreshRecords_Click" Margin="0,0,12,0"/>
-                        <Button Content="删除所选记录" Click="ForgetRecord_Click"/>
+                        <Button Content="删除记录并清零次数" Click="ForgetRecord_Click"/>
                     </StackPanel>
                 </Grid>
             </TabItem>

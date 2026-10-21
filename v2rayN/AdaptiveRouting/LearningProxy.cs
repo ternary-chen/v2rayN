@@ -66,6 +66,8 @@ public sealed class LearningProxy : IAsyncDisposable
             client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
             var stream = client.GetStream();
             var established = false;
+            string? destination = null;
+            var phase = "SOCKS 协商";
             try
             {
                 using var setup = CancellationTokenSource.CreateLinkedTokenSource(_stop.Token);
@@ -82,31 +84,43 @@ public sealed class LearningProxy : IAsyncDisposable
                 var portBytes = new byte[2]; await stream.ReadExactlyAsync(portBytes, ct);
                 var port = (portBytes[0] << 8) | portBytes[1];
                 if (port is not (80 or 443)) throw new IOException("Learning listener accepts web ports only");
+                destination = $"{host}:{port}";
+                phase = "本地地址检查";
                 // Never send private/loopback destinations to the remote proxy, even after local DNS resolves a public-looking name.
                 var addresses = await ResolveLocalAsync(host, ct);
-                var route = addresses.Any(IsPrivate) ? ConnectionRoute.Direct : await _decision.DecideAsync(host, port, ct);
+                var isPrivate = addresses.Any(IsPrivate);
+                if (isPrivate) Message?.Invoke($"{destination}: 解析到本地或私有地址，选择直连，不参与学习。");
+                phase = "路由检测";
+                var route = isPrivate ? ConnectionRoute.Direct : await _decision.DecideAsync(host, port, ct);
                 TcpClient upstream;
+                phase = $"{(route == ConnectionRoute.Direct ? "直连" : "代理")}通道建连";
                 try { upstream = await OpenAsync(host, port, route, ct); }
                 catch
                 {
-                    if (route == ConnectionRoute.Proxy) _decision.Forget(host, port);
+                    if (route == ConnectionRoute.Proxy)
+                        Message?.Invoke($"{destination}: 代理通道建连失败，保留之前的确认次数和有效期；本次不增加次数。");
                     throw;
                 }
                 using (upstream)
                 {
                     await stream.WriteAsync(new byte[] { 5, 0, 0, 1, 0, 0, 0, 0, 0, 0 }, ct);
                     established = true;
+                    Message?.Invoke($"{destination}: 已建立{(route == ConnectionRoute.Direct ? "直连" : "代理")}隧道。");
+                    phase = "隧道传输";
                     using var relay = CancellationTokenSource.CreateLinkedTokenSource(_stop.Token);
                     var remote = upstream.GetStream();
                     var a = PumpAsync(stream, remote, upstream.Client, relay.Token);
                     var b = PumpAsync(remote, stream, client.Client, relay.Token);
                     var first = await Task.WhenAny(a, b);
                     if (first.IsFaulted || first.IsCanceled) await relay.CancelAsync();
-                    try { await Task.WhenAll(a, b); } catch (Exception e) when (e is IOException or OperationCanceledException) { }
+                    try { await Task.WhenAll(a, b); }
+                    catch (Exception e) when (e is IOException or SocketException or OperationCanceledException)
+                    { Message?.Invoke($"{destination}: 隧道传输结束，{DescribeFailure(e)}。"); }
                 }
             }
             catch (Exception e) when (e is IOException or SocketException or OperationCanceledException or ArgumentException or AuthenticationException)
             {
+                if (destination is not null) Message?.Invoke($"{destination}: {phase}未完成，{DescribeFailure(e)}。");
                 // Once the tunnel is established we must never inject a SOCKS error into application bytes.
                 if (!established)
                     try { await stream.WriteAsync(new byte[] { 5, 1, 0, 1, 0, 0, 0, 0, 0, 0 }, _stop.Token); } catch { }
@@ -135,11 +149,13 @@ public sealed class LearningProxy : IAsyncDisposable
     {
         using var bounded = CancellationTokenSource.CreateLinkedTokenSource(ct);
         bounded.CancelAfter(route == ConnectionRoute.Direct ? _options.DirectTimeoutMs : _options.ProxyTimeoutMs);
+        var phase = route == ConnectionRoute.Direct ? "直连建连" : "代理通道建连";
         try
         {
             using var client = await OpenAsync(host, port, route, bounded.Token);
             if (port == 443)
             {
+                phase = "TLS 握手与证书校验";
                 using var tls = new SslStream(client.GetStream(), false);
                 await tls.AuthenticateAsClientAsync(new SslClientAuthenticationOptions
                 {
@@ -147,6 +163,7 @@ public sealed class LearningProxy : IAsyncDisposable
                 }, bounded.Token);
                 return new(true, "TLS certificate and handshake verified");
             }
+            phase = "HTTP 响应检测";
             var stream = client.GetStream();
             await stream.WriteAsync(Encoding.ASCII.GetBytes($"HEAD / HTTP/1.1\r\nHost: {host}\r\nConnection: close\r\nUser-Agent: v2rayN-limited-learning/1\r\n\r\n"), bounded.Token);
             var prefix = new byte[12]; await stream.ReadExactlyAsync(prefix, bounded.Token);
@@ -158,9 +175,20 @@ public sealed class LearningProxy : IAsyncDisposable
         catch (Exception e) when (e is IOException or SocketException or AuthenticationException or OperationCanceledException)
         {
             ct.ThrowIfCancellationRequested();
-            return new(false, e is OperationCanceledException ? "Probe timeout" : e.GetType().Name);
+            return new(false, $"{phase}: {DescribeFailure(e)}");
         }
     }
+
+    private static string DescribeFailure(Exception error) => error switch
+    {
+        OperationCanceledException => "已取消或达到超时限制",
+        SocketException socket => $"网络错误 {socket.SocketErrorCode}",
+        AuthenticationException => "TLS 认证失败（证书或握手不兼容）",
+        IOException { InnerException: SocketException socket } => $"网络错误 {socket.SocketErrorCode}",
+        IOException io when io.Message.StartsWith("Upstream SOCKS", StringComparison.Ordinal) => io.Message,
+        IOException => "连接关闭或读写失败",
+        _ => error.GetType().Name
+    };
 
     private async Task<TcpClient> OpenAsync(string host, int port, ConnectionRoute route, CancellationToken ct)
     {

@@ -77,10 +77,11 @@ await Test("Both failures never learn and repeated failures have a cooldown", as
 });
 await Test("Concurrent requests to one host share a learning decision", async () =>
 {
-    var calls = 0; var d = new LearningDecision(Store("concurrent"), Options(), "a", async (_, _, r, ct) =>
+    var calls = 0; var concurrentStore = Store("concurrent"); var d = new LearningDecision(concurrentStore, Options(), "a", async (_, _, r, ct) =>
     { Interlocked.Increment(ref calls); await Task.Delay(5, ct); return new(r == ConnectionRoute.Proxy, "test"); });
     var outcomes = await Task.WhenAll(Enumerable.Range(0, 20).Select(_ => d.DecideAsync("concurrent.example", 443, default)));
     Assert(calls == 2 && outcomes.All(x => x == ConnectionRoute.Proxy), "Duplicate probes");
+    Assert(concurrentStore.Snapshot().Single().ConfirmationCount == 1, "Concurrent requests incremented confirmation count");
 });
 await Test("Cancellation never becomes a learned proxy", async () =>
 {
@@ -106,6 +107,96 @@ await Test("Forgetting an old-node record does not remove the current-node recor
     decision.Forget("same.example",443,"old");
     Assert(!store.Contains("same.example",443,"old")&&store.Contains("same.example",443,"current"),"Wrong node removed");
     return Task.CompletedTask;
+});
+await Test("Five expired-period confirmations promote across restarts; cached requests never increment", async () =>
+{
+    var now = DateTimeOffset.UtcNow; var path = Path.Combine(root, "promotion.json"); var calls = 0;
+    var options = Options(); options.LifetimeHours = 1;
+    for (var expected = 1; expected <= 5; expected++)
+    {
+        var store = new LearningStore(path, 2000, () => now);
+        if (expected > 1)
+        {
+            Assert(store.Snapshot().Count == 0, "Expired history must not route before promotion");
+            Assert(store.Snapshot(true).Single().ConfirmationCount == expected - 1, "Restart lost expired count");
+        }
+        var d = new LearningDecision(store, options, "node", async (_, _, route, ct) =>
+        { Interlocked.Increment(ref calls); await Task.Delay(2, ct); return new(route == ConnectionRoute.Proxy, "test"); }, () => now);
+        await Task.WhenAll(Enumerable.Range(0, 20).Select(_ => d.DecideAsync("promote.example", 443, default)));
+        var record = store.Snapshot().Single();
+        Assert(record.ConfirmationCount == expected && record.IsPermanent == (expected == 5), "Duplicate count or premature promotion");
+        Assert(calls == expected * 2, "Cached/concurrent requests repeated probes");
+        now = now.AddHours(2);
+    }
+    now = now.AddYears(10);
+    var permanent = new LearningStore(path, 2000, () => now);
+    var messages = new List<string>();
+    var cached = new LearningDecision(permanent, options, "node", (_, _, _, _) => throw new Exception("Permanent record re-probed"), () => now);
+    cached.DecisionMade += messages.Add;
+    Assert(await cached.DecideAsync("promote.example", 443, default) == ConnectionRoute.Proxy, "Permanent record expired");
+    Assert(messages.Any(x => x.Contains("永久") && x.Contains("5/5")), "Permanent-cache log missing");
+    cached.Forget("promote.example", 443);
+    Assert(permanent.Snapshot(true).Count == 0, "Manual delete did not clear history");
+    var reset = new LearningDecision(permanent, options, "node", (_, _, route, _) => Task.FromResult(new ProbeResult(route == ConnectionRoute.Proxy,"test")), () => now);
+    await reset.DecideAsync("promote.example", 443, default);
+    Assert(permanent.Snapshot().Single().ConfirmationCount == 1, "Manual delete did not reset count");
+});
+await Test("Legacy records migrate as one confirmation without changing expiry", () =>
+{
+    var now = DateTimeOffset.UtcNow; var path = Path.Combine(root, "legacy.json");
+    var expires = now.AddHours(-1);
+    File.WriteAllText(path, System.Text.Json.JsonSerializer.Serialize(new[] { new
+    { Host = "legacy.example", Port = 443, RouteIdentity = "node", LearnedAt = now.AddHours(-25), ExpiresAt = expires, Reason = "old" } }));
+    var store = new LearningStore(path, 2000, () => now);
+    Assert(!store.Contains("legacy.example",443,"node"),"Expired legacy entry was reactivated");
+    Assert(store.Snapshot(true).Single().ConfirmationCount == 1 && store.Snapshot(true).Single().ExpiresAt == expires,"Legacy migration changed evidence");
+    var record = store.Learn("legacy.example",443,"node",TimeSpan.FromHours(24),"reconfirmed");
+    Assert(record!.ConfirmationCount == 2,"Legacy count was not continued");
+    return Task.CompletedTask;
+});
+await Test("Direct recovery, dual failure and canceled proxy success preserve historical count", async () =>
+{
+    var now = DateTimeOffset.UtcNow; var store = new LearningStore(Path.Combine(root,"history.json"),2000,()=>now);
+    store.Learn("history.example",443,"node",TimeSpan.FromHours(1),"first");now=now.AddHours(2);
+    var direct = new LearningDecision(store,Options(),"node",(_,_,_,_)=>Task.FromResult(new ProbeResult(true,"ok")),()=>now);
+    await direct.DecideAsync("history.example",443,default);
+    var failed = new LearningDecision(store,Options(),"node",(_,_,_,_)=>Task.FromResult(new ProbeResult(false,"fail")),()=>now);
+    try { await failed.DecideAsync("history.example",443,default); throw new Exception("Expected failure"); } catch(IOException) { }
+    using var canceled=new CancellationTokenSource();
+    var cancel = new LearningDecision(store,Options(),"node",(_,_,route,_)=>
+    { if(route==ConnectionRoute.Proxy)canceled.Cancel();return Task.FromResult(new ProbeResult(route==ConnectionRoute.Proxy,"test")); },()=>now);
+    try { await cancel.DecideAsync("history.example",443,canceled.Token);throw new Exception("Expected cancellation"); } catch(OperationCanceledException) { }
+    Assert(store.Snapshot(true).Single().ConfirmationCount==1&&!store.Contains("history.example",443,"node"),"Unverified outcome incremented/reactivated count");
+});
+await Test("Permanent history is never evicted by capacity pressure", () =>
+{
+    var now=DateTimeOffset.UtcNow; var store=new LearningStore(Path.Combine(root,"permanent-capacity.json"),1,()=>now);
+    for(var i=0;i<5;i++){store.Learn("keep.example",443,"node",TimeSpan.FromHours(1),"test");now=now.AddHours(2);}
+    Assert(store.Learn("overflow.example",443,"node",TimeSpan.FromHours(1),"test") is null,"Capacity silently evicted permanent entry");
+    Assert(store.Snapshot(true).Single().IsPermanent&&store.Contains("keep.example",443,"node"),"Permanent entry lost");
+    return Task.CompletedTask;
+});
+await Test("Confirmation counters are isolated by hostname, port and node", () =>
+{
+    var now=DateTimeOffset.UtcNow;var store=new LearningStore(Path.Combine(root,"count-scope.json"),2000,()=>now);
+    store.Learn("scope.example",443,"a",TimeSpan.FromHours(1),"first");now=now.AddHours(2);
+    store.Learn("scope.example",443,"a",TimeSpan.FromHours(1),"second");
+    foreach(var key in new[]{("scope.example",80,"a"),("scope.example",443,"b"),("other.scope.example",443,"a")})
+        Assert(store.Learn(key.Item1,key.Item2,key.Item3,TimeSpan.FromHours(1),"first")!.ConfirmationCount==1,"Count scope widened");
+    Assert(store.FindActive("scope.example",443,"a")!.ConfirmationCount==2,"Original count changed");return Task.CompletedTask;
+});
+await Test("Decision logs distinguish direct cache, temporary cache, failures and cooldown", async () =>
+{
+    var messages=new List<string>();
+    var direct=new LearningDecision(Store("log-direct"),Options(),"n",(_,_,_,_)=>Task.FromResult(new ProbeResult(true,"ok")));
+    direct.DecisionMade+=messages.Add;await direct.DecideAsync("direct.example",443,default);await direct.DecideAsync("direct.example",443,default);
+    var proxy=new LearningDecision(Store("log-proxy"),Options(),"n",(_,_,route,_)=>Task.FromResult(new ProbeResult(route==ConnectionRoute.Proxy,"test")));
+    proxy.DecisionMade+=messages.Add;await proxy.DecideAsync("proxy.example",443,default);await proxy.DecideAsync("proxy.example",443,default);
+    var failed=new LearningDecision(Store("log-failed"),Options(),"n",(_,_,_,_)=>Task.FromResult(new ProbeResult(false,"test failure")));
+    failed.DecisionMade+=messages.Add;
+    for(var i=0;i<2;i++)try{await failed.DecideAsync("failed.example",443,default);}catch(IOException){}
+    foreach(var text in new[]{"直连检测成功","命中直连缓存","直连检测失败","代理检测成功","累计确认 1/5","命中临时代理记录","代理检测失败","冷却期"})
+        Assert(messages.Any(x=>x.Contains(text)),"Missing log: "+text);
 });
 await Test("Local and non-web destinations do not learn", () =>
 {

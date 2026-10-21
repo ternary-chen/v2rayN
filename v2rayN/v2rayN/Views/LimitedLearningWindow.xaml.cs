@@ -71,7 +71,7 @@ public partial class LimitedLearningWindow : Window
     private void ForgetRecord_Click(object sender, RoutedEventArgs e)
     {
         if (Records.SelectedItem is not LearnedHost host) return;
-        try { LimitedLearningRuntime.Forget(host); RefreshRecords(); Status.Text = "已删除所选记录，下次访问会重新检测。"; }
+        try { LimitedLearningRuntime.Forget(host); RefreshRecords(); Status.Text = "已删除所选节点的记录并清零次数，下次访问会重新检测。"; }
         catch (Exception ex) { Status.Text = ex.Message; }
     }
     private void BrowseCodex_Click(object sender, RoutedEventArgs e)

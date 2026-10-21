@@ -1,14 +1,22 @@
 using System.Globalization;
 using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AdaptiveRouting;
 
 public sealed record LearnedHost(string Host, int Port, string RouteIdentity,
-    DateTimeOffset LearnedAt, DateTimeOffset ExpiresAt, string Reason);
+    DateTimeOffset LearnedAt, DateTimeOffset ExpiresAt, string Reason, int ConfirmationCount = 1)
+{
+    [JsonIgnore] public bool IsPermanent => ConfirmationCount >= LearningStore.PromotionThreshold;
+    [JsonIgnore] public string ConfirmationDisplay => $"{ConfirmationCount}/{LearningStore.PromotionThreshold}";
+    [JsonIgnore] public string ExpiryDisplay => IsPermanent ? "永久" :
+        ExpiresAt <= DateTimeOffset.UtcNow ? "已到期，保留累计次数" : ExpiresAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm");
+}
 
 public sealed class LearningStore
 {
+    public const int PromotionThreshold = 5;
     private readonly object _gate = new();
     private readonly string _file;
     private readonly Func<DateTimeOffset> _now;
@@ -22,28 +30,47 @@ public sealed class LearningStore
         _now = now ?? (() => DateTimeOffset.UtcNow);
         _entries = File.Exists(file)
             ? JsonSerializer.Deserialize<List<LearnedHost>>(File.ReadAllText(file)) ?? [] : [];
-        _entries = _entries.Where(x => x.ExpiresAt > _now()).TakeLast(capacity).ToList();
+        // Keep expired records: they carry confirmation history across TTLs and restarts.
+        _entries = _entries.Select(x => x with { ConfirmationCount = Math.Clamp(x.ConfirmationCount, 1, PromotionThreshold) }).ToList();
     }
 
-    public IReadOnlyList<LearnedHost> Snapshot()
+    public IReadOnlyList<LearnedHost> Snapshot(bool includeExpired = false)
     {
-        lock (_gate) return _entries.Where(x => x.ExpiresAt > _now()).OrderByDescending(x => x.LearnedAt).ToArray();
+        lock (_gate) return _entries.Where(x => includeExpired || IsActive(x))
+            .OrderByDescending(x => x.LearnedAt).ToArray();
     }
 
-    public bool Contains(string host, int port, string identity)
+    private bool IsActive(LearnedHost entry) => entry.IsPermanent || entry.ExpiresAt > _now();
+
+    public LearnedHost? FindActive(string host, int port, string identity)
     {
-        lock (_gate) return _entries.Any(x => x.Host == host && x.Port == port &&
-            x.RouteIdentity == identity && x.ExpiresAt > _now());
+        lock (_gate) return _entries.FirstOrDefault(x => x.Host == host && x.Port == port &&
+            x.RouteIdentity == identity && IsActive(x));
     }
 
-    public void Learn(string host, int port, string identity, TimeSpan lifetime, string reason)
+    public bool Contains(string host, int port, string identity) => FindActive(host, port, identity) is not null;
+
+    public LearnedHost? Learn(string host, int port, string identity, TimeSpan lifetime, string reason)
     {
         lock (_gate)
         {
-            _entries.RemoveAll(x => x.ExpiresAt <= _now() || (x.Host == host && x.Port == port && x.RouteIdentity == identity));
-            _entries.Add(new(host, port, identity, _now(), _now().Add(lifetime), reason));
-            if (_entries.Count > _capacity) _entries.RemoveRange(0, _entries.Count - _capacity);
+            var existing = _entries.FirstOrDefault(x => x.Host == host && x.Port == port && x.RouteIdentity == identity);
+            // Repeated connections and overlapping callers cannot increment an active record.
+            if (existing is not null && IsActive(existing)) return existing;
+            while (existing is null && _entries.Count >= _capacity)
+            {
+                var oldest = _entries.Where(x => !x.IsPermanent).OrderBy(x => x.LearnedAt).FirstOrDefault();
+                if (oldest is null) return null; // Permanent records require explicit deletion.
+                _entries.Remove(oldest);
+            }
+            var count = Math.Min(PromotionThreshold, (existing?.ConfirmationCount ?? 0) + 1);
+            var now = _now();
+            var learned = new LearnedHost(host, port, identity, now,
+                count >= PromotionThreshold ? DateTimeOffset.MaxValue : now + lifetime, reason, count);
+            if (existing is not null) _entries.Remove(existing);
+            _entries.Add(learned);
             Save();
+            return learned;
         }
     }
 
