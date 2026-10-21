@@ -12,6 +12,7 @@ public class CoreManager
     [SupportedOSPlatform("windows")]
     private WindowsJobService? _processJob;
 
+    private AdaptiveRouting.ConnectionLogSession? _connectionLogs;
     private ProcessService? _processService;
     private ProcessService? _processPreService;
     private bool _linuxSudo = false;
@@ -183,6 +184,10 @@ public class CoreManager
         {
             Logging.SaveLog(_tag, ex);
         }
+        finally
+        {
+            if (_connectionLogs is not null) { await _connectionLogs.DisposeAsync(); _connectionLogs = null; }
+        }
     }
 
     #region Private
@@ -194,9 +199,35 @@ public class CoreManager
         var coreInfo = CoreInfoManager.Instance.GetCoreInfo(coreType);
 
         var displayLog = node.ConfigType != EConfigType.Custom || node.DisplayLog;
-        var proc = await RunProcess(coreInfo, Global.CoreConfigFileName, displayLog, true, context.IsTunEnabled);
+        Func<bool, string, Task>? logCallback = null;
+        if (context.RunCoreType == ECoreType.Xray && node.ConfigType != EConfigType.Custom && !context.IsTunEnabled)
+        {
+            try
+            {
+                var json = await File.ReadAllTextAsync(Utils.GetBinConfigPath(Global.CoreConfigFileName));
+                var session = new AdaptiveRouting.ConnectionLogSession(CoreConnectionLogs.Formatter(context, json), async line =>
+                {
+                    if (AdaptiveRouting.ConnectionLogFormatter.Parse(line) != null) Logging.SaveConnectionLog(line);
+                    await UpdateFunc(false, line + Environment.NewLine);
+                });
+                _connectionLogs = session;
+                logCallback = (notify, line) =>
+                {
+                    if (notify) return UpdateFunc(notify, line);
+                    session.Post(line);
+                    return Task.CompletedTask;
+                };
+            }
+            catch (Exception ex)
+            {
+                Logging.SaveLog("ConnectionLog", ex);
+                await UpdateFunc(false, "连接日志增强初始化失败，保留原始核心日志。");
+            }
+        }
+        var proc = await RunProcess(coreInfo, Global.CoreConfigFileName, displayLog, true, context.IsTunEnabled, logCallback);
         if (proc is null)
         {
+            if (_connectionLogs is not null) { await _connectionLogs.DisposeAsync(); _connectionLogs = null; }
             return;
         }
         _processService = proc;
@@ -313,7 +344,7 @@ public class CoreManager
             && isNonWindows;
     }
 
-    private async Task<ProcessService?> RunProcess(CoreInfo? coreInfo, string configPath, bool displayLog, bool mayNeedSudo, bool isTunLaunch = false)
+    private async Task<ProcessService?> RunProcess(CoreInfo? coreInfo, string configPath, bool displayLog, bool mayNeedSudo, bool isTunLaunch = false, Func<bool, string, Task>? logCallback = null)
     {
         var fileName = CoreInfoManager.Instance.GetCoreExecFile(coreInfo, out var msg);
         if (fileName.IsNullOrEmpty())
@@ -332,7 +363,7 @@ public class CoreManager
                 return await CoreAdminManager.Instance.RunProcessAsLinuxSudo(fileName, coreInfo, configPath);
             }
 
-            return await RunProcessNormal(fileName, coreInfo, configPath, displayLog);
+            return await RunProcessNormal(fileName, coreInfo, configPath, displayLog, logCallback);
         }
         catch (Exception ex)
         {
@@ -342,7 +373,7 @@ public class CoreManager
         }
     }
 
-    private async Task<ProcessService?> RunProcessNormal(string fileName, CoreInfo? coreInfo, string configPath, bool displayLog)
+    private async Task<ProcessService?> RunProcessNormal(string fileName, CoreInfo? coreInfo, string configPath, bool displayLog, Func<bool, string, Task>? logCallback = null)
     {
         var environmentVars = new Dictionary<string, string>();
         foreach (var kv in coreInfo.Environment)
@@ -357,7 +388,7 @@ public class CoreManager
             displayLog: displayLog,
             redirectInput: false,
             environmentVars: environmentVars,
-            updateFunc: _updateFunc
+            updateFunc: logCallback ?? _updateFunc
         );
 
         await procService.StartAsync();

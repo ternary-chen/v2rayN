@@ -4,7 +4,7 @@
 
 ## 安装与配置
 
-1. 从此 fork 的 [learning.3 Release](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.3) 下载 ARM64 测试包，核对随附的 SHA-256；解压后将 `v2rayN Learning.app` 复制到“应用程序”。不要覆盖现用客户端的配置。测试包使用本地 ad-hoc 签名，没有 Apple Developer ID 签名或公证；若系统拦截，确认来源和摘要后按系统“隐私与安全性”中的允许打开流程处理。不要全局关闭 Gatekeeper。
+1. 从此 fork 的 [learning.3 Release](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.4) 下载 ARM64 测试包，核对随附的 SHA-256；解压后将 `v2rayN Learning.app` 复制到“应用程序”。不要覆盖现用客户端的配置。测试包使用本地 ad-hoc 签名，没有 Apple Developer ID 签名或公证；若系统拦截，确认来源和摘要后按系统“隐私与安全性”中的允许打开流程处理。不要全局关闭 Gatekeeper。
 2. 暂时保留原代理。导入自己的订阅并选择专用节点，保持 TUN 关闭；先测试节点再切换系统代理。应用配置保存在用户数据目录，不写入 `.app` 内。
 3. 使用随包 `.agents/skills/setup-v2rayn-learning/assets/default-routing.json` 新建独立路由方案，域名策略 `AsIs`，保留末尾 direct。进入“设置 → 自动分流与 Codex 代理”，启用自动检测并保存重载。默认临时 24 小时，累计 5 次独立确认转永久，缓存命中不加次数。需要 AI 专线时，在同一窗口的“策略组”页启用双策略并分别选择 AI 与默认节点；学习归默认策略，详见 [AI 与默认策略](ai-policies.md)。
 4. “强制直连程序”使用实际进程名或绝对目录，例如某个 `.app/Contents/` 目录（结尾保留 `/`）。默认名单来自 Windows，不保证名称覆盖 Mac 版本；核对实际程序名、辅助进程和内核权限。不要把仅仅保存了规则当作直连已验证。

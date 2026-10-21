@@ -278,7 +278,10 @@ await Test("Real SOCKS fallback relays a POST exactly once after independent HEA
     });
     try
     {
-        await using var proxy=new LearningProxy(options,Path.Combine(root,"relay.json"),"test");proxy.Start();
+        await using var proxy=new LearningProxy(options,Path.Combine(root,"relay.json"),"test");
+        var connectionEvents = new System.Collections.Concurrent.ConcurrentQueue<LearningConnectionEvent>();
+        proxy.ConnectionEvent += connectionEvents.Enqueue;
+        proxy.Start();
         using var client=new TcpClient();await client.ConnectAsync(IPAddress.Loopback,options.ListenerPort,stop.Token);
         var stream=client.GetStream();await stream.WriteAsync(new byte[]{5,1,0},stop.Token);
         var hello=new byte[2];await stream.ReadExactlyAsync(hello,stop.Token);
@@ -290,6 +293,9 @@ await Test("Real SOCKS fallback relays a POST exactly once after independent HEA
         Assert(Encoding.ASCII.GetString(memory.ToArray()).EndsWith("OK"),"Response not relayed");
         await server;Assert(heads==1&&posts==1,"Application request was duplicated");
         Assert(proxy.Store.Snapshot().Single().Host=="learning-test.invalid","Learned host missing");
+        var events = connectionEvents.ToArray();
+        Assert(events.Length >= 3 && events[0].Route is null && events.Any(x => x.Route == ConnectionRoute.Proxy && x.Stage == "隧道已建立") && events.Select(x => x.Id).Distinct().Count() == 1,
+            "Learning logs did not track the real established default route");
     }
     finally {upstream.Stop();stop.Cancel();}
 });

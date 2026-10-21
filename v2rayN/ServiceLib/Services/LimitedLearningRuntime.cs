@@ -17,9 +17,17 @@ public static class LimitedLearningRuntime
         // Hash identity rather than storing node credentials in the learning database.
         var identity = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(JsonUtils.Serialize(context.Node))));
         var proxy = new LearningProxy(options, StoragePath, identity);
+        var logFormatter = CoreConnectionLogs.Formatter(context);
+        proxy.ConnectionEvent += entry =>
+        {
+            var line = logFormatter.FormatLearning(entry);
+            Logging.SaveConnectionLog(line);
+            message(line);
+        };
+        var defaultName = ConnectionLogFormatter.Safe(context.Node.Remarks ?? "未命名节点");
         proxy.Message += text =>
         {
-            var entry = $"[自动分流] [默认策略] {text}";
+            var entry = $"[自动分流诊断] [默认候选节点:{defaultName}] {text}";
             Logging.SaveLog(entry);
             message(entry);
         };

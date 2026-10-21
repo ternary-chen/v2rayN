@@ -11,7 +11,7 @@ description: 在 Windows 或 macOS Apple Silicon 上将 Clash/Clash Verge 切换
 
 ## 平台选择
 
-先识别操作系统与架构。Windows 使用下文流程。macOS Apple Silicon（M1/M2/M3/M4，`arm64`）先读仓库 `docs/macos-learning.md`，下载 [ARM64 测试版](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.3)，按该文档安装、配置和验收；以下订阅索取、默认规则、学习逻辑、备份与不断网切换原则同样适用。Mac 不执行 Windows 注册表/计划任务步骤，不复制 Windows 路径和进程名，不下载安装 Windows ZIP。核实 macOS 15 或更新系统，确认包摘要，保留原代理直到测试通过；不关闭系统安全策略。包为 ad-hoc 签名而非 Apple 公证版本。Intel Mac 不使用此 ARM64 包，先说明当前没有该架构的定制发布包。
+先识别操作系统与架构。Windows 使用下文流程。macOS Apple Silicon（M1/M2/M3/M4，`arm64`）先读仓库 `docs/macos-learning.md`，下载 [ARM64 测试版](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.4)，按该文档安装、配置和验收；以下订阅索取、默认规则、学习逻辑、备份与不断网切换原则同样适用。Mac 不执行 Windows 注册表/计划任务步骤，不复制 Windows 路径和进程名，不下载安装 Windows ZIP。核实 macOS 15 或更新系统，确认包摘要，保留原代理直到测试通过；不关闭系统安全策略。包为 ad-hoc 签名而非 Apple 公证版本。Intel Mac 不使用此 ARM64 包，先说明当前没有该架构的定制发布包。
 
 ## 输入与适用范围
 
@@ -25,7 +25,7 @@ description: 在 Windows 或 macOS Apple Silicon 上将 Clash/Clash Verge 切换
 
 1. 发现实际安装位置、进程、监听端口、系统代理/PAC、TUN、开机启动项，以及 Codex 当前是否依赖 Clash。读取中文配置时显式使用 UTF-8，必要时识别 BOM。只获取相关配置，不打印整个配置数据库。
 2. 将原客户端配置、选中订阅/节点、TUN 和系统代理状态、启动项以及要修改的 Codex 配置备份到仓库以外的本地私有目录。SQLite 使用在线备份或停程序后备份，不能只复制正在写入的主数据库而忽略 WAL。
-3. 优先从 [Windows x64 定制版 Release](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.3) 下载便携包并核对随附 SHA-256。通过包内 `build-info.json` 核对构建提交，使用 learning.3 或更新的定制包。确认客户端确实来自此 fork 且包含“设置 → 自动分流与 Codex 代理”、确认次数和永久记录功能。上游官方安装包不包含本分支功能；README 中保留的上游下载地址不能当作定制包。没有可信的对应构建产物时，从用户下载的分支构建 Windows WPF 项目，遵守用户对编译/打包的授权要求，不能虚构 Release 下载地址。SDK 版本以 `global.json` 为准，内核与 geo 数据另行核对。
+3. 优先从 [Windows x64 定制版 Release](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.4) 下载便携包并核对随附 SHA-256。通过包内 `build-info.json` 核对构建提交，使用 learning.3 或更新的定制包。确认客户端确实来自此 fork 且包含“设置 → 自动分流与 Codex 代理”、确认次数和永久记录功能。上游官方安装包不包含本分支功能；README 中保留的上游下载地址不能当作定制包。没有可信的对应构建产物时，从用户下载的分支构建 Windows WPF 项目，遵守用户对编译/打包的授权要求，不能虚构 Release 下载地址。SDK 版本以 `global.json` 为准，内核与 geo 数据另行核对。
 4. 首次安装放在独立目录，使用空闲的本地端口。先让 Clash 继续提供连接，不启用新客户端的 TUN、不让两个程序同时自动写系统代理。优先通过客户端导入订阅和选择节点；离线修改配置数据库前必须停止对应程序，避免内存配置回写覆盖。
 
 ## 默认规则与学习

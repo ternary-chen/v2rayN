@@ -41,6 +41,8 @@ GLaDOS 的 `Research + AI` 共 324 条规则（含重复项），同时覆盖通
 
 [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) 提供 Mihomo/Sing-box 等分发格式，可作为交叉检查；[blackmatrix7/ios_rule_script](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash) 有 OpenAI、Claude、Gemini、Copilot 等独立目录，可辅助发现遗漏。为避免多个来源的范围冲突，本版不把三套列表直接全量叠加，也不引用整个 Google、Microsoft 或 Research 组。
 
+连接日志的进程、策略与节点标注见 [连接日志](connection-logs.md)。
+
 ## 验证
 
 定向检查覆盖 AI 优先级、受保护进程、默认学习出口、出口缺失/重复失败、目录范围以及真实 geosite 分类的 Xray 配置校验。编译验证同时覆盖 Windows WPF 与 Avalonia。实机切换前仍需备份、保留原代理和本机回退；构建通过不代表具体专线、免费节点或 Mac 系统代理已经验收。

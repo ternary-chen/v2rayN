@@ -21,6 +21,12 @@ public sealed class LearningProxy : IAsyncDisposable
     private int _id;
     public LearningStore Store { get; }
     public event Action<string>? Message;
+    public event Action<LearningConnectionEvent>? ConnectionEvent;
+
+    private void LogConnection(LearningConnectionEvent entry)
+    {
+        try { ConnectionEvent?.Invoke(entry); } catch { /* Diagnostics must never interrupt a tunnel. */ }
+    }
 
     public LearningProxy(LearningOptions options, string storageFile, string routeIdentity)
     {
@@ -51,7 +57,7 @@ public sealed class LearningProxy : IAsyncDisposable
                 try { client = await _listener.AcceptTcpClientAsync(_stop.Token); }
                 catch { _slots.Release(); throw; }
                 var id = Interlocked.Increment(ref _id);
-                var task = ServeAsync(client);
+                var task = ServeAsync(client, id);
                 _tasks[id] = task;
                 _ = task.ContinueWith(t => { _tasks.TryRemove(id, out var ignored); _slots.Release(); }, TaskScheduler.Default);
             }
@@ -59,7 +65,7 @@ public sealed class LearningProxy : IAsyncDisposable
         catch (Exception e) when (e is OperationCanceledException or SocketException or ObjectDisposedException) { }
     }
 
-    private async Task ServeAsync(TcpClient client)
+    private async Task ServeAsync(TcpClient client, int connectionId)
     {
         using (client)
         {
@@ -67,6 +73,7 @@ public sealed class LearningProxy : IAsyncDisposable
             var stream = client.GetStream();
             var established = false;
             string? destination = null;
+            ConnectionRoute? selectedRoute = null;
             var phase = "SOCKS 协商";
             try
             {
@@ -85,6 +92,7 @@ public sealed class LearningProxy : IAsyncDisposable
                 var port = (portBytes[0] << 8) | portBytes[1];
                 if (port is not (80 or 443)) throw new IOException("Learning listener accepts web ports only");
                 destination = $"{host}:{port}";
+                LogConnection(new(connectionId, destination, null, "开始自动检测"));
                 phase = "本地地址检查";
                 // Never send private/loopback destinations to the remote proxy, even after local DNS resolves a public-looking name.
                 var addresses = await ResolveLocalAsync(host, ct);
@@ -92,6 +100,8 @@ public sealed class LearningProxy : IAsyncDisposable
                 if (isPrivate) Message?.Invoke($"{destination}: 解析到本地或私有地址，选择直连，不参与学习。");
                 phase = "路由检测";
                 var route = isPrivate ? ConnectionRoute.Direct : await _decision.DecideAsync(host, port, ct);
+                selectedRoute = route;
+                LogConnection(new(connectionId, destination, route, "出口已选择，正在建连"));
                 TcpClient upstream;
                 phase = $"{(route == ConnectionRoute.Direct ? "直连" : "代理")}通道建连";
                 try { upstream = await OpenAsync(host, port, route, ct); }
@@ -105,6 +115,7 @@ public sealed class LearningProxy : IAsyncDisposable
                 {
                     await stream.WriteAsync(new byte[] { 5, 0, 0, 1, 0, 0, 0, 0, 0, 0 }, ct);
                     established = true;
+                    LogConnection(new(connectionId, destination, route, "隧道已建立"));
                     Message?.Invoke($"{destination}: 已建立{(route == ConnectionRoute.Direct ? "直连" : "代理")}隧道。");
                     phase = "隧道传输";
                     using var relay = CancellationTokenSource.CreateLinkedTokenSource(_stop.Token);
@@ -120,7 +131,11 @@ public sealed class LearningProxy : IAsyncDisposable
             }
             catch (Exception e) when (e is IOException or SocketException or OperationCanceledException or ArgumentException or AuthenticationException)
             {
-                if (destination is not null) Message?.Invoke($"{destination}: {phase}未完成，{DescribeFailure(e)}。");
+                if (destination is not null)
+                {
+                    LogConnection(new(connectionId, destination, selectedRoute, $"{phase}失败：{DescribeFailure(e)}"));
+                    Message?.Invoke($"{destination}: {phase}未完成，{DescribeFailure(e)}。");
+                }
                 // Once the tunnel is established we must never inject a SOCKS error into application bytes.
                 if (!established)
                     try { await stream.WriteAsync(new byte[] { 5, 1, 0, 1, 0, 0, 0, 0, 0, 0 }, _stop.Token); } catch { }

@@ -9,6 +9,7 @@ on:
       - 'v2rayN/AdaptiveRouting/**'
       - 'v2rayN/AdaptiveRouting.SmokeTests/**'
       - 'v2rayN/PolicyIntegration.SmokeTests/**'
+      - 'v2rayN/ConnectionLogging.SmokeTests/**'
       - 'v2rayN/ServiceLib/**'
       - 'v2rayN/v2rayN.Desktop/**'
 permissions:
@@ -35,6 +36,7 @@ jobs:
           if [ "$(uname -m)" != arm64 ]; then unset TEST_XRAY_EXE; fi
           dotnet run --project v2rayN/AdaptiveRouting.SmokeTests/AdaptiveRouting.SmokeTests.csproj
           dotnet run --project v2rayN/PolicyIntegration.SmokeTests/PolicyIntegration.SmokeTests.csproj
+          dotnet run --project v2rayN/ConnectionLogging.SmokeTests/ConnectionLogging.SmokeTests.csproj
       - name: Publish Apple Silicon client
         run: dotnet publish v2rayN/v2rayN.Desktop/v2rayN.Desktop.csproj -c Release -r osx-arm64 --self-contained true -o "$RUNNER_TEMP/learning-publish"
       - name: Package and ad-hoc sign application
