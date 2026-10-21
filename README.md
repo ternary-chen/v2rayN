@@ -4,6 +4,10 @@
 
 本分支提供 Windows WPF 的自动分流、累计学习记录和 Codex 系统代理配置。定制功能说明见 [自动分流与 Codex 系统代理](docs/limited-learning.md)。下方保留的是上游项目介绍及下载入口，官方安装包不包含这些定制功能。
 
+**Windows x64 定制版下载：[v7.25.6-learning.1](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.1)。** 客户端为便携压缩包，解压到独立目录后运行 `v2rayN.exe`；Release 同时提供配置 skill 和 SHA-256 校验文件。无需自行编译。
+
+**macOS：本定制功能尚未完成适配和实机验证。** 跨平台客户端目前没有自动学习/Codex 代理设置界面，不能将此 Windows 包用于 Mac，也不能把上游的 macOS 支持视为本定制功能已经可用。
+
 下载此分支，在仓库目录中打开 Codex，然后发送：
 
 ```text
@@ -12,7 +16,7 @@
 
 也可以直接让 Codex 阅读 [.agents/skills/setup-v2rayn-learning/SKILL.md](.agents/skills/setup-v2rayn-learning/SKILL.md)。技能使用用户自己的订阅或节点，不包含 VPS 服务端搭建，也不包含作者的节点信息。默认规则随 skill 提供，自动学习需要在客户端启用；不会默认套用下载者原来的 Clash 规则。
 
-仓库级 skill 的发现方式见 [OpenAI 官方技能文档](https://learn.chatgpt.com/docs/build-skills)。仅下载客户端二进制包时不会自动获得仓库内的 skill，应另外下载该分支源码。
+仓库级 skill 的发现方式见 [OpenAI 官方技能文档](https://learn.chatgpt.com/docs/build-skills)。仅下载客户端二进制包时不会自动获得 skill；可另外下载 Release 中的 skill 压缩包并解压到工作目录，或下载该分支源码。
 
 ---
 
