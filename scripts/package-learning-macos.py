@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 import urllib.request
+import urllib.error
 import zipfile
 
 SOURCES = {
@@ -19,16 +20,42 @@ SOURCES = {
     "geosite.dat": ("https://github.com/Loyalsoldier/v2ray-rules-dat/releases/download/202610202206/geosite.dat", "9a4f9f84cf6201cf135afbc9d67190359cdc28e4e02e2e9f3e2b359cac317ed2"),
 }
 
+# The upstream release can disappear. Reuse exactly the already published core,
+# never an unpinned latest release. The prior bundle has an ad-hoc signed Xray.
+FALLBACK_NAME = "v2rayN-learning-macos-arm64-977fc6e1.zip"
+FALLBACK_URL = "https://github.com/ternary-chen/v2rayN/releases/download/v7.25.6-learning.4/" + FALLBACK_NAME
+FALLBACK_SHA = "ad406d0fa974025f6c1c2fbeb1f9c72b0d4dba6d8b966339ac3170725dffd9eb"
+FALLBACK_FILES = {"xray": "xray/xray", "geoip.dat": "geoip.dat", "geosite.dat": "geosite.dat"}
+
+def check_fallback(folder, extract=False):
+    archive = folder / FALLBACK_NAME
+    if digest(archive) != FALLBACK_SHA:
+        raise ValueError("Prior release bundle checksum mismatch")
+    with zipfile.ZipFile(archive) as z:
+        for name, relative in FALLBACK_FILES.items():
+            data = z.read("v2rayN Learning.app/Contents/Resources/bin/" + relative)
+            if extract:
+                (folder / name).write_bytes(data)
+            elif hashlib.sha256(data).hexdigest() != digest(folder / name):
+                raise ValueError(f"Prior release dependency mismatch: {name}")
+    for name in ("geoip.dat", "geosite.dat"):
+        if digest(folder / name) != SOURCES[name][1]:
+            raise ValueError(f"Pinned geo data mismatch: {name}")
+
+
 def digest(path):
     with path.open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 def check_sources(folder):
+    if (folder / FALLBACK_NAME).exists():
+        check_fallback(folder)
+        return
     for name, (_, expected) in SOURCES.items():
         if digest(folder / name) != expected:
             raise ValueError(f"Checksum mismatch: {name}")
 
-def download(folder):
+def download_original(folder):
     folder.mkdir(parents=True, exist_ok=True)
     for name, (url, expected) in SOURCES.items():
         path = folder / name
@@ -42,6 +69,22 @@ def download(folder):
         (folder / "xray").write_bytes(archive.read("xray"))
     (folder / "xray").chmod(0o755)
 
+def download(folder):
+    try:
+        download_original(folder)
+    except urllib.error.HTTPError as error:
+        if error.code != 404:
+            raise
+        print("Pinned upstream dependency is unavailable; verifying prior release dependencies.")
+        archive = folder / FALLBACK_NAME
+        if not archive.exists() or digest(archive) != FALLBACK_SHA:
+            request = urllib.request.Request(FALLBACK_URL, headers={"User-Agent": "v2rayN-learning-build"})
+            with urllib.request.urlopen(request, timeout=120) as response, archive.open("wb") as target:
+                shutil.copyfileobj(response, target)
+        check_fallback(folder, extract=True)
+        (folder / "xray").chmod(0o755)
+
+
 def ensure_arm64(path):
     with path.open("rb") as stream:
         magic, cpu = struct.unpack("<II", stream.read(8))
@@ -52,9 +95,10 @@ def package(publish, dependencies, output, commit, helper):
     if sys.platform != "darwin":
         raise RuntimeError("Final packaging requires macOS codesign; do not distribute an unvalidated Windows-created app bundle")
     check_sources(dependencies)
-    with zipfile.ZipFile(dependencies / "Xray-macos-arm64-v8a.zip") as archive:
-        if hashlib.sha256(archive.read("xray")).hexdigest() != digest(dependencies / "xray"):
-            raise ValueError("Extracted Xray does not match verified archive")
+    if not (dependencies / FALLBACK_NAME).exists():
+        with zipfile.ZipFile(dependencies / "Xray-macos-arm64-v8a.zip") as archive:
+            if hashlib.sha256(archive.read("xray")).hexdigest() != digest(dependencies / "xray"):
+                raise ValueError("Extracted Xray does not match verified archive")
     ensure_arm64(publish / "v2rayN")
     ensure_arm64(helper)
     ensure_arm64(dependencies / "xray")
@@ -116,6 +160,8 @@ def package(publish, dependencies, output, commit, helper):
         shutil.copy2(repo / "LICENSE", stage / "LICENSE")
         shutil.copy2(repo / "docs" / "macos-learning.md", stage / "READ-ME-FIRST.md")
         manifest = {"commit": commit, "runtime": "osx-arm64", "minimum_macos": "15.0", "signing": "ad-hoc; not notarized", "dependencies": {k: {"url": v[0], "sha256": v[1]} for k, v in SOURCES.items()}}
+        if (dependencies / FALLBACK_NAME).exists():
+            manifest["dependency_fallback"] = {"url": FALLBACK_URL, "sha256": FALLBACK_SHA, "files": {name: digest(dependencies / name) for name in FALLBACK_FILES}}
         (stage / "build-info.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
         entitlements.unlink()
         archive = output / f"v2rayN-learning-macos-arm64-{commit[:8]}.zip"
