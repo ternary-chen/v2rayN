@@ -23,6 +23,9 @@ public class TaskManager
         var numOfExecuted = 1;
         while (await timer.WaitForNextTickAsync().ConfigureAwait(false))
         {
+            try { _ = CustomUpdateRuntime.TickAsync(_config); }
+            catch (Exception ex) { Logging.SaveLog("ScheduledTasks - CustomUpdate", ex); }
+
             //Execute once 1 minute
             try
             {

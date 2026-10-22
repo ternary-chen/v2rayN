@@ -9,6 +9,7 @@ public class Config
     public string SubIndexId { get; set; }
     public AdaptiveRouting.LearningOptions LimitedLearning { get; set; } = new();
     public AdaptiveRouting.AiPolicyOptions AiPolicy { get; set; } = new();
+    public AdaptiveRouting.CustomUpdateOptions CustomUpdate { get; set; } = new();
 
     #endregion property
 

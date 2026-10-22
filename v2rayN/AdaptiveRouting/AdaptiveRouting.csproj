@@ -1,4 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><Nullable>enable</Nullable></PropertyGroup>
-  <ItemGroup><EmbeddedResource Include="ai-catalog.json" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="ai-catalog.json" /><EmbeddedResource Include="custom-build.json" /><Content Include="custom-build.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
 </Project>

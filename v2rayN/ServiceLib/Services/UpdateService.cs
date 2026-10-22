@@ -8,42 +8,8 @@ public partial class UpdateService(Config config, Func<bool, string, Task> updat
 
     public async Task CheckUpdateGuiN(bool preRelease, bool blProxy = true, CancellationToken cancellationToken = default)
     {
-        var url = string.Empty;
-        var fileName = string.Empty;
-
-        DownloadService downloadHandle = new();
-        downloadHandle.UpdateCompleted += (sender2, args) =>
-        {
-            if (args.Success)
-            {
-                _ = UpdateFunc(false, ResUI.MsgDownloadV2rayCoreSuccessfully);
-                _ = UpdateFunc(true, Utils.UrlEncode(fileName));
-            }
-            else
-            {
-                _ = UpdateFunc(false, args.Msg);
-            }
-        };
-        downloadHandle.Error += (sender2, args) =>
-        {
-            _ = UpdateFunc(false, args.GetException().Message);
-        };
-
-        await UpdateFunc(false, string.Format(ResUI.MsgStartUpdating, ECoreType.v2rayN));
-        var result = await CheckUpdateAsync(downloadHandle, ECoreType.v2rayN, preRelease, blProxy);
-        if (result.Success)
-        {
-            await UpdateFunc(false, string.Format(ResUI.MsgParsingSuccessfully, ECoreType.v2rayN));
-            await UpdateFunc(false, result.Msg);
-
-            url = result.Url!;
-            fileName = Utils.GetTempPath(Utils.GetGuid());
-            await downloadHandle.DownloadFileAsync(new() { FileUrl = url, FilePath = fileName }, blProxy, cancellationToken);
-        }
-        else
-        {
-            await UpdateFunc(false, result.Msg);
-        }
+        await CustomUpdateRuntime.CheckAndDownloadAsync(_config!);
+        await UpdateFunc(false, "定制客户端请在更新面板中确认安装；此操作只检查和下载。");
     }
 
     public async Task CheckUpdateCore(ECoreType type, bool preRelease, bool blProxy = true, CancellationToken cancellationToken = default)
@@ -101,6 +67,7 @@ public partial class UpdateService(Config config, Func<bool, string, Task> updat
 
     public async Task<UpdateResult> CheckHasUpdateOnly(ECoreType type, bool preRelease, bool blProxy = true, CancellationToken cancellationToken = default)
     {
+        if (type == ECoreType.v2rayN) return new UpdateResult(false, CustomUpdateRuntime.State.Status);
         if (!CoreInfoManager.Instance.IsCheckUpdateSupported(type))
         {
             return new UpdateResult(false, ResUI.MsgNotSupport);

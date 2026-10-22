@@ -10,6 +10,9 @@ on:
       - 'v2rayN/AdaptiveRouting.SmokeTests/**'
       - 'v2rayN/PolicyIntegration.SmokeTests/**'
       - 'v2rayN/ConnectionLogging.SmokeTests/**'
+      - 'v2rayN/CustomUpdate.SmokeTests/**'
+      - 'v2rayN/CustomUpdate.Fixture/**'
+      - 'v2rayN/CustomUpdater/**'
       - 'v2rayN/ServiceLib/**'
       - 'v2rayN/v2rayN.Desktop/**'
 permissions:
@@ -37,10 +40,17 @@ jobs:
           dotnet run --project v2rayN/AdaptiveRouting.SmokeTests/AdaptiveRouting.SmokeTests.csproj
           dotnet run --project v2rayN/PolicyIntegration.SmokeTests/PolicyIntegration.SmokeTests.csproj
           dotnet run --project v2rayN/ConnectionLogging.SmokeTests/ConnectionLogging.SmokeTests.csproj
+      - name: Check updater replacement and rollback on macOS
+        run: |
+          dotnet build v2rayN/CustomUpdate.Fixture/CustomUpdate.Fixture.csproj
+          export UPDATE_FIXTURE_DIR="$GITHUB_WORKSPACE/v2rayN/CustomUpdate.Fixture/bin/Debug/net10.0"
+          dotnet run --project v2rayN/CustomUpdate.SmokeTests/CustomUpdate.SmokeTests.csproj
       - name: Publish Apple Silicon client
         run: dotnet publish v2rayN/v2rayN.Desktop/v2rayN.Desktop.csproj -c Release -r osx-arm64 --self-contained true -o "$RUNNER_TEMP/learning-publish"
+      - name: Publish independent update helper
+        run: dotnet publish v2rayN/CustomUpdater/CustomUpdater.csproj -c Release -r osx-arm64 --self-contained true -o "$RUNNER_TEMP/learning-updater"
       - name: Package and ad-hoc sign application
-        run: python3 scripts/package-learning-macos.py package --publish "$RUNNER_TEMP/learning-publish" --dependencies "$RUNNER_TEMP/learning-dependencies" --output "$RUNNER_TEMP/learning-release" --commit "$GITHUB_SHA"
+        run: python3 scripts/package-learning-macos.py package --publish "$RUNNER_TEMP/learning-publish" --helper "$RUNNER_TEMP/learning-updater/CustomUpdater" --dependencies "$RUNNER_TEMP/learning-dependencies" --output "$RUNNER_TEMP/learning-release" --commit "$GITHUB_SHA"
       - uses: actions/upload-artifact@v7
         with:
           name: learning-macos-arm64

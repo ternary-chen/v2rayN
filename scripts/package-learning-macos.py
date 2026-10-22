@@ -48,7 +48,7 @@ def ensure_arm64(path):
     if magic != 0xFEEDFACF or cpu != 0x0100000C:
         raise ValueError(f"Not an ARM64 Mach-O executable: {path.name}")
 
-def package(publish, dependencies, output, commit):
+def package(publish, dependencies, output, commit, helper):
     if sys.platform != "darwin":
         raise RuntimeError("Final packaging requires macOS codesign; do not distribute an unvalidated Windows-created app bundle")
     check_sources(dependencies)
@@ -56,6 +56,7 @@ def package(publish, dependencies, output, commit):
         if hashlib.sha256(archive.read("xray")).hexdigest() != digest(dependencies / "xray"):
             raise ValueError("Extracted Xray does not match verified archive")
     ensure_arm64(publish / "v2rayN")
+    ensure_arm64(helper)
     ensure_arm64(dependencies / "xray")
     output.mkdir(parents=True, exist_ok=True)
     repo = Path(__file__).resolve().parents[1]
@@ -65,6 +66,7 @@ def package(publish, dependencies, output, commit):
         contents = app / "Contents"
         macos = contents / "MacOS"
         shutil.copytree(publish, macos)
+        shutil.copy2(helper, macos / "CustomUpdater")
         for path in macos.rglob("*"):
             if path.name.lower() in {"guiconfigs", "guilogs", "guibackups", "binconfigs", "auth.json", ".env"}:
                 raise ValueError("Private runtime data in publish directory")
@@ -83,7 +85,7 @@ def package(publish, dependencies, output, commit):
         frameworks.mkdir()
         # Use the documented bundle layout, retaining relative links for .NET probing.
         for file in list(macos.iterdir()):
-            if not file.is_file() or file.is_symlink() or file.name == "v2rayN":
+            if not file.is_file() or file.is_symlink() or file.name in {"v2rayN", "CustomUpdater"}:
                 continue
             destination = frameworks if file.suffix == ".dylib" else resources
             shutil.move(file, destination / file.name)
@@ -134,8 +136,9 @@ if __name__ == "__main__":
     for name in ("publish", "dependencies", "output"):
         pack.add_argument("--"+name, type=Path, required=True)
     pack.add_argument("--commit", required=True)
+    pack.add_argument("--helper", type=Path, required=True)
     args = parser.parse_args()
     if args.command == "download":
         download(args.directory)
     else:
-        package(args.publish, args.dependencies, args.output, args.commit)
+        package(args.publish, args.dependencies, args.output, args.commit, args.helper)

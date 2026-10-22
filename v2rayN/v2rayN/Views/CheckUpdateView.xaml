@@ -18,6 +18,20 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     </UserControl.Resources>
     <DockPanel Margin="{StaticResource Margin8}">
+        <Border DockPanel.Dock="Top" Margin="8" Padding="10" BorderThickness="1" BorderBrush="Gray">
+            <StackPanel>
+                <TextBlock Text="定制版客户端更新" FontSize="18" Margin="0,0,0,6" />
+                <TextBlock Text="来源：ternary-chen/v2rayN。自动检查并下载，安装需要点击确认。" TextWrapping="Wrap" />
+                <CheckBox x:Name="chkCustomAutomatic" Content="自动检查并下载定制版更新" Margin="0,6,0,6" />
+                <TextBlock x:Name="txtCustomStatus" TextWrapping="Wrap" />
+                <ScrollViewer MaxHeight="100" Margin="0,6,0,6"><TextBlock x:Name="txtCustomNotes" TextWrapping="Wrap" /></ScrollViewer>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="btnDownloadCustom" Content="检查并下载" Margin="0,0,10,0" Padding="12,6" />
+                    <Button x:Name="btnInstallCustom" Content="安装并重启" IsEnabled="False" Padding="12,6" />
+                </StackPanel>
+                <TextBlock Text="安装会短暂重启代理；订阅、策略和学习记录会保留，启动失败自动回退。下方仅更新内核与规则数据。" TextWrapping="Wrap" Margin="0,6,0,0" />
+            </StackPanel>
+        </Border>
         <StackPanel
             Margin="{StaticResource Margin8}"
             HorizontalAlignment="Right"

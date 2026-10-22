@@ -2,15 +2,17 @@
 
 ## 定制版配置与 Codex skill
 
+`learning.5` 支持自动检查、后台下载和确认后安装，详见 [更新说明](docs/custom-updates.md)。此前 learning.4 包尚未包含此能力；首次需要安装包含独立更新程序的新启动包。
+
 `learning.4` 增加 Windows/Mac 连接日志的进程名、PID、策略与实际节点标注，详见 [连接日志说明](docs/connection-logs.md)。
 
 本分支新增了 [AI 与默认策略](docs/ai-policies.md)：AI 专线单独选择，默认节点由用户切换，学习记录归默认策略；厂商域名使用可更新的社区 geosite 分类。Windows 与 macOS ARM64 的 `learning.3` 发布包均包含此功能。
 
 本分支提供 Windows WPF 与 macOS Avalonia 的自动分流、累计学习记录和 Codex 系统代理配置。定制功能说明见 [自动分流与 Codex 系统代理](docs/limited-learning.md)。下方保留的是上游项目介绍及下载入口，官方安装包不包含这些定制功能。
 
-**Windows x64 定制版下载：[v7.25.6-learning.4](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.4)。** 客户端为便携压缩包，解压到独立目录后运行 `v2rayN.exe`；Release 同时提供配置 skill 和 SHA-256 校验文件。无需自行编译。
+**Windows x64 定制版下载：[v7.25.6-learning.5](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.5)。** 客户端为便携压缩包，解压到独立目录后运行 `v2rayN.exe`；Release 同时提供配置 skill 和 SHA-256 校验文件。无需自行编译。
 
-**macOS Apple Silicon：已移植设置界面，提供 M1/M2/M3/M4 的 ARM64 测试版。** [Mac 使用与验收说明](docs/macos-learning.md)；[Mac 测试版 Release](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.4)。要求 macOS 15 或更新版本；测试包采用 ad-hoc 签名，未经 Apple 公证，实际代理与 Codex 会话需要目标 Mac 验收。Windows 包不能用于 Mac。
+**macOS Apple Silicon：已移植设置界面，提供 M1/M2/M3/M4 的 ARM64 测试版。** [Mac 使用与验收说明](docs/macos-learning.md)；[Mac 测试版 Release](https://github.com/ternary-chen/v2rayN/releases/tag/v7.25.6-learning.5)。要求 macOS 15 或更新版本；测试包采用 ad-hoc 签名，未经 Apple 公证，实际代理与 Codex 会话需要目标 Mac 验收。Windows 包不能用于 Mac。
 
 下载此分支，在仓库目录中打开 Codex，然后发送：
 

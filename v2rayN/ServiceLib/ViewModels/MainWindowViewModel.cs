@@ -345,6 +345,8 @@ public partial class MainWindowViewModel : MyReactiveObject
         await RefreshServersDispatcherAsync();
 
         await Reload();
+        await CustomUpdateRuntime.ReportHealthyAsync();
+        await CustomUpdateRuntime.InitializeAsync();
     }
 
     #endregion Init

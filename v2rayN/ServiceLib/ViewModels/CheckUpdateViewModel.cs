@@ -12,12 +12,34 @@ public partial class CheckUpdateViewModel : MyReactiveObject
     public BulkObservableCollection<CheckUpdateModel> CheckUpdateModels { get; } = [];
     public ReactiveCommand<RxVoid, RxVoid> CheckUpdateCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> CheckOnlyCmd { get; }
+    public ReactiveCommand<RxVoid, RxVoid> CheckCustomUpdateCmd { get; }
+    public ReactiveCommand<RxVoid, RxVoid> InstallCustomUpdateCmd { get; }
+    [Reactive] public partial string CustomUpdateStatus { get; set; }
+    [Reactive] public partial string CustomUpdateNotes { get; set; }
+    [Reactive] public partial bool CustomUpdateReady { get; set; }
+    [Reactive] public partial bool EnableCustomAutoUpdate { get; set; }
+
+    public IDisposable ObserveCustomUpdates()
+    {
+        void Refresh(CustomUpdateState state) { CustomUpdateStatus = state.Status; CustomUpdateNotes = state.Notes; CustomUpdateReady = state.Ready && !state.Busy; }
+        Refresh(CustomUpdateRuntime.State);
+        return CustomUpdateRuntime.Changed.AsObservable().ObserveOn(RxSchedulers.MainThreadScheduler).Subscribe(Refresh);
+    }
 
     [Reactive] public partial bool EnableUpdateViaProxy { get; set; }
 
     public CheckUpdateViewModel()
     {
         _config = AppManager.Instance.Config;
+        CustomUpdateStatus = CustomUpdateRuntime.State.Status;
+        CustomUpdateNotes = CustomUpdateRuntime.State.Notes;
+        EnableCustomAutoUpdate = _config.CustomUpdate.Enabled;
+        CheckCustomUpdateCmd = ReactiveCommand.CreateFromTask(() => CustomUpdateRuntime.CheckAndDownloadAsync(_config));
+        InstallCustomUpdateCmd = ReactiveCommand.CreateFromTask(() => CustomUpdateRuntime.InstallConfirmedAsync(_config));
+        this.WhenAnyValue(x => x.EnableCustomAutoUpdate).SubscribeAsync(async enabled =>
+        {
+            if (_config.CustomUpdate.Enabled != enabled) { _config.CustomUpdate.Enabled = enabled; await ConfigHandler.SaveConfig(_config); }
+        });
 
         CheckUpdateCmd = ReactiveCommand.CreateFromTask(CheckUpdate);
         CheckUpdateCmd.ThrownExceptions.Subscribe(ex =>

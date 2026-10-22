@@ -56,10 +56,8 @@ public sealed class CoreInfoManager
 
         if (RuntimeInformation.ProcessArchitecture != Architecture.X86)
         {
-            if (IsCheckUpdateSupported(ECoreType.v2rayN))
-            {
-                lst.Add(ECoreType.v2rayN);
-            }
+            // The custom client has a separate download + explicit-install workflow.
+            // Keep the generic one-click core updater restricted to cores and geo data.
 
             if (!(Utils.IsWindows() && Environment.OSVersion.Version.Major < 10))
             {

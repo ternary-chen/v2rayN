@@ -60,5 +60,10 @@ try
     var disabled = await CoreConfigContextBuilder.BuildAll(config, normal2);
     Check(disabled.Success && disabled.MainResult.Context.AiPolicyNode is null, "Disabled policy still resolved AI node");
     Console.WriteLine("PASS Disabled dual policy leaves ordinary routing in control");
+    Check(!CoreInfoManager.Instance.GetCheckUpdateCoreTypes().Contains(ECoreType.v2rayN), "Custom GUI exposed to generic auto installer");
+    Check(CoreInfoManager.Instance.GetCoreInfo(ECoreType.v2rayN)?.Url?.Contains("ternary-chen/v2rayN") == true, "Client update source still upstream");
+    var legacy = await new UpdateService(config, (_, _) => Task.CompletedTask).CheckHasUpdateOnly(ECoreType.v2rayN, true);
+    Check(!legacy.Success && legacy.Url is null, "Legacy GUI updater returned an install URL");
+    Console.WriteLine("PASS Generic core updater cannot overwrite the custom GUI with upstream binaries");
 }
 finally { await db.DisposeDbConnectionAsync(); }
