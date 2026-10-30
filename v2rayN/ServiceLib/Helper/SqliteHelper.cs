@@ -33,6 +33,11 @@ public sealed class SQLiteHelper
         return await _dbAsync.InsertAsync(model);
     }
 
+    public Task RunInTransactionAsync(Action<SQLiteConnection> action)
+    {
+        return _dbAsync.RunInTransactionAsync(action);
+    }
+
     public async Task<int> ReplaceAsync(object model)
     {
         return await _dbAsync.InsertOrReplaceAsync(model);

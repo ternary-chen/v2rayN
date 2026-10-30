@@ -282,12 +282,12 @@ public class CoreConfigContextBuilder
             {
                 var fillResult = await RegisterNodeAsync(context, node);
                 fillResult.Warnings.InsertRange(0, chainValidatorResult.Warnings);
-                return (node, fillResult);
+                return (context.AllProxiesMap.GetValueOrDefault(node.IndexId, node), fillResult);
             }
         }
 
         var registerResult = await RegisterNodeAsync(context, node);
-        return (node, registerResult);
+        return (context.AllProxiesMap.GetValueOrDefault(node.IndexId, node), registerResult);
     }
 
     /// <summary>
@@ -377,6 +377,14 @@ public class CoreConfigContextBuilder
         if (node.ConfigType.IsGroupType())
         {
             return NodeValidatorResult.Empty();
+        }
+
+        if (MihomoBridgeService.IsNode(node))
+        {
+            if (context.RunCoreType != ECoreType.Xray)
+                return new NodeValidatorResult(["Mihomo 节点桥接需要 Xray 分流内核。"], []);
+            try { node = MihomoBridgeService.Resolve(context, node); }
+            catch (Exception ex) { return new NodeValidatorResult([ex.Message], []); }
         }
 
         var nodeValidatorResult = NodeValidator.Validate(node, context.RunCoreType);

@@ -673,6 +673,8 @@ public sealed class AppManager
 
     public ECoreType GetCoreType(ProfileItem? profileItem, EConfigType eConfigType)
     {
+        if (MihomoBridgeService.IsNode(profileItem)) return ECoreType.Xray;
+
         if (profileItem?.CoreType != null)
         {
             return (ECoreType)profileItem.CoreType;

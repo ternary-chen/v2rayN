@@ -2067,6 +2067,62 @@ public static class ConfigHandler
         {
             return -1;
         }
+        var subItem = subid.IsNotEmpty() ? await AppManager.Instance.GetSubItem(subid) : null;
+        var mihomoProfiles = subItem?.CustomCoreType is null or ECoreType.mihomo
+            ? MihomoFmt.ResolveProxies(strData) : [];
+        if (mihomoProfiles.Count > 0)
+        {
+            if (isSub && subItem?.Filter.IsNotEmpty() == true)
+            {
+                foreach (var excluded in mihomoProfiles.Where(p => !Utils.IsRegexMatch(p.Remarks, subItem.Filter)).ToList())
+                {
+                    File.Delete(excluded.Address);
+                    mihomoProfiles.Remove(excluded);
+                }
+                if (mihomoProfiles.Count == 0) return 0;
+            }
+            var previous = isSub && subid.IsNotEmpty() ? await AppManager.Instance.ProfileItems(subid) : [];
+            foreach (var profile in mihomoProfiles)
+            {
+                var matched = previous?.FirstOrDefault(p => p.IsSub && p.Remarks == profile.Remarks);
+                if (matched != null) profile.IndexId = matched.IndexId;
+            }
+            // Prepare files first; database replacement is one transaction. A failed import
+            // leaves the old subscription and its selected IDs available.
+            List<ProfileItem> prepared = [];
+            try
+            {
+                foreach (var profile in mihomoProfiles)
+                {
+                    profile.Subid = subid;
+                    profile.IsSub = isSub;
+                    if (await AddCustomOutboundServer(config, profile, true, false) != 0)
+                        throw new IOException("Mihomo 节点保存失败，未更新订阅。");
+                    prepared.Add(profile);
+                }
+                await SQLiteHelper.Instance.RunInTransactionAsync(connection =>
+                {
+                    if (isSub && subid.IsNotEmpty())
+                        connection.Execute("delete from ProfileItem where IsSub = 1 and Subid = ?", subid);
+                    foreach (var profile in prepared) connection.Insert(profile);
+                });
+            }
+            catch
+            {
+                foreach (var profile in prepared) File.Delete(Utils.GetConfigPath(profile.Address));
+                foreach (var profile in mihomoProfiles)
+                    if (Path.IsPathRooted(profile.Address) && File.Exists(profile.Address)) File.Delete(profile.Address);
+                throw;
+            }
+            foreach (var old in previous ?? [])
+                if (old.IsSub && old.ConfigType is EConfigType.Custom or EConfigType.Outbound)
+                {
+                    try { File.Delete(Utils.GetConfigPath(old.Address)); } catch { }
+                }
+            await SaveConfig(config);
+            return prepared.Count;
+        }
+
         List<ProfileItem>? lstOriSub = null;
         ProfileItem? activeProfile = null;
         if (isSub && subid.IsNotEmpty())

@@ -23,6 +23,7 @@ public class CoreManager
                 throw new InvalidOperationException("规则热更新仅支持标准 Xray 单节点、非 TUN 模式。");
             var generated = await CoreConfigHandler.GenerateClientConfig(context, null);
             if (!generated.Success) throw new InvalidOperationException(generated.Msg);
+            using var bridgeLease = await MihomoBridgeService.AcquireAsync(context, AddProcessJob);
             var before = _activeHotConfig;
             var after = generated.Data!.ToString()!;
             var path = Utils.GetBinConfigPath(Global.CoreConfigFileName);
@@ -46,6 +47,7 @@ public class CoreManager
                     }
                     finally { if (File.Exists(pending)) File.Delete(pending); }
                 });
+            process.Own(await MihomoBridgeService.AcquireAsync(context, AddProcessJob));
             _activeHotConfig = after;
             // No CoreStop/Start, learning restart, system-proxy update or connection close here.
         }
@@ -130,41 +132,53 @@ public class CoreManager
             return;
         }
 
-        await UpdateFunc(false, $"{node.GetSummary()}");
-        await UpdateFunc(false, $"{Utils.GetRuntimeInfo()}");
-        await UpdateFunc(false, string.Format(ResUI.StartService, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")));
-        await CoreStopInternal();
-        await Task.Delay(100);
-
-        if (Utils.IsWindows() && (mainContext?.IsTunEnabled == true || preContext?.IsTunEnabled == true))
-        {
-            await Task.Delay(100);
-            await WindowsUtils.RemoveTunDevice();
-        }
-
+        IDisposable? bridgeLease;
+        try { bridgeLease = await MihomoBridgeService.AcquireAsync(mainContext, AddProcessJob); }
+        catch (Exception ex) { await UpdateFunc(true, ex.Message); return; }
         try
         {
-            LimitedLearningRuntime.Start(mainContext, msg => { _ = UpdateFunc(false, msg); });
-        }
-        catch (Exception ex)
-        {
-            await UpdateFunc(true, $"有限学习启动失败：{ex.Message}");
-            return;
-        }
-        await CoreStart(mainContext);
-        if (_processService is null) await LimitedLearningRuntime.StopAsync();
-        await WaitForProxyPort(preContext);
-        await CoreStartPreService(preContext);
+            await UpdateFunc(false, $"{node.GetSummary()}");
+            await UpdateFunc(false, $"{Utils.GetRuntimeInfo()}");
+            await UpdateFunc(false, string.Format(ResUI.StartService, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")));
+            await CoreStopInternal();
+            await Task.Delay(100);
 
-        AppManager.Instance.RunningCoreType = preContext?.RunCoreType ?? mainContext.RunCoreType;
-        if (_processService is { HasExited: false } && preContext is null && mainContext.RunCoreType == ECoreType.Xray &&
-            !mainContext.IsTunEnabled && TrafficPolicyService.IsSupportedNode(mainContext.Node))
-            _activeHotConfig = result.Data?.ToString();
+            if (Utils.IsWindows() && (mainContext?.IsTunEnabled == true || preContext?.IsTunEnabled == true))
+            {
+                await Task.Delay(100);
+                await WindowsUtils.RemoveTunDevice();
+            }
 
-        if (_processService != null)
-        {
-            await UpdateFunc(true, $"{node.GetSummary()}");
+            try
+            {
+                LimitedLearningRuntime.Start(mainContext, msg => { _ = UpdateFunc(false, msg); });
+            }
+            catch (Exception ex)
+            {
+                await UpdateFunc(true, $"有限学习启动失败：{ex.Message}");
+                return;
+            }
+            await CoreStart(mainContext);
+            if (_processService != null)
+            {
+                _processService.Own(bridgeLease);
+                bridgeLease = null;
+            }
+            if (_processService is null) await LimitedLearningRuntime.StopAsync();
+            await WaitForProxyPort(preContext);
+            await CoreStartPreService(preContext);
+
+            AppManager.Instance.RunningCoreType = preContext?.RunCoreType ?? mainContext.RunCoreType;
+            if (_processService is { HasExited: false } && preContext is null && mainContext.RunCoreType == ECoreType.Xray &&
+                !mainContext.IsTunEnabled && TrafficPolicyService.IsSupportedNode(mainContext.Node))
+                _activeHotConfig = result.Data?.ToString();
+
+            if (_processService != null)
+            {
+                await UpdateFunc(true, $"{node.GetSummary()}");
+            }
         }
+        finally { bridgeLease?.Dispose(); }
     }
 
     public async Task<ProcessService?> LoadCoreConfigSpeedtest(List<ServerTestItem> selecteds)
@@ -172,7 +186,8 @@ public class CoreManager
         var coreType = selecteds.FirstOrDefault()?.CoreType == ECoreType.sing_box ? ECoreType.sing_box : ECoreType.Xray;
         var fileName = string.Format(Global.CoreSpeedtestConfigFileName, Utils.GetGuid(false));
         var configPath = Utils.GetBinConfigPath(fileName);
-        var result = await CoreConfigHandler.GenerateClientSpeedtestConfig(_config, configPath, selecteds, coreType);
+        CoreConfigContext? context = null;
+        var result = await CoreConfigHandler.GenerateClientSpeedtestConfig(_config, configPath, selecteds, coreType, value => context = value);
         await UpdateFunc(false, result.Msg);
         if (result.Success != true)
         {
@@ -183,7 +198,7 @@ public class CoreManager
         await UpdateFunc(false, configPath);
 
         var coreInfo = CoreInfoManager.Instance.GetCoreInfo(coreType);
-        return await RunProcess(coreInfo, fileName, true, false);
+        return await RunSpeedtestWithBridges(coreInfo, fileName, context!);
     }
 
     public async Task<ProcessService?> LoadCoreConfigSpeedtest(ServerTestItem testItem)
@@ -196,7 +211,8 @@ public class CoreManager
 
         var fileName = string.Format(Global.CoreSpeedtestConfigFileName, Utils.GetGuid(false));
         var configPath = Utils.GetBinConfigPath(fileName);
-        var (context, _) = await CoreConfigContextBuilder.Build(_config, node, false);
+        var (context, validation) = await CoreConfigContextBuilder.Build(_config, node, false);
+        if (!validation.Success) return null;
         var result = await CoreConfigHandler.GenerateClientSpeedtestConfig(_config, context, testItem, configPath);
         if (result.Success != true)
         {
@@ -205,7 +221,21 @@ public class CoreManager
 
         var coreType = context.RunCoreType;
         var coreInfo = CoreInfoManager.Instance.GetCoreInfo(coreType);
-        return await RunProcess(coreInfo, fileName, true, false);
+        return await RunSpeedtestWithBridges(coreInfo, fileName, context!);
+    }
+
+    private async Task<ProcessService?> RunSpeedtestWithBridges(CoreInfo coreInfo, string fileName, CoreConfigContext context)
+    {
+        IDisposable? lease = null;
+        try
+        {
+            lease = await MihomoBridgeService.AcquireAsync(context, AddProcessJob);
+            var process = await RunProcess(coreInfo, fileName, true, false);
+            if (process != null) { process.Own(lease); lease = null; }
+            return process;
+        }
+        catch (Exception ex) { await UpdateFunc(false, ex.Message); return null; }
+        finally { lease?.Dispose(); }
     }
 
     public async Task CoreStop()

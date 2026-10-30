@@ -155,7 +155,7 @@ public class SpeedtestService(Config config, Func<SpeedTestResult, Task> updateF
             lstSelected.Add(new ServerTestItem()
             {
                 IndexId = it.IndexId,
-                Address = it.Address,
+                Address = MihomoBridgeService.IsNode(profile) ? MihomoBridgeService.Read(profile).Server : it.Address,
                 Port = it.Port,
                 ConfigType = it.ConfigType,
                 QueueNum = i,
@@ -593,7 +593,11 @@ public class SpeedtestService(Config config, Func<SpeedTestResult, Task> updateF
         }
 
         pageSize = Math.Max(pageSize, 1);
-        var lst1 = lstSelected.Where(t => t.CoreType == ECoreType.Xray).ToList();
+        // Limit bridge batches to one node so large subscriptions do not launch dozens
+        // of Mihomo processes simultaneously. The active connection has its own lease.
+        var bridged = lstSelected.Where(t => MihomoBridgeService.IsNode(t.Profile)).ToList();
+        foreach (var item in bridged) lstTest.Add([item]);
+        var lst1 = lstSelected.Where(t => t.CoreType == ECoreType.Xray && !MihomoBridgeService.IsNode(t.Profile)).ToList();
         var lst2 = lstSelected.Where(t => t.CoreType == ECoreType.sing_box).ToList();
 
         for (var num = 0; num < (int)Math.Ceiling(lst1.Count * 1.0 / pageSize); num++)

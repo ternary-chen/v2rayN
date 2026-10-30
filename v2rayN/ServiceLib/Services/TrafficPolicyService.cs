@@ -11,7 +11,8 @@ public sealed record TrafficPolicyChoice(string Id, string Label)
 public static class TrafficPolicyService
 {
     public static bool IsSupportedNode(ProfileItem node) =>
-        Global.XraySupportConfigType.Contains(node.ConfigType) && !node.ConfigType.IsComplexType();
+        MihomoBridgeService.IsNode(node) ||
+        (Global.XraySupportConfigType.Contains(node.ConfigType) && !node.ConfigType.IsComplexType());
 
     public static async Task<IReadOnlyList<TrafficPolicyChoice>> ChoicesAsync()
     {

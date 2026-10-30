@@ -16,6 +16,8 @@ public record CoreConfigContext
 
     public Dictionary<string, string> CustomOutboundContent { get; init; } = new();
 
+    public Dictionary<string, MihomoBridgeNode> MihomoNodes { get; init; } = new();
+
     // Test ServerTestItem Map
     public Dictionary<string, string> ServerTestItemMap { get; init; } = new();
 

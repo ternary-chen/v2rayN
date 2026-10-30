@@ -114,25 +114,27 @@ public static class CoreConfigHandler
         }
     }
 
-    public static async Task<RetResult> GenerateClientSpeedtestConfig(Config config, string fileName, List<ServerTestItem> selecteds, ECoreType coreType)
+    public static async Task<RetResult> GenerateClientSpeedtestConfig(Config config, string fileName, List<ServerTestItem> selecteds, ECoreType coreType, Action<CoreConfigContext>? contextReady = null)
     {
         var result = new RetResult();
         var dummyNode = new ProfileItem
         {
             CoreType = coreType
         };
-        var builderResult = await CoreConfigContextBuilder.Build(config, dummyNode);
+        var builderResult = await CoreConfigContextBuilder.Build(config, dummyNode, false);
         var context = builderResult.Context;
         foreach (var testItem in selecteds)
         {
             var node = testItem.Profile;
-            var (actNode, _) = await CoreConfigContextBuilder.ResolveNodeAsync(context, node, true);
+            var (actNode, validation) = await CoreConfigContextBuilder.ResolveNodeAsync(context, node, true);
+            if (!validation.Success) return new RetResult(false, string.Join("; ", validation.Errors));
             if (node.IndexId == actNode.IndexId)
             {
                 continue;
             }
             context.ServerTestItemMap[node.IndexId] = actNode.IndexId;
         }
+        contextReady?.Invoke(context);
         if (coreType == ECoreType.sing_box)
         {
             result = new CoreConfigSingboxService(context).GenerateClientSpeedtestConfig(selecteds);

@@ -5,6 +5,28 @@ public class ProcessService : IDisposable
     private readonly Process _process;
     private readonly Func<bool, string, Task>? _updateFunc;
     private bool _isDisposed;
+    private readonly object _resourceLock = new();
+    private readonly List<IDisposable> _ownedResources = [];
+
+    public void Own(IDisposable resource)
+    {
+        lock (_resourceLock)
+        {
+            if (_isDisposed || _process.HasExited) resource.Dispose();
+            else _ownedResources.Add(resource);
+        }
+    }
+
+    private void ReleaseResources()
+    {
+        IDisposable[] resources;
+        lock (_resourceLock)
+        {
+            resources = _ownedResources.ToArray();
+            _ownedResources.Clear();
+        }
+        foreach (var resource in resources) resource.Dispose();
+    }
 
     public int Id => _process.Id;
     public string FileName => _process.StartInfo.FileName;
@@ -39,6 +61,8 @@ public class ProcessService : IDisposable
             },
             EnableRaisingEvents = true
         };
+
+        _process.Exited += (_, _) => ReleaseResources();
 
         if (environmentVars != null)
         {
@@ -75,6 +99,7 @@ public class ProcessService : IDisposable
     {
         if (_process.HasExited)
         {
+            ReleaseResources();
             return;
         }
 
@@ -113,8 +138,9 @@ public class ProcessService : IDisposable
         }
         catch (Exception ex)
         {
-            await _updateFunc?.Invoke(true, ex.Message);
+            if (_updateFunc != null) await _updateFunc(true, ex.Message);
         }
+        finally { ReleaseResources(); }
     }
 
     private void RegisterEventHandlers()
@@ -145,9 +171,10 @@ public class ProcessService : IDisposable
 
     public void Dispose()
     {
-        if (_isDisposed)
+        lock (_resourceLock)
         {
-            return;
+            if (_isDisposed) return;
+            _isDisposed = true;
         }
 
         try
@@ -175,7 +202,7 @@ public class ProcessService : IDisposable
             _updateFunc?.Invoke(true, ex.Message);
         }
 
-        _isDisposed = true;
+        ReleaseResources();
         GC.SuppressFinalize(this);
     }
 }

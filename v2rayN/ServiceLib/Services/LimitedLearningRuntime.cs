@@ -15,7 +15,9 @@ public static class LimitedLearningRuntime
         if (context.RunCoreType != ECoreType.Xray || context.IsTunEnabled || context.Node.ConfigType == EConfigType.Custom)
             throw new InvalidOperationException("有限学习仅支持标准 Xray 非 TUN 模式。");
         // Hash identity rather than storing node credentials in the learning database.
-        var identity = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(JsonUtils.Serialize(context.Node))));
+        var identity = context.MihomoNodes.TryGetValue(context.Node.IndexId, out var mihomoNode)
+            ? mihomoNode.Key
+            : Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(JsonUtils.Serialize(context.Node))));
         var proxy = new LearningProxy(options, StoragePath, identity);
         var logFormatter = CoreConnectionLogs.Formatter(context);
         proxy.ConnectionEvent += entry =>
