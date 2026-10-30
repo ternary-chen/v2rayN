@@ -1,6 +1,6 @@
 # 自动分流与 Codex 系统代理
 
-本分支基于 v2rayN 7.25.6。Windows WPF 与 Avalonia 客户端均在“设置 → 自动分流与 Codex 代理”提供入口。默认关闭学习，保留官方节点、订阅和 Xray 内核更新方式。macOS Apple Silicon 测试版的安装、签名和实机验收边界见 [Mac 说明](macos-learning.md)。
+本分支基于 v2rayN 7.25.6。Windows WPF 与 Avalonia 客户端均在“设置 → 规则管理与自动分流”提供入口。默认关闭学习，保留官方节点、订阅和 Xray 内核更新方式。macOS Apple Silicon 测试版的安装、签名和实机验收边界见 [Mac 说明](macos-learning.md)。
 
 双策略配置与持续更新的厂商名单见 [AI 与默认策略](ai-policies.md)。
 

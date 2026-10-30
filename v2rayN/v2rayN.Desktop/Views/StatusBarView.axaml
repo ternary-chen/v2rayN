@@ -52,16 +52,24 @@
                 VerticalAlignment="Center"
                 DockPanel.Dock="Left"
                 Orientation="Horizontal">
+                <StackPanel VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock x:Name="txtActualSystemProxy" FontSize="11" Margin="8,0,8,2" MaxWidth="360" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                        <Button x:Name="btnProxyDiagnostics" Content="检查代理" FontSize="11" Padding="6,2" MinWidth="0" MinHeight="0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
                 <ComboBox
                     x:Name="cmbSystemProxy"
                     Width="160"
                     Margin="{StaticResource MarginLr8}"
                     ToolTip.Tip="{x:Static resx:ResUI.menuSystemproxy}">
-                    <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxyClear}" />
-                    <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxySet}" />
+                    <ComboBoxItem x:Name="clearProxyAction" Content="{x:Static resx:ResUI.menuSystemProxyClear}" />
+                    <ComboBoxItem x:Name="setProxyAction" Content="{x:Static resx:ResUI.menuSystemProxySet}" />
                     <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxyNothing}" />
                     <ComboBoxItem Content="{x:Static resx:ResUI.menuSystemProxyPac}" />
                 </ComboBox>
+                    </StackPanel>
+                </StackPanel>
 
                 <ComboBox
                     x:Name="cmbRoutings2"

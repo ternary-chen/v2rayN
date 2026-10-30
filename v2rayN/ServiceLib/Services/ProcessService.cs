@@ -7,6 +7,7 @@ public class ProcessService : IDisposable
     private bool _isDisposed;
 
     public int Id => _process.Id;
+    public string FileName => _process.StartInfo.FileName;
     public IntPtr Handle => _process.Handle;
     public bool HasExited => _process.HasExited;
 

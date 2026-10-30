@@ -8,6 +8,49 @@ public class CoreManager
     private static readonly Lazy<CoreManager> _instance = new(() => new());
     public static CoreManager Instance => _instance.Value;
     private Config _config;
+    private readonly SemaphoreSlim _lifecycleGate = new(1, 1);
+    private string? _activeHotConfig;
+
+    public async Task ApplyRulesAsync(CoreConfigContext context, Func<Task> persist)
+    {
+        await _lifecycleGate.WaitAsync();
+        try
+        {
+            var process = _processService;
+            if (process is null || process.HasExited || _activeHotConfig is null || _processPreService != null)
+                throw new InvalidOperationException("当前没有支持热更新的活动内核。未保存、未重启；请先正常启动新版客户端的标准 Xray 服务。");
+            if (context.RunCoreType != ECoreType.Xray || context.IsTunEnabled || !TrafficPolicyService.IsSupportedNode(context.Node))
+                throw new InvalidOperationException("规则热更新仅支持标准 Xray 单节点、非 TUN 模式。");
+            var generated = await CoreConfigHandler.GenerateClientConfig(context, null);
+            if (!generated.Success) throw new InvalidOperationException(generated.Msg);
+            var before = _activeHotConfig;
+            var after = generated.Data!.ToString()!;
+            var path = Utils.GetBinConfigPath(Global.CoreConfigFileName);
+            var previousFile = await File.ReadAllTextAsync(path);
+            await AdaptiveRouting.XrayRoutingHotReload.ApplyAsync(process.FileName, Utils.GetBinPath(""), Utils.GetTempPath(),
+                before, after, () => ReferenceEquals(_processService, process) && !process.HasExited,
+                async () =>
+                {
+                    var pending = path + ".rules-" + Guid.NewGuid().ToString("N");
+                    try
+                    {
+                        await File.WriteAllTextAsync(pending, after);
+                        File.Move(pending, path, true);
+                        await persist();
+                    }
+                    catch
+                    {
+                        await File.WriteAllTextAsync(pending, previousFile);
+                        File.Move(pending, path, true);
+                        throw;
+                    }
+                    finally { if (File.Exists(pending)) File.Delete(pending); }
+                });
+            _activeHotConfig = after;
+            // No CoreStop/Start, learning restart, system-proxy update or connection close here.
+        }
+        finally { _lifecycleGate.Release(); }
+    }
 
     [SupportedOSPlatform("windows")]
     private WindowsJobService? _processJob;
@@ -65,6 +108,13 @@ public class CoreManager
     /// <param name="preContext">Optional pre-socks context passed to <see cref="CoreStartPreService"/>.</param>
     public async Task LoadCore(CoreConfigContext? mainContext, CoreConfigContext? preContext)
     {
+        await _lifecycleGate.WaitAsync();
+        try { await LoadCoreInternal(mainContext, preContext); }
+        finally { _lifecycleGate.Release(); }
+    }
+
+    private async Task LoadCoreInternal(CoreConfigContext? mainContext, CoreConfigContext? preContext)
+    {
         if (mainContext == null)
         {
             await UpdateFunc(false, ResUI.CheckServerSettings);
@@ -83,7 +133,7 @@ public class CoreManager
         await UpdateFunc(false, $"{node.GetSummary()}");
         await UpdateFunc(false, $"{Utils.GetRuntimeInfo()}");
         await UpdateFunc(false, string.Format(ResUI.StartService, DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")));
-        await CoreStop();
+        await CoreStopInternal();
         await Task.Delay(100);
 
         if (Utils.IsWindows() && (mainContext?.IsTunEnabled == true || preContext?.IsTunEnabled == true))
@@ -107,6 +157,9 @@ public class CoreManager
         await CoreStartPreService(preContext);
 
         AppManager.Instance.RunningCoreType = preContext?.RunCoreType ?? mainContext.RunCoreType;
+        if (_processService is { HasExited: false } && preContext is null && mainContext.RunCoreType == ECoreType.Xray &&
+            !mainContext.IsTunEnabled && TrafficPolicyService.IsSupportedNode(mainContext.Node))
+            _activeHotConfig = result.Data?.ToString();
 
         if (_processService != null)
         {
@@ -157,6 +210,14 @@ public class CoreManager
 
     public async Task CoreStop()
     {
+        await _lifecycleGate.WaitAsync();
+        try { await CoreStopInternal(); }
+        finally { _lifecycleGate.Release(); }
+    }
+
+    private async Task CoreStopInternal()
+    {
+        _activeHotConfig = null;
         await LimitedLearningRuntime.StopAsync();
         try
         {

@@ -11,12 +11,44 @@ public partial class StatusBarView
         InitializeComponent();
         _config = AppManager.Instance.Config;
 
+        btnProxyDiagnostics.Click += (_, _) =>
+        {
+            var dialog = new SystemProxyDiagnosticsWindow { Owner = System.Windows.Window.GetWindow(this) };
+            dialog.ShowDialog();
+        };
+
+
         menuExit.Click += menuExit_Click;
         txtRunningServerDisplay.PreviewMouseDown += txtRunningInfoDisplay_MouseDoubleClick;
         txtRunningInfoDisplay.PreviewMouseDown += txtRunningInfoDisplay_MouseDoubleClick;
 
+        void RegisterRepeatAction(System.Windows.Controls.ComboBoxItem item, ESysProxyType type)
+        {
+            var repeated = false;
+            item.PreviewMouseLeftButtonDown += (_, _) => repeated = cmbSystemProxy.SelectedIndex == (int)type;
+            item.PreviewMouseLeftButtonUp += async (_, _) =>
+            {
+                // Changed selections use the binding; an already-selected item needs an explicit command.
+                var apply = repeated;
+                repeated = false;
+                if (!apply || ViewModel == null) return;
+                cmbSystemProxy.IsDropDownOpen = false;
+                await ViewModel.ApplySystemProxyAsync(type);
+            };
+        }
+        cmbSystemProxy.PreviewKeyDown += async (_, e) =>
+        {
+            if (!cmbSystemProxy.IsDropDownOpen || e.Key != System.Windows.Input.Key.Enter || ViewModel == null) return;
+            e.Handled = true;
+            cmbSystemProxy.IsDropDownOpen = false;
+            await ViewModel.ApplySystemProxyAsync((ESysProxyType)cmbSystemProxy.SelectedIndex);
+        };
+        RegisterRepeatAction(clearProxyAction, ESysProxyType.ForcedClear);
+        RegisterRepeatAction(setProxyAction, ESysProxyType.ForcedChange);
         this.WhenActivated(disposables =>
         {
+            this.OneWayBind(ViewModel, vm => vm.ActualSystemProxyStatus, v => v.txtActualSystemProxy.Text).DisposeWith(disposables);
+            this.OneWayBind(ViewModel, vm => vm.ActualSystemProxyDetail, v => v.txtActualSystemProxy.ToolTip).DisposeWith(disposables);
             //system proxy
             this.OneWayBind(ViewModel, vm => vm.BlSystemProxyClear, v => v.menuSystemProxyClear2.Visibility, conversionHint: BooleanToVisibilityHint.UseHidden, viewModelToViewConverterOverride: new BooleanToVisibilityTypeConverter()).DisposeWith(disposables);
             this.OneWayBind(ViewModel, vm => vm.BlSystemProxySet, v => v.menuSystemProxySet2.Visibility, conversionHint: BooleanToVisibilityHint.UseHidden, viewModelToViewConverterOverride: new BooleanToVisibilityTypeConverter()).DisposeWith(disposables);

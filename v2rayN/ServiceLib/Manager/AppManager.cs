@@ -7,6 +7,14 @@ public sealed class AppManager
     private static readonly Lazy<AppManager> _instance = new(() => new());
     private Config _config;
     private int? _statePort;
+    private readonly Lazy<int> _routingApiPort = new(() =>
+    {
+        var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
+        listener.Start();
+        try { return ((System.Net.IPEndPoint)listener.LocalEndpoint).Port; }
+        finally { listener.Stop(); }
+    });
+    public int RoutingApiPort => _routingApiPort.Value;
     private int? _statePort2;
     public static AppManager Instance => _instance.Value;
     public Config Config => _config;

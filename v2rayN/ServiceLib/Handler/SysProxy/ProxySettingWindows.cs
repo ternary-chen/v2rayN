@@ -7,30 +7,76 @@ public static class ProxySettingWindows
 {
     private const string _regPath = @"Software\Microsoft\Windows\CurrentVersion\Internet Settings";
 
-    private static bool SetProxyFallback(string? strProxy, string? exceptions, int type)
+    private static void SetProxyFallback(string? strProxy, string? exceptions, int type)
     {
-        if (type == 1)
+        using var key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(_regPath, true)
+            ?? throw new IOException("无法写入 Windows 系统代理设置。");
+        key.SetValue("ProxyEnable", type == 2 ? 1 : 0, Microsoft.Win32.RegistryValueKind.DWord);
+        key.SetValue("ProxyServer", type == 2 ? strProxy ?? "" : "");
+        key.SetValue("ProxyOverride", type == 2 ? exceptions ?? "" : "");
+        key.SetValue("AutoConfigURL", type == 4 ? strProxy ?? "" : "");
+        key.Flush();
+    }
+
+    private static readonly object ProxyWriteGate = new();
+
+    public static int ReadConnectionFlags() => ReadConnectionProxy().Flags;
+
+    public static (int Flags, WindowsProxyEndpoint Endpoint) ReadConnectionProxy()
+    {
+        var size = Marshal.SizeOf<InternetConnectionOption>();
+        var pointer = Marshal.AllocHGlobal(size * 4);
+        var list = new InternetPerConnOptionList { dwSize = Marshal.SizeOf<InternetPerConnOptionList>(), dwOptionCount = 4, options = pointer };
+        var listPointer = Marshal.AllocHGlobal(list.dwSize);
+        var queried = false;
+        try
         {
-            WindowsUtils.RegWriteValue(_regPath, "ProxyEnable", 0);
-            WindowsUtils.RegWriteValue(_regPath, "ProxyServer", string.Empty);
-            WindowsUtils.RegWriteValue(_regPath, "ProxyOverride", string.Empty);
-            WindowsUtils.RegWriteValue(_regPath, "AutoConfigURL", string.Empty);
+            for (var i = 0; i < 4; i++)
+                Marshal.StructureToPtr(new InternetConnectionOption { m_Option = (PerConnOption)(i + 1) }, pointer + i * size, false);
+            Marshal.StructureToPtr(list, listPointer, false);
+            var length = list.dwSize;
+            if (!NativeMethods.InternetQueryOption(nint.Zero, InternetOption.INTERNET_OPTION_PER_CONNECTION_OPTION, listPointer, ref length))
+                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error(), "读取 WinINet 代理失败");
+            queried = true;
+            var flags = Marshal.PtrToStructure<InternetConnectionOption>(pointer).m_Value.m_Int;
+            string Text(int i) => Marshal.PtrToStringUni(Marshal.PtrToStructure<InternetConnectionOption>(pointer + i * size).m_Value.m_StringPtr) ?? "";
+            return (flags, new((flags & 2) != 0, (flags & 8) != 0, Text(1), Text(2), Text(3)));
         }
-        if (type == 2)
+        finally
         {
-            WindowsUtils.RegWriteValue(_regPath, "ProxyEnable", 1);
-            WindowsUtils.RegWriteValue(_regPath, "ProxyServer", strProxy ?? string.Empty);
-            WindowsUtils.RegWriteValue(_regPath, "ProxyOverride", exceptions ?? string.Empty);
-            WindowsUtils.RegWriteValue(_regPath, "AutoConfigURL", string.Empty);
+            if (queried)
+                for (var i = 1; i < 4; i++)
+                    NativeMethods.GlobalFree(Marshal.PtrToStructure<InternetConnectionOption>(pointer + i * size).m_Value.m_StringPtr);
+            Marshal.FreeHGlobal(listPointer);
+            Marshal.FreeHGlobal(pointer);
         }
-        else if (type == 4)
+    }
+
+    public static WindowsProxyEndpoint ReadWinHttpProxy()
+    {
+        if (!NativeMethods.WinHttpGetIEProxyConfigForCurrentUser(out var config))
+            throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error(), "读取 WinHTTP 当前用户代理失败");
+        try
         {
-            WindowsUtils.RegWriteValue(_regPath, "ProxyEnable", 0);
-            WindowsUtils.RegWriteValue(_regPath, "ProxyServer", string.Empty);
-            WindowsUtils.RegWriteValue(_regPath, "ProxyOverride", string.Empty);
-            WindowsUtils.RegWriteValue(_regPath, "AutoConfigURL", strProxy ?? string.Empty);
+            var server = Marshal.PtrToStringUni(config.Proxy) ?? "";
+            return new(server.Length > 0, config.AutoDetect, server,
+                Marshal.PtrToStringUni(config.Bypass) ?? "", Marshal.PtrToStringUni(config.Pac) ?? "");
         }
-        return true;
+        finally
+        {
+            NativeMethods.GlobalFree(config.Proxy);
+            NativeMethods.GlobalFree(config.Bypass);
+            NativeMethods.GlobalFree(config.Pac);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct WinHttpProxyConfig
+    {
+        [MarshalAs(UnmanagedType.Bool)] public bool AutoDetect;
+        public nint Pac;
+        public nint Proxy;
+        public nint Bypass;
     }
 
     /// <summary>
@@ -57,144 +103,85 @@ public static class ProxySettingWindows
     /// <returns>true: one of connection is successfully updated proxy settings</returns>
     public static bool SetProxy(string? strProxy, string? exceptions, int type)
     {
-        try
+        if (type is not (1 or 2 or 4)) throw new ArgumentOutOfRangeException(nameof(type));
+        if (type != 1 && string.IsNullOrWhiteSpace(strProxy)) throw new ArgumentException("代理地址不能为空", nameof(strProxy));
+        lock (ProxyWriteGate)
         {
-            // set proxy for LAN
-            var result = SetConnectionProxy(null, strProxy, exceptions, type);
-            // set proxy for dial up connections
-            var connections = EnumerateRasEntries();
-            foreach (var connection in connections)
+            Logging.SaveLog($"[系统代理] 请求 type={type}；操作前：{WindowsProxySnapshot.Read().Detail}");
+            // RAS first; LAN and the public registry are finalized together before notifying clients.
+            foreach (var connection in EnumerateRasEntries()) SetConnectionProxy(connection, strProxy, exceptions, type);
+            WindowsProxySnapshot actual = null;
+            for (var attempt = 0; attempt < 2; attempt++)
             {
-                result |= SetConnectionProxy(connection, strProxy, exceptions, type);
+                SetConnectionProxy(null, strProxy, exceptions, type);
+                SetProxyFallback(strProxy, exceptions, type);
+                NotifyProxyChanged();
+                actual = WindowsProxySnapshot.Read();
+                if (actual.Matches(type, strProxy, exceptions))
+                {
+                    // Catch immediate overwrites; never fight another proxy app with a background writer.
+                    Thread.Sleep(100);
+                    actual = WindowsProxySnapshot.Read();
+                    if (actual.Matches(type, strProxy, exceptions))
+                    {
+                        Logging.SaveLog($"[系统代理] 已验证 type={type}；{actual.Detail}");
+                        return true;
+                    }
+                }
+                Logging.SaveLog($"[系统代理] 回读不一致 attempt={attempt + 1}；{actual.Detail}");
             }
-            return result;
+            throw new IOException("系统代理未完整生效，请检查其他代理程序或系统策略。" + actual?.Detail);
         }
-        catch
-        {
-            _ = SetProxyFallback(strProxy, exceptions, type);
-            return false;
-        }
+    }
+
+    private static void NotifyProxyChanged()
+    {
+        var changed = NativeMethods.InternetSetOption(nint.Zero, InternetOption.INTERNET_OPTION_SETTINGS_CHANGED, nint.Zero, 0);
+        var changedError = changed ? 0 : Marshal.GetLastWin32Error();
+        var refreshed = NativeMethods.InternetSetOption(nint.Zero, InternetOption.INTERNET_OPTION_REFRESH, nint.Zero, 0);
+        if (!changed || !refreshed)
+            throw new System.ComponentModel.Win32Exception(!changed ? changedError : Marshal.GetLastWin32Error(), "代理已写入，但通知 Windows 刷新失败");
     }
 
     private static bool SetConnectionProxy(string? connectionName, string? strProxy, string? exceptions, int type)
     {
-        var list = new InternetPerConnOptionList();
-
-        var optionCount = 1;
-        if (type == 1) // No proxy
+        var options = new InternetConnectionOption[4];
+        var optionsPointer = nint.Zero;
+        var listPointer = nint.Zero;
+        var connection = nint.Zero;
+        try
         {
-            optionCount = 1;
-        }
-        else if (type is 2 or 4) // named proxy or autoproxy script URL
-        {
-            optionCount = exceptions.IsNullOrEmpty() ? 2 : 3;
-        }
-
-        var m_Int = (int)PerConnFlags.PROXY_TYPE_DIRECT;
-        var m_Option = PerConnOption.INTERNET_PER_CONN_FLAGS;
-        if (type == 2) // named proxy
-        {
-            m_Int = (int)(PerConnFlags.PROXY_TYPE_DIRECT | PerConnFlags.PROXY_TYPE_PROXY);
-            m_Option = PerConnOption.INTERNET_PER_CONN_PROXY_SERVER;
-        }
-        else if (type == 4) // autoproxy script url
-        {
-            m_Int = (int)(PerConnFlags.PROXY_TYPE_DIRECT | PerConnFlags.PROXY_TYPE_AUTO_PROXY_URL);
-            m_Option = PerConnOption.INTERNET_PER_CONN_AUTOCONFIG_URL;
-        }
-
-        var options = new InternetConnectionOption[optionCount];
-        // USE a proxy server ...
-        options[0].m_Option = PerConnOption.INTERNET_PER_CONN_FLAGS;
-        options[0].m_Value.m_Int = m_Int;
-        // use THIS proxy server
-        if (optionCount > 1)
-        {
-            options[1].m_Option = m_Option;
-            options[1].m_Value.m_StringPtr = Marshal.StringToHGlobalAuto(strProxy); // !! remember to deallocate memory 1
-                                                                                    // except for these addresses ...
-            if (optionCount > 2)
+            options[0].m_Option = PerConnOption.INTERNET_PER_CONN_FLAGS;
+            options[0].m_Value.m_Int = type == 2 ? 3 : type == 4 ? 5 : 1;
+            options[1].m_Option = PerConnOption.INTERNET_PER_CONN_PROXY_SERVER;
+            options[1].m_Value.m_StringPtr = Marshal.StringToHGlobalUni(type == 2 ? strProxy ?? "" : "");
+            options[2].m_Option = PerConnOption.INTERNET_PER_CONN_PROXY_BYPASS;
+            options[2].m_Value.m_StringPtr = Marshal.StringToHGlobalUni(type == 2 ? exceptions ?? "" : "");
+            options[3].m_Option = PerConnOption.INTERNET_PER_CONN_AUTOCONFIG_URL;
+            options[3].m_Value.m_StringPtr = Marshal.StringToHGlobalUni(type == 4 ? strProxy ?? "" : "");
+            if (connectionName != null) connection = Marshal.StringToHGlobalUni(connectionName);
+            var size = Marshal.SizeOf<InternetConnectionOption>();
+            optionsPointer = Marshal.AllocHGlobal(size * options.Length);
+            for (var i = 0; i < options.Length; i++) Marshal.StructureToPtr(options[i], optionsPointer + i * size, false);
+            var list = new InternetPerConnOptionList
             {
-                options[2].m_Option = PerConnOption.INTERNET_PER_CONN_PROXY_BYPASS;
-                options[2].m_Value.m_StringPtr = Marshal.StringToHGlobalAuto(exceptions); // !! remember to deallocate memory 2
-            }
+                dwSize = Marshal.SizeOf<InternetPerConnOptionList>(), szConnection = connection,
+                dwOptionCount = options.Length, options = optionsPointer
+            };
+            listPointer = Marshal.AllocHGlobal(list.dwSize);
+            Marshal.StructureToPtr(list, listPointer, false);
+            if (!NativeMethods.InternetSetOption(nint.Zero, InternetOption.INTERNET_OPTION_PER_CONNECTION_OPTION, listPointer, list.dwSize))
+                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error(), "写入 Windows 连接代理失败");
+            // Notify once, only after LAN, RAS and the public registry have all been written.
+            return true;
         }
-
-        // default stuff
-        list.dwSize = Marshal.SizeOf(list);
-        if (connectionName != null)
+        finally
         {
-            list.szConnection = Marshal.StringToHGlobalAuto(connectionName); // !! remember to deallocate memory 3
+            for (var i = 1; i < options.Length; i++) Marshal.FreeHGlobal(options[i].m_Value.m_StringPtr);
+            Marshal.FreeHGlobal(connection);
+            Marshal.FreeHGlobal(optionsPointer);
+            Marshal.FreeHGlobal(listPointer);
         }
-        else
-        {
-            list.szConnection = nint.Zero;
-        }
-        list.dwOptionCount = options.Length;
-        list.dwOptionError = 0;
-
-        var optSize = Marshal.SizeOf(typeof(InternetConnectionOption));
-        // make a pointer out of all that ...
-        var optionsPtr = Marshal.AllocCoTaskMem(optSize * options.Length); // !! remember to deallocate memory 4
-                                                                           // copy the array over into that spot in memory ...
-        for (var i = 0; i < options.Length; ++i)
-        {
-            if (Environment.Is64BitOperatingSystem)
-            {
-                var opt = new nint(optionsPtr.ToInt64() + (i * optSize));
-                Marshal.StructureToPtr(options[i], opt, false);
-            }
-            else
-            {
-                var opt = new nint(optionsPtr.ToInt32() + (i * optSize));
-                Marshal.StructureToPtr(options[i], opt, false);
-            }
-        }
-
-        list.options = optionsPtr;
-
-        // and then make a pointer out of the whole list
-        var ipcoListPtr = Marshal.AllocCoTaskMem(list.dwSize); // !! remember to deallocate memory 5
-        Marshal.StructureToPtr(list, ipcoListPtr, false);
-
-        // and finally, call the API method!
-        var isSuccess = NativeMethods.InternetSetOption(nint.Zero,
-           InternetOption.INTERNET_OPTION_PER_CONNECTION_OPTION,
-           ipcoListPtr, list.dwSize);
-        var returnvalue = 0; // ERROR_SUCCESS
-        if (!isSuccess)
-        {  // get the error codes, they might be helpful
-            returnvalue = Marshal.GetLastPInvokeError();
-        }
-        else
-        {
-            // Notify the system that the registry settings have been changed and cause them to be refreshed
-            _ = NativeMethods.InternetSetOption(nint.Zero, InternetOption.INTERNET_OPTION_SETTINGS_CHANGED, nint.Zero, 0);
-            _ = NativeMethods.InternetSetOption(nint.Zero, InternetOption.INTERNET_OPTION_REFRESH, nint.Zero, 0);
-        }
-
-        // FREE the data ASAP
-        if (list.szConnection != nint.Zero)
-        {
-            Marshal.FreeHGlobal(list.szConnection); // release mem 3
-        }
-        if (optionCount > 1)
-        {
-            Marshal.FreeHGlobal(options[1].m_Value.m_StringPtr); // release mem 1
-            if (optionCount > 2)
-            {
-                Marshal.FreeHGlobal(options[2].m_Value.m_StringPtr); // release mem 2
-            }
-        }
-        Marshal.FreeCoTaskMem(optionsPtr); // release mem 4
-        Marshal.FreeCoTaskMem(ipcoListPtr); // release mem 5
-        if (returnvalue != 0)
-        {
-            // throw the error codes, they might be helpful
-            throw new ApplicationException($"Set Internet Proxy failed with error code: {Marshal.GetLastWin32Error()}");
-        }
-
-        return true;
     }
 
     /// <summary>
@@ -343,6 +330,17 @@ public static class ProxySettingWindows
 
     internal static class NativeMethods
     {
+        [DllImport("winhttp.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool WinHttpGetIEProxyConfigForCurrentUser(out WinHttpProxyConfig config);
+
+        [DllImport("kernel32.dll")]
+        internal static extern nint GlobalFree(nint memory);
+
+        [DllImport("WinInet.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool InternetQueryOption(nint hInternet, InternetOption option, nint buffer, ref int size);
+
         [DllImport("WinInet.dll", SetLastError = true, CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool InternetSetOption(nint hInternet, InternetOption dwOption, nint lpBuffer, int dwBufferLength);

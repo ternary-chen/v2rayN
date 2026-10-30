@@ -42,6 +42,32 @@ public partial class StatusBarViewModel : MyReactiveObject
     public ReactiveCommand<RxVoid, RxVoid> ShowWindowCmd { get; }
     public ReactiveCommand<RxVoid, RxVoid> HideWindowCmd { get; }
 
+    private readonly SemaphoreSlim _proxyChangeGate = new(1, 1);
+    private bool _updatingProxySelection;
+    [Reactive] public partial string ActualSystemProxyStatus { get; set; } = "正在读取系统代理…";
+    [Reactive] public partial string ActualSystemProxyDetail { get; set; } = "";
+
+    public void RefreshActualSystemProxy()
+    {
+        if (!Utils.IsWindows()) { ActualSystemProxyStatus = "系统代理操作"; return; }
+        try
+        {
+            var actual = WindowsProxySnapshot.Read();
+            ActualSystemProxyStatus = actual.Display;
+            ActualSystemProxyDetail = actual.Detail;
+            BlSystemProxyClear = actual.IsDirect;
+            BlSystemProxySet = actual.ManualEnabled;
+            BlSystemProxyPac = actual.PacEnabled;
+            BlSystemProxyNothing = false;
+        }
+        catch (Exception ex)
+        {
+            ActualSystemProxyStatus = "Windows：代理状态读取失败";
+            ActualSystemProxyDetail = ex.Message;
+            BlSystemProxyClear = BlSystemProxySet = BlSystemProxyPac = BlSystemProxyNothing = false;
+        }
+    }
+
     #region System Proxy
 
     [Reactive]
@@ -133,8 +159,9 @@ public partial class StatusBarViewModel : MyReactiveObject
 
         SystemProxySelected = (int)_config.SystemProxyItem.SysProxyType;
         this.WhenAnyValue(x => x.SystemProxySelected)
-            .Where(y => y >= 0)
-            .SubscribeAsync(async _ => await DoSystemProxySelected());
+            .Skip(1)
+            .Where(y => y >= 0 && !_updatingProxySelection)
+            .SubscribeAsync(async selected => await SetListenerType((ESysProxyType)selected));
 
         this.WhenAnyValue(x => x.EnableTun)
             .SubscribeAsync(async _ => await DoEnableTun());
@@ -211,6 +238,17 @@ public partial class StatusBarViewModel : MyReactiveObject
 
         #endregion AppEvents
 
+        if (Utils.IsWindows())
+        {
+            RefreshActualSystemProxy();
+            // The singleton lasts for the application lifetime. Observation never writes settings.
+            _ = Task.Run(async () =>
+            {
+                using var timer = new PeriodicTimer(TimeSpan.FromSeconds(2));
+                while (await timer.WaitForNextTickAsync())
+                    RxSchedulers.MainThreadScheduler.Schedule(RefreshActualSystemProxy);
+            });
+        }
         _ = Init();
     }
 
@@ -360,33 +398,60 @@ public partial class StatusBarViewModel : MyReactiveObject
 
     #region System proxy and Routings
 
+    public Task ClearSystemProxyAsync() => SetListenerType(ESysProxyType.ForcedClear);
+    public Task ApplySystemProxyAsync(ESysProxyType type) => SetListenerType(type);
+
+    private void SetProxySelection(ESysProxyType type)
+    {
+        _updatingProxySelection = true;
+        try { SystemProxySelected = (int)type; }
+        finally { _updatingProxySelection = false; }
+    }
+
     private async Task SetListenerType(ESysProxyType type)
     {
-        if (_config.SystemProxyItem.SysProxyType == type)
+        if (!Enum.IsDefined(type)) return;
+        await _proxyChangeGate.WaitAsync();
+        try
         {
-            return;
+            if (await ApplySystemProxyCoreAsync(type, true))
+            {
+                // Persist an intent only after Windows confirmed the operation.
+                _config.SystemProxyItem.SysProxyType = type;
+                SetProxySelection(type);
+                await ConfigHandler.SaveConfig(_config);
+            }
+            else
+            {
+                SetProxySelection(_config.SystemProxyItem.SysProxyType);
+            }
         }
-        _config.SystemProxyItem.SysProxyType = type;
-        await ChangeSystemProxyAsync(type, true);
-        NoticeManager.Instance.SendMessageEx($"{ResUI.TipChangeSystemProxy} - {_config.SystemProxyItem.SysProxyType}");
-
-        SystemProxySelected = (int)_config.SystemProxyItem.SysProxyType;
-        await ConfigHandler.SaveConfig(_config);
+        finally { _proxyChangeGate.Release(); }
     }
 
     public async Task ChangeSystemProxyAsync(ESysProxyType type, bool blChange)
     {
-        await SysProxyHandler.UpdateSysProxy(_config, false);
+        await _proxyChangeGate.WaitAsync();
+        try { await ApplySystemProxyCoreAsync(type, blChange); }
+        finally { _proxyChangeGate.Release(); }
+    }
 
+    private async Task<bool> ApplySystemProxyCoreAsync(ESysProxyType type, bool notify)
+    {
+        var applied = await SysProxyHandler.UpdateSysProxy(_config, false, type);
         BlSystemProxyClear = type == ESysProxyType.ForcedClear;
         BlSystemProxySet = type == ESysProxyType.ForcedChange;
         BlSystemProxyNothing = type == ESysProxyType.Unchanged;
         BlSystemProxyPac = type == ESysProxyType.Pac;
-
-        if (blChange)
+        RefreshActualSystemProxy();
+        if (notify)
         {
+            if (applied)
+                NoticeManager.Instance.SendMessageEx(type == ESysProxyType.Unchanged ? "保持系统代理现状" :
+                    Utils.IsWindows() ? ActualSystemProxyStatus : $"{ResUI.TipChangeSystemProxy} - {type}");
             await DispatcherRefreshIconInteraction.HandleSafe(RxVoid.Default);
         }
+        return applied;
     }
 
     public async Task RefreshRoutingsMenu()
@@ -417,15 +482,6 @@ public partial class StatusBarViewModel : MyReactiveObject
             ReloadRequested.Publish();
             await DispatcherRefreshIconInteraction.HandleSafe(RxVoid.Default);
         }
-    }
-
-    private async Task DoSystemProxySelected()
-    {
-        if (_config.SystemProxyItem.SysProxyType == (ESysProxyType)SystemProxySelected)
-        {
-            return;
-        }
-        await SetListenerType((ESysProxyType)SystemProxySelected);
     }
 
     private async Task DoEnableTun()

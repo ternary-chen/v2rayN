@@ -5,22 +5,21 @@ public static class SysProxyHandler
     private static readonly string _tag = "SysProxyHandler";
     private static readonly Lazy<PacManager> _pacManager = new(() => new PacManager());
 
-    public static async Task<bool> UpdateSysProxy(Config config, bool forceDisable)
+    public static async Task<bool> UpdateSysProxy(Config config, bool forceDisable, ESysProxyType? requestedType = null)
     {
-        var type = config.SystemProxyItem.SysProxyType;
+        var type = requestedType ?? config.SystemProxyItem.SysProxyType;
 
         if (forceDisable && type != ESysProxyType.Unchanged)
         {
             type = ESysProxyType.ForcedClear;
         }
 
+        if (type == ESysProxyType.Unchanged) return true;
         try
         {
             var port = AppManager.Instance.GetLocalPort(EInboundProtocol.socks);
-            if (port <= 0)
-            {
-                return false;
-            }
+            if (port <= 0 && type != ESysProxyType.ForcedClear)
+                throw new InvalidOperationException("代理端口无效，未修改 Windows 代理。");
             switch (type)
             {
                 case ESysProxyType.ForcedChange when Utils.IsWindows():
@@ -63,6 +62,8 @@ public static class SysProxyHandler
         catch (Exception ex)
         {
             Logging.SaveLog(_tag, ex);
+            NoticeManager.Instance.SendMessageEx("系统代理操作失败：" + ex.Message);
+            return false;
         }
         return true;
     }
@@ -83,7 +84,7 @@ public static class SysProxyHandler
         return string.Join(',', items);
     }
 
-    private static (string strProxy, string strExceptions) GetWindowsProxyString(Config config, int port)
+    internal static (string strProxy, string strExceptions) GetWindowsProxyString(Config config, int port)
     {
         var strExceptions = config.SystemProxyItem.SystemProxyExceptions.Replace(" ", "");
         if (config.SystemProxyItem.NotProxyLocalAddress)

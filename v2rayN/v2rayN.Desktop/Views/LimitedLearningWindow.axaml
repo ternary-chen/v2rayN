@@ -1,28 +1,88 @@
 <Window x:Class="v2rayN.Desktop.Views.LimitedLearningWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="自动分流与 Codex 代理" Width="880" Height="740" MinWidth="720" MinHeight="620"
+        Title="规则管理与自动分流" Width="1080" Height="820" MinWidth="960" MinHeight="740"
         WindowStartupLocation="CenterOwner" x:CompileBindings="False">
     <Grid Margin="20">
         <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
         <TabControl>
-            <TabItem Header="策略组">
-                <ScrollViewer>
-                    <StackPanel Margin="16">
-                        <TextBlock FontSize="20" FontWeight="SemiBold" Text="AI 与默认代理节点"/>
-                        <TextBlock Margin="0,10,0,16" TextWrapping="Wrap" Text="AI 服务使用专线；其他需要代理的网站和自动学习记录使用默认策略。明确直连规则及受保护程序保持直连。"/>
-                        <CheckBox x:Name="EnableAiPolicy" Content="启用 AI 与默认双策略"/>
-                        <TextBlock Margin="0,20,0,8" Text="AI 策略 · 专线节点"/>
-                        <ComboBox x:Name="AiPolicyNode" HorizontalAlignment="Stretch"/>
-                        <TextBlock Margin="0,20,0,8" Text="默认策略 · 日常节点"/>
-                        <ComboBox x:Name="DefaultPolicyNode" HorizontalAlignment="Stretch"/>
-                        <TextBlock Margin="0,8,0,16" TextWrapping="Wrap" Text="在默认策略中选择日常使用的节点。主窗口切换节点也只改变默认策略；AI 专线选择单独保留。两组都由你手动选择，不自动测速切换。"/>
-                        <TextBlock x:Name="AiCatalogState" Margin="0,8,0,12" TextWrapping="Wrap"/>
-                        <TextBlock TextWrapping="Wrap" Text="社区分类覆盖 OpenAI、Claude、Google AI、GitHub Copilot、Cursor、Windsurf、Perplexity、Grok、Poe、DeepSeek，另保留已整理的 Copilot、Mistral 等精确补充。请通过客户端的 Geo 数据更新维护社区名单。"/>
-                        <TextBlock Margin="0,8,0,12" TextWrapping="Wrap" Text="自动学习只使用默认策略验证并记录；更换默认节点后使用该节点自己的学习记录。更换 AI 节点不影响默认策略的计数。"/>
-                        <Button x:Name="SavePoliciesButton" Content="保存策略并重载" IsEnabled="False" HorizontalAlignment="Left" Margin="0,16,0,0" Padding="18,8" Click="SavePolicies_Click"/>
+            <TabItem Header="规则管理">
+                <Grid Margin="12">
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <StackPanel>
+                        <TextBlock FontSize="20" FontWeight="SemiBold" Text="规则与出口"/>
+                        <TextBlock Margin="0,6,0,12" TextWrapping="Wrap" Text="按列表从上到下匹配，命中后停止。受保护程序直连 → 手动规则 → 内置 AI → 原路由规则 → 自动学习。适用于标准 Xray 非 TUN 模式。"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                            <StackPanel Margin="0,0,12,0"><TextBlock Text="默认代理节点"/><ComboBox x:Name="DefaultPolicyNode" HorizontalAlignment="Stretch" Margin="0,6,0,0"/></StackPanel>
+                            <StackPanel Grid.Column="1"><TextBlock Text="专线节点（手动专线和内置 AI 共用）"/><ComboBox x:Name="AiPolicyNode" HorizontalAlignment="Stretch" Margin="0,6,0,0"/></StackPanel>
+                        </Grid>
+                        <CheckBox x:Name="EnableAiPolicy" Margin="0,10,0,4" Content="启用内置 AI 网站规则，未命中手动规则的 AI 网站走专线"/>
+                        <TextBlock TextWrapping="Wrap" FontSize="12" Text="关闭内置 AI 不影响手动专线规则。主窗口切换节点只改变默认代理。修改仅在保存后生效。"/>
                     </StackPanel>
-                </ScrollViewer>
+                    <Grid Grid.Row="1" Margin="0,14,0,8">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="250"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Grid Margin="0,0,16,0">
+                            <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                        <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock x:Name="RuleEditorTitle" FontWeight="SemiBold" Text="新增规则"/>
+                                <TextBlock Margin="0,10,0,4" Text="规则类型"/>
+                                <ComboBox x:Name="RuleKind" HorizontalAlignment="Stretch" SelectionChanged="RuleKind_SelectionChanged"/>
+                                <TextBlock Margin="0,10,0,4" Text="匹配内容"/>
+                                <TextBox x:Name="RuleValue"/>
+                                <TextBlock x:Name="RuleHint" FontSize="12" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Margin="0,10,0,4" Text="出口策略"/>
+                                <ComboBox x:Name="RuleTarget" HorizontalAlignment="Stretch"/>
+                                <TextBlock Margin="0,10,0,4" Text="备注（可选）"/>
+                                <TextBox x:Name="RuleRemarks"/>
+                                <CheckBox x:Name="RuleEnabled" Content="启用这条规则" IsChecked="True" Margin="0,10,0,8"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                            <WrapPanel Grid.Row="1" Margin="0,8,0,0">
+                                <Button x:Name="ApplyRuleButton" Content="添加到顶部" Click="ApplyRule_Click" Margin="0,0,8,6"/>
+                                <Button Content="清空 / 新建" Click="NewRule_Click" Margin="0,0,0,6"/>
+                            </WrapPanel>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                            <TextBlock x:Name="RuleCount" Margin="0,0,0,8" Text="手动规则"/>
+                            <DataGrid x:Name="ManualRulesGrid" Grid.Row="1" IsReadOnly="True" AutoGenerateColumns="False" SelectionMode="Single" >
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="状态" Binding="{Binding StateLabel}" Width="70"/>
+                                    <DataGridTextColumn Header="类型" Binding="{Binding KindLabel}" Width="130"/>
+                                    <DataGridTextColumn Header="匹配内容" Binding="{Binding Value}" Width="*"/>
+                                    <DataGridTextColumn Header="出口" Binding="{Binding TargetLabel}" Width="105"/>
+                                    <DataGridTextColumn Header="备注" Binding="{Binding Remarks}" Width="100"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <WrapPanel Grid.Row="2" Margin="0,8,0,0">
+                                <Button Content="编辑" Click="EditRule_Click" Margin="0,0,8,6"/>
+                                <Button Content="启用 / 停用" Click="ToggleRule_Click" Margin="0,0,8,6"/>
+                                <Button Content="上移" Click="MoveRuleUp_Click" Margin="0,0,8,6"/>
+                                <Button Content="下移" Click="MoveRuleDown_Click" Margin="0,0,8,6"/>
+                                <Button Content="删除" Click="DeleteRule_Click" Margin="0,0,8,6"/>
+                            </WrapPanel>
+                        </Grid>
+                    </Grid>
+                    <Expander Grid.Row="2" Header="受保护程序直连与内置 AI 范围">
+                        <ScrollViewer MaxHeight="160" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="0,8,0,4">
+                                <TextBlock TextWrapping="Wrap" Text="受保护程序优先于所有网站规则。每行填一个不含 .exe 的进程名，或使用 / 分隔且以 / 结尾的绝对目录。仅匹配进入代理且内核能识别的连接。"/>
+                                <TextBox x:Name="DirectProcesses" Margin="0,6,0,8" Height="85" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                                <TextBlock x:Name="AiCatalogState" TextWrapping="Wrap"/>
+                                <TextBlock TextWrapping="Wrap" Text="内置 AI 分类随 Geo 数据更新；原路由规则仍在“设置 → 路由设置”中维护。手动规则独立保存，不随订阅更新覆盖。"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Expander>
+                    <StackPanel Grid.Row="3" Margin="0,8,0,0">
+                        <TextBlock FontSize="12" TextWrapping="Wrap" Text="仅修改规则会热更新：已有连接保持原出口，新连接按新规则走。切换节点需要重启，请使用单独按钮。"/>
+                        <WrapPanel HorizontalAlignment="Right" Margin="0,8,0,0">
+                            <Button x:Name="SaveNodesButton" Content="应用节点变更并重启" IsEnabled="False" Margin="0,0,12,0" Padding="14,8" Click="SaveNodes_Click"/>
+                            <Button x:Name="SavePoliciesButton" Content="保存规则（不中断连接）" IsEnabled="False" Padding="18,8" Click="SavePolicies_Click"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Grid>
             </TabItem>
 
             <TabItem Header="自动分流">
@@ -40,9 +100,7 @@
                             <StackPanel Grid.Column="1" Margin="0,0,16,0"><TextBlock Text="代理检测限时（毫秒）"/><TextBox x:Name="ProxyTimeout" Margin="0,8,0,0"/></StackPanel>
                             <StackPanel Grid.Column="2"><TextBlock Text="临时记录有效期（小时）"/><TextBox x:Name="Lifetime" Margin="0,8,0,0"/></StackPanel>
                         </Grid>
-                        <TextBlock Margin="0,20,0,8" FontWeight="SemiBold" Text="强制直连程序"/>
-                        <TextBlock TextWrapping="Wrap" Text="这些规则对进入代理且能被内核识别的程序优先直连。填写实际进程名，或使用 / 分隔且以 / 结尾的目录；macOS 可填写应用 .app/Contents/ 内的实际程序目录。默认名单主要来自 Windows，请按本机程序补充并验证。"/>
-                        <TextBox x:Name="DirectProcesses" Margin="0,8,0,8" Height="160" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        <TextBlock Margin="0,16,0,8" Text="强制直连程序已移至“规则管理”页。"/>
                         <TextBlock x:Name="LearningState" TextWrapping="Wrap" Foreground="DimGray"/>
                         <Button Margin="0,16,0,0" HorizontalAlignment="Left" Padding="18,8" Content="保存并重载规则" Click="SaveLearning_Click"/>
                     </StackPanel>

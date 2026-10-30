@@ -18,6 +18,7 @@ public partial class LimitedLearningWindow : Window
     {
         InitializeComponent();
         _config = config;
+        InitializeManualRules();
         var options = config.LimitedLearning ?? new();
         EnableLearning.IsChecked = options.Enabled;
         DirectTimeout.Text = options.DirectTimeoutMs.ToString();
@@ -36,6 +37,109 @@ public partial class LimitedLearningWindow : Window
         Closed += (_, _) => _closed.Cancel();
     }
 
+
+    private readonly System.Collections.ObjectModel.ObservableCollection<ManualRouteRule> _manualRules = new();
+    private ManualRouteRule? _editingRule;
+
+    private void InitializeManualRules()
+    {
+        foreach (var rule in _config.ManualRules ?? []) _manualRules.Add(rule.Copy());
+        ManualRulesGrid.ItemsSource = _manualRules;
+        RuleKind.ItemsSource = ManualRouteRule.Kinds;
+        RuleTarget.ItemsSource = ManualRouteRule.Targets;
+        ResetRuleEditor();
+        UpdateRuleCount();
+    }
+
+    private void UpdateRuleCount() => RuleCount.Text = _manualRules.Count == 0
+        ? "暂无手动规则 · 在左侧添加，原有分流继续生效"
+        : $"手动规则 {_manualRules.Count} 条 · 已启用 {_manualRules.Count(x => x.Enabled)} 条 · 上方优先";
+
+    private void ResetRuleEditor()
+    {
+        _editingRule = null;
+        RuleEditorTitle.Text = "新增规则";
+        ApplyRuleButton.Content = "添加到顶部";
+        RuleKind.SelectedItem = ManualRouteRule.Kinds[0];
+        RuleTarget.SelectedItem = ManualRouteRule.Targets[0];
+        RuleValue.Text = RuleRemarks.Text = "";
+        RuleEnabled.IsChecked = true;
+    }
+    private void NewRule_Click(object sender, RoutedEventArgs e) => ResetRuleEditor();
+    private void RuleKind_SelectionChanged(object? sender, Avalonia.Controls.SelectionChangedEventArgs e)
+    {
+        if (RuleHint is null) return;
+        RuleHint.Text = (RuleKind.SelectedItem as RuleChoice)?.Value switch
+        {
+            "domain-suffix" => "example.com：包含其所有子域名；无需填 domain:。",
+            "domain" => "api.example.com：只匹配这个完整域名。",
+            "keyword" => "example：匹配域名中包含的文字。",
+            "ip" => "例如 192.168.1.1、10.0.0.0/8 或 2001:db8::/32。域名连接的 IP 匹配受原路由 DNS 策略影响。",
+            "geosite" => "例如 openai、youtube；分类须存在于本机 geosite.dat。",
+            "geoip" => "例如 cn、private；分类须存在于本机 geoip.dat。",
+            "process" => "例如 chrome 或 chrome.exe；仅匹配内核能识别的进程。",
+            "process-dir" => "例如 D:/apps/example/，包含该目录内的程序。",
+            _ => ""
+        };
+    }
+    private void ApplyRule_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var rule = new ManualRouteRule
+            {
+                Kind = (RuleKind.SelectedItem as RuleChoice)?.Value ?? "",
+                Target = (RuleTarget.SelectedItem as RuleChoice)?.Value ?? "",
+                Value = RuleValue.Text ?? "", Remarks = RuleRemarks.Text ?? "", Enabled = RuleEnabled.IsChecked == true
+            }.Normalize();
+            if (_editingRule is { } editing && _manualRules.Contains(editing)) _manualRules[_manualRules.IndexOf(editing)] = rule;
+            else _manualRules.Insert(0, rule);
+            ManualRulesGrid.SelectedItem = rule;
+            ResetRuleEditor();
+            UpdateRuleCount();
+            Status.Text = "规则已放入待保存列表；点击“保存规则（不中断连接）”后生效。";
+        }
+        catch (Exception ex) { Status.Text = ex.Message; }
+    }
+    private void EditRule_Click(object sender, RoutedEventArgs e)
+    {
+        if (ManualRulesGrid.SelectedItem is not ManualRouteRule rule) { Status.Text = "请先选择一条规则。"; return; }
+        _editingRule = rule;
+        RuleEditorTitle.Text = "编辑选中规则";
+        ApplyRuleButton.Content = "更新这条规则";
+        RuleKind.SelectedItem = ManualRouteRule.Kinds.FirstOrDefault(x => x.Value == rule.Kind);
+        RuleTarget.SelectedItem = ManualRouteRule.Targets.FirstOrDefault(x => x.Value == rule.Target);
+        RuleValue.Text = rule.Value;
+        RuleRemarks.Text = rule.Remarks;
+        RuleEnabled.IsChecked = rule.Enabled;
+    }
+    private void ToggleRule_Click(object sender, RoutedEventArgs e)
+    {
+        if (ManualRulesGrid.SelectedItem is not ManualRouteRule rule) return;
+        var updated = rule.Copy(); updated.Enabled = !updated.Enabled;
+        _manualRules[_manualRules.IndexOf(rule)] = updated;
+        ManualRulesGrid.SelectedItem = updated;
+        if (ReferenceEquals(_editingRule, rule)) ResetRuleEditor();
+        UpdateRuleCount();
+    }
+    private void DeleteRule_Click(object sender, RoutedEventArgs e)
+    {
+        if (ManualRulesGrid.SelectedItem is not ManualRouteRule rule) return;
+        _manualRules.Remove(rule);
+        if (ReferenceEquals(_editingRule, rule)) ResetRuleEditor();
+        UpdateRuleCount();
+    }
+    private void MoveRule(int offset)
+    {
+        if (ManualRulesGrid.SelectedItem is not ManualRouteRule rule) return;
+        var index = _manualRules.IndexOf(rule);
+        if (index + offset < 0 || index + offset >= _manualRules.Count) return;
+        _manualRules.Move(index, index + offset);
+        ManualRulesGrid.SelectedItem = rule;
+    }
+    private void MoveRuleUp_Click(object sender, RoutedEventArgs e) => MoveRule(-1);
+    private void MoveRuleDown_Click(object sender, RoutedEventArgs e) => MoveRule(1);
+
     private bool _policiesLoaded;
     private async Task LoadPoliciesAsync()
     {
@@ -45,26 +149,37 @@ public partial class LimitedLearningWindow : Window
             var choices = await TrafficPolicyService.ChoicesAsync();
             AiPolicyNode.ItemsSource = choices;
             DefaultPolicyNode.ItemsSource = choices;
-            var aiId = string.IsNullOrEmpty(_config.AiPolicy?.AiProfileId) ? _config.IndexId : _config.AiPolicy.AiProfileId;
+            var aiId = _config.AiPolicy?.AiProfileId;
             AiPolicyNode.SelectedItem = choices.FirstOrDefault(x => x.Id == aiId);
             DefaultPolicyNode.SelectedItem = choices.FirstOrDefault(x => x.Id == _config.IndexId);
             _policiesLoaded = true;
             SavePoliciesButton.IsEnabled = true;
+            SaveNodesButton.IsEnabled = true;
         }
         catch (Exception ex) { Status.Text = "读取策略节点失败：" + ex.Message; }
     }
-    private async void SavePolicies_Click(object sender, RoutedEventArgs e)
+    private async void SavePolicies_Click(object sender, RoutedEventArgs e) => await SavePoliciesAsync(false);
+    private async void SaveNodes_Click(object sender, RoutedEventArgs e) => await SavePoliciesAsync(true);
+    private async Task SavePoliciesAsync(bool allowNodeRestart)
     {
+        if (_editingRule != null || !string.IsNullOrWhiteSpace(RuleValue.Text))
+        {
+            Status.Text = "左侧还有未加入列表的规则，请先点击添加 / 更新，或清空表单。";
+            return;
+        }
         SavePoliciesButton.IsEnabled = false;
+        SaveNodesButton.IsEnabled = false;
         try
         {
-            await TrafficPolicyService.SaveAsync(_config, EnableAiPolicy.IsChecked == true,
+            var requiresReload = await TrafficPolicyService.SaveAndApplyAsync(_config, EnableAiPolicy.IsChecked == true,
                 (AiPolicyNode.SelectedItem as TrafficPolicyChoice)?.Id,
-                (DefaultPolicyNode.SelectedItem as TrafficPolicyChoice)?.Id);
-            Close(true);
+                (DefaultPolicyNode.SelectedItem as TrafficPolicyChoice)?.Id, _manualRules,
+                (DirectProcesses.Text ?? "").Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries), allowNodeRestart);
+            if (requiresReload) Close(true);
+            else Status.Text = "规则已热更新：内核未重启，已有连接保持原出口，新连接按新规则匹配。";
         }
         catch (Exception ex) { Status.Text = ex.Message; }
-        finally { SavePoliciesButton.IsEnabled = true; }
+        finally { SavePoliciesButton.IsEnabled = true; SaveNodesButton.IsEnabled = true; }
     }
 
     private async void SaveLearning_Click(object sender, RoutedEventArgs e)
@@ -77,8 +192,6 @@ public partial class LimitedLearningWindow : Window
             updated.DirectTimeoutMs = int.Parse(DirectTimeout.Text ?? "");
             updated.ProxyTimeoutMs = int.Parse(ProxyTimeout.Text ?? "");
             updated.LifetimeHours = int.Parse(Lifetime.Text ?? "");
-            updated.DirectProcesses = (DirectProcesses.Text ?? "").Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => x.Trim()).Where(x => x.Length > 0).Distinct().ToList();
             updated.Validate();
             if (updated.Enabled && _config.TunModeItem.EnableTun)
                 throw new InvalidOperationException("请先关闭 TUN。自动检测仅支持标准 Xray 配置的非 TUN 模式。");

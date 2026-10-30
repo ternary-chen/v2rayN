@@ -13,11 +13,45 @@ public partial class StatusBarView : ReactiveUserControl<StatusBarViewModel>
 
         _config = AppManager.Instance.Config;
 
+        btnProxyDiagnostics.IsVisible = OperatingSystem.IsWindows();
+        btnProxyDiagnostics.Click += async (_, _) =>
+        {
+            if (Avalonia.Controls.TopLevel.GetTopLevel(this) is Avalonia.Controls.Window owner)
+                await new SystemProxyDiagnosticsWindow().ShowDialog(owner);
+        };
+
+
         txtRunningServerDisplay.Tapped += TxtRunningServerDisplay_Tapped;
         txtRunningInfoDisplay.Tapped += TxtRunningServerDisplay_Tapped;
 
+        void RegisterRepeatAction(Avalonia.Controls.ComboBoxItem item, ESysProxyType type)
+        {
+            var repeated = false;
+            item.AddHandler(Avalonia.Input.InputElement.PointerPressedEvent, (_, e) =>
+                repeated = e.GetCurrentPoint(item).Properties.IsLeftButtonPressed && cmbSystemProxy.SelectedIndex == (int)type,
+                Avalonia.Interactivity.RoutingStrategies.Tunnel, true);
+            item.AddHandler(Avalonia.Input.InputElement.PointerReleasedEvent, async (_, _) =>
+            {
+                var apply = repeated;
+                repeated = false;
+                if (!apply || ViewModel == null) return;
+                cmbSystemProxy.IsDropDownOpen = false;
+                await ViewModel.ApplySystemProxyAsync(type);
+            }, Avalonia.Interactivity.RoutingStrategies.Bubble, true);
+        }
+        cmbSystemProxy.AddHandler(Avalonia.Input.InputElement.KeyDownEvent, async (_, e) =>
+        {
+            if (!cmbSystemProxy.IsDropDownOpen || e.Key != Avalonia.Input.Key.Enter || ViewModel == null) return;
+            e.Handled = true;
+            cmbSystemProxy.IsDropDownOpen = false;
+            await ViewModel.ApplySystemProxyAsync((ESysProxyType)cmbSystemProxy.SelectedIndex);
+        }, Avalonia.Interactivity.RoutingStrategies.Tunnel, true);
+        RegisterRepeatAction(clearProxyAction, ESysProxyType.ForcedClear);
+        RegisterRepeatAction(setProxyAction, ESysProxyType.ForcedChange);
         this.WhenActivated(disposables =>
         {
+            this.OneWayBind(ViewModel, vm => vm.ActualSystemProxyStatus, v => v.txtActualSystemProxy.Text).DisposeWith(disposables);
+            this.WhenAnyValue(x => x.ViewModel.ActualSystemProxyDetail).Subscribe(detail => Avalonia.Controls.ToolTip.SetTip(txtActualSystemProxy, detail)).DisposeWith(disposables);
             //status bar
             this.OneWayBind(ViewModel, vm => vm.InboundDisplay, v => v.txtInboundDisplay.Text).DisposeWith(disposables);
             this.OneWayBind(ViewModel, vm => vm.InboundLanDisplay, v => v.txtInboundLanDisplay.Text).DisposeWith(disposables);

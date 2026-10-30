@@ -39,14 +39,18 @@ public static class CoreConfigHandler
             {
                 if (context.ApplyTrafficPolicies)
                     result.Data = AdaptiveRouting.XrayAiPolicyConfig.Apply(result.Data.ToString());
+                if (context.ApplyManualRules)
+                    result.Data = AdaptiveRouting.XrayManualRoutingConfig.Apply(result.Data.ToString(), context.AppConfig.ManualRules);
                 var options = context.AppConfig.LimitedLearning ?? new();
                 if (options.Enabled && context.IsTunEnabled)
                     throw new InvalidOperationException("有限学习第一版仅支持 Xray 非 TUN 模式，请关闭学习或 TUN。");
                 result.Data = AdaptiveRouting.XrayLearningConfig.Apply(result.Data.ToString(), options);
+                if (!context.IsTunEnabled)
+                    result.Data = AdaptiveRouting.XrayRoutingHotReload.Prepare(result.Data.ToString(), AppManager.Instance.RoutingApiPort);
             }
             catch (Exception ex)
             {
-                return new RetResult { Success = false, Msg = $"有限学习配置失败：{ex.Message}" };
+                return new RetResult { Success = false, Msg = $"分流规则配置失败：{ex.Message}" };
             }
         }
         else if (context.AppConfig.LimitedLearning?.Enabled == true)
