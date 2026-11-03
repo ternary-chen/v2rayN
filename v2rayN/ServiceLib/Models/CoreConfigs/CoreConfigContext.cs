@@ -5,6 +5,7 @@ public record CoreConfigContext
     public required ProfileItem Node { get; init; }
     public ProfileItem? AiPolicyNode { get; init; }
     public bool ApplyTrafficPolicies { get; init; }
+    public bool ApplyCommunityPolicy { get; init; }
     public bool ApplyManualRules { get; init; }
     public required ECoreType RunCoreType { get; init; }
     public RoutingItem? RoutingItem { get; init; }

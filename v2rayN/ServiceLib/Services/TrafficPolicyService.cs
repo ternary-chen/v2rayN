@@ -25,22 +25,23 @@ public static class TrafficPolicyService
     private static readonly SemaphoreSlim SaveGate = new(1, 1);
 
     public static Task SaveAsync(Config config, bool enabled, string? aiId, string? defaultId,
-        IEnumerable<ManualRouteRule>? manualRules = null, IEnumerable<string>? directProcesses = null) =>
-        SaveInternalAsync(config, enabled, aiId, defaultId, manualRules, directProcesses, false, false);
+        IEnumerable<ManualRouteRule>? manualRules = null, IEnumerable<string>? directProcesses = null, bool? communityPolicy = null) =>
+        SaveInternalAsync(config, enabled, aiId, defaultId, manualRules, directProcesses, false, false, communityPolicy);
 
     // Returns true only for an explicitly requested node change requiring the caller to reload.
     public static Task<bool> SaveAndApplyAsync(Config config, bool enabled, string? aiId, string? defaultId,
-        IEnumerable<ManualRouteRule> manualRules, IEnumerable<string> directProcesses, bool allowNodeRestart = false) =>
-        SaveInternalAsync(config, enabled, aiId, defaultId, manualRules, directProcesses, true, allowNodeRestart);
+        IEnumerable<ManualRouteRule> manualRules, IEnumerable<string> directProcesses, bool allowNodeRestart = false, bool? communityPolicy = null) =>
+        SaveInternalAsync(config, enabled, aiId, defaultId, manualRules, directProcesses, true, allowNodeRestart, communityPolicy);
 
     private static async Task<bool> SaveInternalAsync(Config config, bool enabled, string? aiId, string? defaultId,
-        IEnumerable<ManualRouteRule>? manualRules, IEnumerable<string>? directProcesses, bool apply, bool allowNodeRestart)
+        IEnumerable<ManualRouteRule>? manualRules, IEnumerable<string>? directProcesses, bool apply, bool allowNodeRestart, bool? communityPolicy)
     {
         await SaveGate.WaitAsync();
         try
         {
             var candidate = JsonUtils.DeepCopy(config);
-            candidate.AiPolicy = new AiPolicyOptions { Enabled = enabled, AiProfileId = aiId ?? "" };
+            candidate.AiPolicy = new AiPolicyOptions { Enabled = enabled, AiProfileId = aiId ?? "",
+                CommunityProxyToDedicated = communityPolicy ?? config.AiPolicy?.CommunityProxyToDedicated ?? true };
             candidate.IndexId = defaultId ?? config.IndexId;
             candidate.ManualRules = XrayManualRoutingConfig.Normalize(manualRules ?? candidate.ManualRules ?? []);
             if (directProcesses != null)
@@ -53,9 +54,9 @@ public static class TrafficPolicyService
             if (apply && nodesChanged && !allowNodeRestart)
                 throw new InvalidOperationException("节点选择发生变化。仅保存规则不会重启内核；如需切换节点，请点击“应用节点变更并重启”。");
             CoreConfigContext? context = null;
-            if (apply || enabled || candidate.ManualRules.Any(x => x.Enabled))
+            if (apply || enabled || candidate.AiPolicy.CommunityProxyToDedicated || candidate.ManualRules.Any(x => x.Enabled))
             {
-                if (string.IsNullOrWhiteSpace(candidate.IndexId) || ((enabled || candidate.ManualRules.Any(x => x.Enabled && x.Target == "ai-policy")) && string.IsNullOrWhiteSpace(aiId)))
+                if (string.IsNullOrWhiteSpace(candidate.IndexId) || ((enabled || candidate.AiPolicy.CommunityProxyToDedicated || candidate.ManualRules.Any(x => x.Enabled && x.Target == "ai-policy")) && string.IsNullOrWhiteSpace(aiId)))
                     throw new InvalidOperationException("请选择默认代理节点；启用专线规则时还需选择专线节点。");
                 var node = await AppManager.Instance.GetProfileItem(candidate.IndexId)
                     ?? throw new InvalidOperationException("默认代理节点已被删除，请重新选择。");

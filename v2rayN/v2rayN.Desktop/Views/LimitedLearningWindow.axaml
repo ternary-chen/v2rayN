@@ -11,12 +11,13 @@
                     <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
                     <StackPanel>
                         <TextBlock FontSize="20" FontWeight="SemiBold" Text="规则与出口"/>
-                        <TextBlock Margin="0,6,0,12" TextWrapping="Wrap" Text="按列表从上到下匹配，命中后停止。受保护程序直连 → 手动规则 → 内置 AI → 原路由规则 → 自动学习。适用于标准 Xray 非 TUN 模式。"/>
+                        <TextBlock Margin="0,6,0,12" TextWrapping="Wrap" Text="按列表从上到下匹配，命中后停止。受保护程序直连 → 手动规则 → 内置 AI → 原路由规则 → 自动学习。支持标准 Xray 系统代理与原生 TUN。TUN 接管 DNS 和浏览器 UDP；系统代理需配合“浏览器防泄露”设置。"/>
                         <Grid>
                             <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
                             <StackPanel Margin="0,0,12,0"><TextBlock Text="默认代理节点"/><ComboBox x:Name="DefaultPolicyNode" HorizontalAlignment="Stretch" Margin="0,6,0,0"/></StackPanel>
-                            <StackPanel Grid.Column="1"><TextBlock Text="专线节点（手动专线和内置 AI 共用）"/><ComboBox x:Name="AiPolicyNode" HorizontalAlignment="Stretch" Margin="0,6,0,0"/></StackPanel>
+                            <StackPanel Grid.Column="1"><TextBlock Text="专线节点（手动专线、内置 AI 和社区代理名单共用）"/><ComboBox x:Name="AiPolicyNode" HorizontalAlignment="Stretch" Margin="0,6,0,0"/></StackPanel>
                         </Grid>
+                        <CheckBox x:Name="EnableCommunityPolicy" Margin="0,10,0,4" Content="社区代理名单走专线；大陆及局域网直连；其余按自动分流设置处理"/>
                         <CheckBox x:Name="EnableAiPolicy" Margin="0,10,0,4" Content="启用内置 AI 网站规则，未命中手动规则的 AI 网站走专线"/>
                         <TextBlock TextWrapping="Wrap" FontSize="12" Text="关闭内置 AI 不影响手动专线规则。主窗口切换节点只改变默认代理。修改仅在保存后生效。"/>
                     </StackPanel>
@@ -91,9 +92,9 @@
                         <TextBlock FontSize="20" FontWeight="SemiBold" Text="未匹配网站处理" />
                         <TextBlock Margin="0,10,0,18" TextWrapping="Wrap"
                                    Text="未匹配现有规则的网站先检测直连；直连失败后检测代理。代理检测成功后，保存该主机名的代理记录。累计 5 次独立确认后转为永久记录；有效期内的重复访问不计数。"/>
-                        <CheckBox x:Name="EnableLearning" Content="启用自动检测与代理记录"/>
+                        <CheckBox x:Name="EnableLearning" Content="启用未知网站直连探测与代理记录（成功后正式请求也直连）"/>
                         <TextBlock Margin="0,12,0,16" TextWrapping="Wrap" Foreground="DimGray"
-                                   Text="适用于标准 Xray 配置的非 TUN 模式，仅检测 TCP 80/443。HTTPS 检测 TLS 连接，HTTP 检测响应；检测结果表示连接是否可用，不判断网页内容。"/>
+                                   Text="支持标准 Xray 系统代理与原生 TUN，仅检测 TCP 80/443。探测不携带登录凭据，但会暴露本地出口；成功后正式请求也直连。DNS 经默认代理解析。"/>
                         <Grid>
                             <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
                             <StackPanel Margin="0,0,16,0"><TextBlock Text="直连检测限时（毫秒）"/><TextBox x:Name="DirectTimeout" Margin="0,8,0,0"/></StackPanel>
@@ -124,6 +125,21 @@
                         <Button Content="删除记录并清零次数" Click="ForgetRecord_Click"/>
                     </StackPanel>
                 </Grid>
+            </TabItem>
+            <TabItem Header="浏览器防泄露">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="16">
+                        <TextBlock FontSize="20" Text="Chrome / Edge 网络防护"/>
+                        <TextBlock Margin="0,12,0,12" TextWrapping="Wrap" Text="TUN：DNS 接管与 IPv6 路由由 Xray 处理，浏览器 UDP 经代理转发。配套策略限制接口地址暴露，保留 UDP 通话。系统代理：限制未代理的 WebRTC UDP，网页通话需要支持 TCP 中继。"/>
+                        <TextBlock Margin="0,0,0,12" TextWrapping="Wrap" Text="按钮按当前 TUN 开关应用当前用户的 Chrome/Edge 策略，并保存备份；不会修改节点选择。策略需要完全退出浏览器后重开，并在 chrome://policy 或 edge://policy 确认生效。切换模式后请先恢复，再重新应用。"/>
+                        <TextBlock Margin="0,0,0,12" TextWrapping="Wrap" Text="系统代理只管理进入代理的连接，不能接管全部系统 DNS 或所有应用 UDP。通话是否可用还取决于节点 UDP 支持、TURN 中继及浏览器策略；不要把检测超时当作无泄露。"/>
+                        <WrapPanel>
+                            <Button Content="按当前模式应用浏览器防护" Click="ApplyBrowserPrivacy_Click" Margin="0,0,12,8"/>
+                            <Button Content="恢复浏览器原设置" Click="RestoreBrowserPrivacy_Click" Margin="0,0,0,8"/>
+                        </WrapPanel>
+                        <TextBlock x:Name="BrowserPrivacyResult" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="Codex 系统代理">
                 <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">

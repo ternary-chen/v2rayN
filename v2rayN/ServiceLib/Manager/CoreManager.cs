@@ -19,8 +19,8 @@ public class CoreManager
             var process = _processService;
             if (process is null || process.HasExited || _activeHotConfig is null || _processPreService != null)
                 throw new InvalidOperationException("当前没有支持热更新的活动内核。未保存、未重启；请先正常启动新版客户端的标准 Xray 服务。");
-            if (context.RunCoreType != ECoreType.Xray || context.IsTunEnabled || !TrafficPolicyService.IsSupportedNode(context.Node))
-                throw new InvalidOperationException("规则热更新仅支持标准 Xray 单节点、非 TUN 模式。");
+            if (context.RunCoreType != ECoreType.Xray || !TrafficPolicyService.IsSupportedNode(context.Node))
+                throw new InvalidOperationException("规则热更新仅支持标准 Xray 单节点（系统代理或原生 TUN）。");
             var generated = await CoreConfigHandler.GenerateClientConfig(context, null);
             if (!generated.Success) throw new InvalidOperationException(generated.Msg);
             using var bridgeLease = await MihomoBridgeService.AcquireAsync(context, AddProcessJob);
@@ -124,6 +124,16 @@ public class CoreManager
         }
 
         var node = mainContext.Node;
+        if (mainContext.RunCoreType == ECoreType.Xray && node.ConfigType != EConfigType.Custom)
+        {
+            try
+            {
+                var executable = CoreInfoManager.Instance.GetCoreExecFile(CoreInfoManager.Instance.GetCoreInfo(ECoreType.Xray), out var error);
+                if (string.IsNullOrEmpty(executable)) throw new IOException(error);
+                await AdaptiveRouting.XrayPrivacyPrerequisites.CheckAsync(executable);
+            }
+            catch (Exception ex) { await UpdateFunc(true, ex.Message); return; }
+        }
         var fileName = Utils.GetBinConfigPath(Global.CoreConfigFileName);
         var result = await CoreConfigHandler.GenerateClientConfig(mainContext, fileName);
         if (result.Success != true)
@@ -170,7 +180,7 @@ public class CoreManager
 
             AppManager.Instance.RunningCoreType = preContext?.RunCoreType ?? mainContext.RunCoreType;
             if (_processService is { HasExited: false } && preContext is null && mainContext.RunCoreType == ECoreType.Xray &&
-                !mainContext.IsTunEnabled && TrafficPolicyService.IsSupportedNode(mainContext.Node))
+                TrafficPolicyService.IsSupportedNode(mainContext.Node))
                 _activeHotConfig = result.Data?.ToString();
 
             if (_processService != null)
@@ -291,7 +301,7 @@ public class CoreManager
 
         var displayLog = node.ConfigType != EConfigType.Custom || node.DisplayLog;
         Func<bool, string, Task>? logCallback = null;
-        if (context.RunCoreType == ECoreType.Xray && node.ConfigType != EConfigType.Custom && !context.IsTunEnabled)
+        if (context.RunCoreType == ECoreType.Xray && node.ConfigType != EConfigType.Custom)
         {
             try
             {

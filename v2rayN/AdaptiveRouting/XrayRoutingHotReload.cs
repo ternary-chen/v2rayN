@@ -72,9 +72,10 @@ public static class XrayRoutingHotReload
                 .Select(x => (x?["tag"]?.ToString() ?? "", x?["ruleTag"]?.ToString() ?? "")).ToList();
             return isSameProcessAlive() && actual != null && expected.SequenceEqual(actual);
         }
-        if (!await Matches(expectedOld))
-            throw new InvalidOperationException("运行中的规则与上次应用快照不一致，未覆盖规则，也未重启内核。");
-        if (expectedOld.SequenceEqual(expectedNew)) { await persist(); return; }
+        // The settings being saved are authoritative. Runtime drift must be repaired even
+        // when before == after (the user is reapplying unchanged settings). Only skip the
+        // replacement when the live rules already match the requested revision and order.
+        if (await Matches(expectedNew)) { await persist(); return; }
 
         Directory.CreateDirectory(scratchDirectory);
         var oldFile = Path.Combine(scratchDirectory, "rules-before-" + Guid.NewGuid().ToString("N") + ".json");
@@ -115,10 +116,10 @@ public static class XrayRoutingHotReload
                 }
                 catch (Exception rollback)
                 {
-                    throw new InvalidOperationException("规则更新失败，且无法确认旧规则已恢复；未重启内核。请检查内核状态。" + rollback.Message, error);
+                    throw new InvalidOperationException("规则更新失败，且无法确认上次保存的规则已恢复；未重启内核。请检查内核状态。" + rollback.Message, error);
                 }
             }
-            throw new InvalidOperationException("规则未保存，旧规则已保留或恢复；内核未重启。" + error.Message, error);
+            throw new InvalidOperationException("规则未保存，上次保存的规则已保留或恢复；内核未重启。" + error.Message, error);
         }
         finally
         {

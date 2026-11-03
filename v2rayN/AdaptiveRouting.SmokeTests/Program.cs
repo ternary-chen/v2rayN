@@ -5,6 +5,17 @@ using System.Text;
 using System.Text.Json.Nodes;
 using System.Diagnostics;
 
+if (args.Contains("--public-ip-only"))
+{
+    await PublicIpFallbackChecks.RunAsync();
+    return;
+}
+if (args.Length == 2 && args[0] == "--hot-reload-only")
+{
+    await HotReloadReconcileChecks.RunAsync(args[1]);
+    return;
+}
+
 var root = Path.Combine(AppContext.BaseDirectory, "test-data", Guid.NewGuid().ToString("N"));
 Directory.CreateDirectory(root);
 var passed = 0;

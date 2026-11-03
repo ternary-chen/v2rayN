@@ -29,9 +29,11 @@ try
     config.IndexId = normal.IndexId;
     config.TunModeItem.EnableTun = false;
     config.LimitedLearning.Enabled = true;
-    config.AiPolicy = new() { Enabled = true, AiProfileId = ai.IndexId };
+    config.AiPolicy = new() { Enabled = true, AiProfileId = ai.IndexId, CommunityProxyToDedicated = false };
     var route = new RoutingItem { Id = id, Remarks = "fixture", IsActive = true, DomainStrategy = "AsIs", RuleSet = "[{\"OutboundTag\":\"direct\",\"Domain\":[\"domain:google.com\"]},{\"OutboundTag\":\"direct\",\"Network\":\"tcp,udp\"}]" };
+    await db.ExecuteAsync("UPDATE RoutingItem SET IsActive = 0");
     await db.InsertAsync(route);
+    await ConfigHandler.SetDefaultRouting(config, route);
     async Task<JsonNode> Generate(ProfileItem node)
     {
         var built = await CoreConfigContextBuilder.BuildAll(config, node);
@@ -76,8 +78,8 @@ try
     Check(ordered[RuleIndex("manual-rule-2")]!["outboundTag"]!.ToString() == "proxy", "AI default-proxy override changed");
     Check(ordered[RuleIndex("manual-rule-3")]!["outboundTag"]!.ToString() == "ai-policy", "Manual dedicated rule has wrong target");
     Check(!ordered.ToJsonString().Contains("disabled.example.org"), "Disabled manual rule was generated");
-    Check(ordered[0]!["inboundTag"]![0]!.ToString() == XrayLearningConfig.ForcedProxyTag, "Internal probe no longer bypasses manual routing");
-    Check(ordered[1]!["process"] is JsonArray && ordered[1]!["outboundTag"]!.ToString() == "direct", "Protected programs lost precedence");
+    Check(ordered.Take(RuleIndex("manual-rule-1")).Any(x => x?["inboundTag"]?[0]?.ToString() == XrayLearningConfig.ForcedProxyTag), "Internal probe no longer bypasses manual routing");
+    Check(ordered.Take(RuleIndex("manual-rule-1")).Any(x => x?["process"] is JsonArray && x?["outboundTag"]?.ToString() == "direct"), "Protected programs lost precedence");
     Check(ordered.Any(x => x?["process"]?[0]?.ToString() == "example"), "Windows process suffix not normalized");
     Check(ordered.Any(x => x?["process"]?[0]?.ToString() == "D:/apps/example/"), "Process directory not normalized");
     var restored = JsonUtils.Deserialize<ServiceLib.Models.Configs.Config>(File.ReadAllText(Utils.GetConfigPath("guiNConfig.json")))!;
@@ -110,11 +112,84 @@ try
         Check(File.ReadAllBytes(Utils.GetConfigPath("guiNConfig.json")).SequenceEqual(before), "Invalid input rewrote configuration");
     }
     config.TunModeItem.EnableTun = true;
-    Check(!(await CoreConfigContextBuilder.BuildAll(config, normal2)).Success, "Manual rules silently ignored TUN mode");
+    config.TunModeItem.EnableLegacyProtect = true;
+    config.TunModeItem.AutoRoute = true;
+    config.TunModeItem.StrictRoute = false;
+    config.TunModeItem.EnableIPv6Address = false;
+    config.AiPolicy.Enabled = true;
+    config.SimpleDNSItem.BootstrapDNS = "119.29.29.29";
+    var tunBuilt = await CoreConfigContextBuilder.BuildAll(config, normal2);
+    Check(tunBuilt.Success && tunBuilt.PreSocksResult is null && tunBuilt.MainResult.Context.IsTunEnabled,
+        "TUN policies must use a single native Xray even with legacy protection selected");
+    var tunGenerated = await CoreConfigHandler.GenerateClientConfig(tunBuilt.MainResult.Context, null);
+    Check(tunGenerated.Success, tunGenerated.Msg ?? "Native TUN generation failed");
+    var tunJson = JsonNode.Parse(tunGenerated.Data!.ToString()!)!;
+    Check(Address(tunJson, "proxy") == normal2.Address && Address(tunJson, "ai-policy") == ai.Address, "TUN mixed policy exits");
+    var tunInbound = tunJson["inbounds"]!.AsArray().Single(x => x?["protocol"]?.ToString() == "tun")!;
+    Check(tunInbound["settings"]!["autoSystemRoutingTable"]!.AsArray().Any(x => x!.ToString() == "::/0"), "IPv6 bypasses TUN when toggle is off");
+    Check(tunInbound["settings"]!["gateway"]!.AsArray().Any(x => x!.ToString().Contains(':')), "Missing IPv6 TUN address");
+    if (OperatingSystem.IsWindows())
+        Check(tunInbound["settings"]!["autoSystemWfpBlockLeak"]!.AsArray().Count == 2, "Windows leak protection not enforced");
+    Check(tunInbound["sniffing"]!["destOverride"]!.AsArray().Any(x => x!.ToString() == "fakedns") && tunInbound["sniffing"]!["routeOnly"]!.ToString() == "false", "Fake IP not restored before domain routing");
+    Check(tunJson["dns"]!["servers"]!.AsArray().Count == 2, "Website DNS may fall back to ISP");
+    Check(tunJson["dns"]!.ToJsonString().Contains("https://1.1.1.1/dns-query") && !tunJson["dns"]!.ToJsonString().Contains("119.29.29.29"), "Numeric proxy endpoints unexpectedly use bootstrap DNS");
+    var tunRules = tunJson["routing"]!["rules"]!.AsArray();
+    int TIndex(string tag) => tunRules.Select((x, i) => (x, i)).Single(x => x.x?["ruleTag"]?.ToString() == tag).i;
+    Check(TIndex("tun-dns-intercept") < TIndex("manual-rule-1"), "Manual process/direct rules can bypass DNS capture");
+    Check(TIndex("tun-browser-udp") > TIndex("ai-services") && tunRules[TIndex("tun-browser-udp")]!["outboundTag"]!.ToString() == "proxy", "Browser UDP breaks policy order or calls");
+    Check(TIndex("manual-rule-1") < TIndex("ai-services"), "TUN changed manual versus AI precedence");
+    Check(tunRules.Any(x => x?["inboundTag"]?[0]?.ToString() == XrayTunPrivacyConfig.DirectProbeTag && x?["outboundTag"]?.ToString() == "direct"), "TUN learner direct probes can recurse");
+    Check(tunJson["inbounds"]!.AsArray().Any(x => x?["port"]?.ToString() == config.LimitedLearning.TunDirectPort.ToString()), "No loopback direct probe listener");
+    var beforeTunRule = tunGenerated.Data!.ToString()!;
+    config.ManualRules.Add(new() { Value = "new.example.org", Target = "proxy" });
+    var updatedTun = await Generate(normal2);
+    XrayRoutingHotReload.EnsureRulesOnly(beforeTunRule, updatedTun.ToJsonString());
+    config.ManualRules.RemoveAt(config.ManualRules.Count - 1);
+    config.TunModeItem.RouteExcludeAddress = ["0.0.0.0/0"];
+    Check(!(await CoreConfigContextBuilder.BuildAll(config, normal2)).Success, "TUN accepted a route bypass");
+    config.TunModeItem.RouteExcludeAddress = null;
+    config.TunModeItem.AutoRoute = false;
+    Check(!(await CoreConfigContextBuilder.BuildAll(config, normal2)).Success, "TUN accepted disabled capture");
+    config.TunModeItem.AutoRoute = true;
+    // Isolated synthetic fixture for xray -test and loopback DNS/UDP checks; no real credentials.
+    File.WriteAllText(Path.Combine(AppContext.BaseDirectory, "native-tun-fixture.json"), beforeTunRule);
+    Console.WriteLine("PASS Native TUN dual exits, rule order, IPv6/WFP, DNS capture, browser UDP guard, probe isolation and hot reload");
     config.TunModeItem.EnableTun = false;
+    config.AiPolicy.Enabled = false;
     var unsupported = Node("singbox", "198.51.100.30"); unsupported.CoreType = ECoreType.sing_box;
     Check(!(await CoreConfigContextBuilder.BuildAll(config, unsupported)).Success, "Manual rules silently ignored unsupported core");
     Console.WriteLine("PASS Manual-only dedicated exit, reordering, missing-node/invalid-input rollback and unsupported-mode rejection");
+
+    // User-requested four overrides survive in BOTH transport modes and beat the community list.
+    var originalRoute = route.RuleSet;
+    route.RuleSet = "[{\"OutboundTag\":\"direct\",\"Domain\":[\"domain:known-proxy.example\"]},{\"OutboundTag\":\"proxy\",\"Domain\":[\"domain:known-proxy.example\",\"domain:yahoo.com\"]},{\"OutboundTag\":\"direct\",\"Network\":\"tcp,udp\"}]";
+    await db.UpdateAsync(route);
+    var requested = new[] { "pingip.co", "cleanip.io", "ip.net.coffee", "yahoo.com" };
+    config.AiPolicy.Enabled = true;
+    await TrafficPolicyService.SaveAsync(config, true, ai.IndexId, normal2.IndexId,
+        requested.Select(x => new ManualRouteRule { Value = x, Target = "proxy" }), communityPolicy: true);
+    foreach (var tunMode in new[] { false, true })
+    {
+        config.TunModeItem.EnableTun = tunMode;
+        var split = await Generate(normal2);
+        var sr = split["routing"]!["rules"]!.AsArray();
+        var overrides = sr.Where(x => x?["ruleTag"]?.ToString().StartsWith("manual-rule-") == true).ToArray();
+        Check(overrides.Select(x => x!["domain"]![0]!.ToString()).SequenceEqual(requested.Select(x => "domain:" + x)), "Screenshot rules changed order or disappeared");
+        Check(overrides.All(x => x!["outboundTag"]!.ToString() == "proxy"), "Screenshot override rerouted to dedicated exit");
+        var community = sr.First(x => x?["ruleTag"]?.ToString().StartsWith("community-dedicated-") == true)!;
+        Check(community["outboundTag"]!.ToString() == "ai-policy", "Community blacklist not sent to chosen dedicated node");
+        Check(sr.IndexOf(community) > sr.IndexOf(overrides[^1]) && sr.IndexOf(community) > sr.IndexOf(sr.First(x => x?["ruleTag"]?.ToString() == "ai-services")), "Manual/AI/community precedence changed");
+        Check(sr.IndexOf(community) < sr.IndexOf(sr.First(x => x?["ruleTag"]?.ToString() == "community-mainland")), "Mainland rule precedes blacklist");
+        Check(sr.Any(x => x?["outboundTag"]?.ToString() == XrayLearningConfig.UnknownTag), "Opted-in unknown-site probes removed");
+        Check(split["dns"]!["servers"]!.ToJsonString().Contains("https://1.1.1.1/dns-query") && !split["dns"]!["servers"]!.ToJsonString().Contains("119.29.29.29"), "DNS outside core proxy path");
+        File.WriteAllText(Path.Combine(AppContext.BaseDirectory, tunMode ? "native-tun-fixture.json" : "system-proxy-fixture.json"), split.ToJsonString());
+    }
+    config.TunModeItem.EnableTun = false;
+    config.AiPolicy.CommunityProxyToDedicated = false;
+    config.AiPolicy.Enabled = false;
+    route.RuleSet = originalRoute;
+    await db.UpdateAsync(route);
+    Console.WriteLine("PASS Both modes retain all four screenshot rules and community/AI/dedicated/mainland/learning order");
 
     // With no AI rules and no enabled dedicated rule, a removed dedicated node is harmless.
     foreach (var rule in manual) rule.Enabled = false;
@@ -140,3 +215,12 @@ try
     Console.WriteLine("PASS Generic core updater cannot overwrite the custom GUI with upstream binaries");
 }
 finally { await db.DisposeDbConnectionAsync(); }
+await ProbeDelegationCheck.Run();
+
+XrayPrivacyPrerequisites.ValidateVersion("Xray 26.10.10 example");
+foreach (var old in new[] { "Xray 25.10.10 old", "unrecognized" })
+{
+    try { XrayPrivacyPrerequisites.ValidateVersion(old); throw new Exception("Old/unknown core accepted"); }
+    catch (InvalidOperationException) { }
+}
+Console.WriteLine("PASS Old/unknown core is rejected before stopping the existing service");

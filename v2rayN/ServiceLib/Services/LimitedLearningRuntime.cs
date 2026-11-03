@@ -12,13 +12,13 @@ public static class LimitedLearningRuntime
     {
         var options = context.AppConfig.LimitedLearning ?? new();
         if (!options.Enabled) return;
-        if (context.RunCoreType != ECoreType.Xray || context.IsTunEnabled || context.Node.ConfigType == EConfigType.Custom)
-            throw new InvalidOperationException("有限学习仅支持标准 Xray 非 TUN 模式。");
+        if (context.RunCoreType != ECoreType.Xray || context.Node.ConfigType == EConfigType.Custom)
+            throw new InvalidOperationException("有限学习仅支持标准 Xray（系统代理或原生 TUN）。");
         // Hash identity rather than storing node credentials in the learning database.
         var identity = context.MihomoNodes.TryGetValue(context.Node.IndexId, out var mihomoNode)
             ? mihomoNode.Key
             : Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(JsonUtils.Serialize(context.Node))));
-        var proxy = new LearningProxy(options, StoragePath, identity);
+        var proxy = new LearningProxy(options, StoragePath, identity + "-private-dns", coreManagedDialing: true);
         var logFormatter = CoreConnectionLogs.Formatter(context);
         proxy.ConnectionEvent += entry =>
         {

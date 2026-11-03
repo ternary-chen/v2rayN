@@ -1,0 +1,58 @@
+v2rayN 本地开发版修改记录
+日期：2026-11-02（Asia/Shanghai）
+源码目录：D:\codex tools\v2rayN-dev
+状态：源码修改与针对性检查完成，未部署、未发布打包、未提交 Git。
+
+分流方式
+TUN 与非 TUN 系统代理采用同一套业务分流。默认节点与专线节点继续由用户选择，代码不绑定 Lisa 或某个机场。
+手动规则 → 内置 AI → 社区代理名单走专线 → 大陆域名及局域网直连 → 未匹配的 TCP 80/443 网站执行直连探测，失败才尝试默认代理。
+已有受保护程序的直连例外继续保留。DNS 接管与 TUN 的常见 STUN 安全规则位于业务规则之前。
+手动规则保持顺序和启用状态；已对 pingip.co、cleanip.io、ip.net.coffee、yahoo.com 四条“域名及子域名 → 默认代理”做回归验证。
+“社区代理名单”复用当前选中的路由规则中明确指向 proxy 的条目；新模式把它们转到专线，没有替换或订阅一个来源不明的新名单。geosite:cn 用于补足大陆域名识别。
+关闭自动探测时，未匹配流量走默认代理；启用时保留已有学习记录和确认机制。非网页端口不执行 HTTP/TLS 直连探测。
+专线无效时明确报错，不静默退回默认代理或直连。
+
+用户明确接受的边界
+直连探测不携带浏览器 Cookie、Authorization 或原始网页请求。HTTPS 探测只做 TLS 握手和证书校验；HTTP 使用独立 HEAD 请求。
+探测仍暴露本地公网 IP。直连成功后的正式请求也直连，目标网站可能把登录请求与本地 IP 联系起来。这是用户明确选择的兼容性取舍，不是“匿名模式”。
+
+DNS 与 TUN
+标准 Xray 使用原生 TUN，不再经 sing-box 前置转发而丢失进程/规则上下文。
+TUN 捕获 IPv4 与 IPv6，启用 Windows 核心自带的 DNS/错误 TUN 路由防漏设置；拒绝关闭自动路由及系统路由排除，直连例外应放在路由规则中。
+TUN 使用双栈 FakeDNS 恢复目标域名，使 UDP、IPv6 也能按域名和手动规则选择出口。
+两种模式中，进入核心的 DNS 查询使用经默认代理的 Cloudflare DoH（https://1.1.1.1/dns-query），没有向运营商 DNS 的网站查询降级。只有代理服务器自身的域名允许使用启动 DNS，配置要求为单个 IP。
+直连目标也由核心解析，自动探测通过回环 SOCKS 直连入口交回核心拨号，避免应用侧系统 DNS 查询和 TUN 回环。
+被 DNS 出站接管的 A/AAAA 请求交内置解析器，其他类型返回空响应，避免向请求指定的解析器直接转发；某些依赖特殊 DNS 类型的应用需单独验收。
+本次模式会统一核心 DNS 行为，不再依照旧的简单 DNS 国内/国外列表分别解析。自定义 TUN DNS 模板需要关闭。非 TUN 系统代理不能接管未进入代理的全部应用 DNS。
+最低核心版本：Xray 26.10.10。启动前检查版本，不满足时不停止现有服务。
+
+WebRTC / UDP
+TUN 下不一律阻断浏览器 UDP。常见 STUN 端口走默认代理；浏览器未被手动/AI/社区代理规则匹配的 UDP 也走默认代理，失败不直接回退到本地网络。明确的手动、受保护程序例外仍应由用户审查。
+添加“浏览器防泄露”页面，提供显式应用和恢复 Chrome/Edge 当前用户策略的按钮，先备份；不会在启动或切换 TUN 时自动写注册表。
+TUN 配套策略为限制 WebRTC 使用默认公网接口并关闭预解析；系统代理配套策略为 disable_non_proxied_udp 并关闭预解析。需要完全退出浏览器再重开，在 chrome://policy 或 edge://policy 核对实际生效。
+系统代理模式不能透明承载浏览器原生 UDP；网页通话依赖 TCP TURN 中继时可以工作，UDP-only 服务无法保证。TUN 仍依赖所选节点的 UDP 能力，不能保证全部网页通话均兼容。
+普通 Vision 可能限制 UDP/443；没有擅自修改用户节点的 flow。端口以外的 STUN、无法归属进程的 UDP、浏览器已有管理策略和手动直连例外，仍需要实际环境复测。
+
+已经通过的验证
+1. PolicyIntegration.SmokeTests：默认/专线独立、规则保存及失败回滚、两种模式的四条手动规则、AI/社区/大陆/探测顺序、IPv6/WFP/DNS配置、热更新兼容性、探测无登录凭据、旧核心拒绝等针对性检查。
+2. Xray 26.10.10 对 TUN 与系统代理生成配置的 run -test 均通过。
+3. 独立回环 Xray：移除 TUN 入站，不创建虚拟网卡；验证四个域名 FakeDNS 还原后走默认出口、AI 和社区域名走另一出口、IPv6 FakeDNS、非地址 DNS 查询处理、UDP 数据经 SOCKS 代理往返成功。
+4. Windows WPF 与跨平台 Avalonia 界面增量编译通过，均为 0 错误、0 警告；未运行全仓库测试或发布打包。
+
+未执行的验收
+没有启用真实 TUN、修改本机系统代理、写入 Chrome/Edge 策略或切换当前节点。
+没有在改版 GUI 中做视觉验收、真实 WFP/网卡生命周期测试、实际浏览器泄露复测、真实网页音视频通话或断线重连验收。
+因此当前结论是“源码与隔离验证完成，待部署试用验收”，不能宣称已在本机实测实现零泄露。切换 TUN/FakeDNS 后还应注意旧 DNS 缓存，需要重连应用并检查缓存恢复。
+
+复现入口
+v2rayN/PolicyIntegration.SmokeTests/PolicyIntegration.SmokeTests.csproj
+scripts/check-tun-loopback.py --xray <xray.exe> --fixture <native-tun-fixture.json> --assets <geo 数据目录> --work <独立测试目录>
+
+GitHub / 上游依据
+https://github.com/2dust/v2rayN/issues/7711
+https://github.com/MetaCubeX/mihomo/discussions/3057
+https://github.com/chromium/chromium/blob/main/net/docs/proxy.md
+https://xtls.github.io/en/config/inbounds/tun.html
+https://xtls.github.io/en/config/fakedns.html
+https://xtls.github.io/en/config/outbounds/vless.html
+GitHub 问题讨论用于识别边界，并不作为所有环境均能成功的保证；最终行为以配置校验和实际验收为准。

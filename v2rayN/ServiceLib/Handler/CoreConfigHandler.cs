@@ -37,16 +37,17 @@ public static class CoreConfigHandler
         {
             try
             {
+                if (context.ApplyCommunityPolicy)
+                    result.Data = AdaptiveRouting.XrayCommunityPolicyConfig.Apply(result.Data.ToString(), context.AppConfig.LimitedLearning?.Enabled == true);
                 if (context.ApplyTrafficPolicies)
                     result.Data = AdaptiveRouting.XrayAiPolicyConfig.Apply(result.Data.ToString());
                 if (context.ApplyManualRules)
                     result.Data = AdaptiveRouting.XrayManualRoutingConfig.Apply(result.Data.ToString(), context.AppConfig.ManualRules);
                 var options = context.AppConfig.LimitedLearning ?? new();
-                if (options.Enabled && context.IsTunEnabled)
-                    throw new InvalidOperationException("有限学习第一版仅支持 Xray 非 TUN 模式，请关闭学习或 TUN。");
-                result.Data = AdaptiveRouting.XrayLearningConfig.Apply(result.Data.ToString(), options);
-                if (!context.IsTunEnabled)
-                    result.Data = AdaptiveRouting.XrayRoutingHotReload.Prepare(result.Data.ToString(), AppManager.Instance.RoutingApiPort);
+                result.Data = AdaptiveRouting.XrayLearningConfig.Apply(result.Data.ToString(), options, coreManagedDialing: true);
+                result.Data = AdaptiveRouting.XrayTunPrivacyConfig.Apply(result.Data.ToString(), context.ProtectDomainList,
+                    context.SimpleDnsItem.BootstrapDNS ?? "119.29.29.29", context.IsWindows);
+                result.Data = AdaptiveRouting.XrayRoutingHotReload.Prepare(result.Data.ToString(), AppManager.Instance.RoutingApiPort);
             }
             catch (Exception ex)
             {

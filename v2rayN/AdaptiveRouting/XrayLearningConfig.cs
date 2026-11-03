@@ -10,7 +10,7 @@ public static class XrayLearningConfig
     public const string UnknownTag = "limited-learning";
     public const string ForcedProxyTag = "limited-learning-proxy";
 
-    public static string Apply(string json, LearningOptions options)
+    public static string Apply(string json, LearningOptions options, bool coreManagedDialing = false)
     {
         options.Validate();
         var root = JsonNode.Parse(json)!.AsObject();
@@ -23,13 +23,13 @@ public static class XrayLearningConfig
             AddProcessBypass(rules, options);
             return root.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
         }
-        if (inbounds.Any(x => x?["protocol"]?.GetValue<string>() == "tun"))
-            throw new InvalidOperationException("有限学习第一版仅支持非 TUN 模式。");
+        var tun = coreManagedDialing || inbounds.Any(x => x?["protocol"]?.GetValue<string>() == "tun");
+        if (tun) options.ValidateTun();
         if (outbounds.Any(x => x?["tag"]?.GetValue<string>() == UnknownTag) ||
             inbounds.Any(x => x?["tag"]?.GetValue<string>() == ForcedProxyTag))
             throw new InvalidOperationException("配置已包含学习端口，请勿重复应用。");
         if (inbounds.Any(x => x?["port"]?.ToString() is { } p &&
-            (p == options.ListenerPort.ToString() || p == options.ProxyPort.ToString())))
+            (p == options.ListenerPort.ToString() || p == options.ProxyPort.ToString() || (tun && p == options.TunDirectPort.ToString()))))
             throw new InvalidOperationException("学习端口与现有入站端口冲突。");
         if (!outbounds.Any(x => x?["tag"]?.GetValue<string>() == "proxy") ||
             !outbounds.Any(x => x?["tag"]?.GetValue<string>() == "direct"))
@@ -66,6 +66,18 @@ public static class XrayLearningConfig
             ["tag"] = ForcedProxyTag, ["listen"] = "127.0.0.1", ["port"] = options.ProxyPort,
             ["protocol"] = "socks", ["settings"] = new JsonObject { ["auth"] = "noauth", ["udp"] = false }
         });
+        if (tun)
+        {
+            inbounds.Add(new JsonObject
+            {
+                ["tag"] = XrayTunPrivacyConfig.DirectProbeTag, ["listen"] = "127.0.0.1", ["port"] = options.TunDirectPort,
+                ["protocol"] = "socks", ["settings"] = new JsonObject { ["auth"] = "noauth", ["udp"] = false }
+            });
+            rules.Insert(1, new JsonObject
+            {
+                ["type"] = "field", ["inboundTag"] = new JsonArray(XrayTunPrivacyConfig.DirectProbeTag), ["outboundTag"] = "direct"
+            });
+        }
         outbounds.Add(new JsonObject
         {
             ["tag"] = UnknownTag, ["protocol"] = "socks",

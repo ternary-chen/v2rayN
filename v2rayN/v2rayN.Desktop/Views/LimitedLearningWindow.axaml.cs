@@ -31,6 +31,7 @@ public partial class LimitedLearningWindow : Window
         SystemProxyState.Text = "正在读取系统代理状态…";
         Opened += async (_, _) => await RefreshSystemProxyAsync();
         EnableAiPolicy.IsChecked = config.AiPolicy?.Enabled == true;
+        EnableCommunityPolicy.IsChecked = config.AiPolicy?.CommunityProxyToDedicated != false;
         AiCatalogState.Text = AiDomainCatalog.Summary;
         Loaded += async (_, _) => await LoadPoliciesAsync();
         RefreshRecords();
@@ -140,6 +141,20 @@ public partial class LimitedLearningWindow : Window
     private void MoveRuleUp_Click(object sender, RoutedEventArgs e) => MoveRule(-1);
     private void MoveRuleDown_Click(object sender, RoutedEventArgs e) => MoveRule(1);
 
+    private void ApplyBrowserPrivacy_Click(object? sender, RoutedEventArgs e)
+    {
+        if (!OperatingSystem.IsWindows()) { BrowserPrivacyResult.Text = "此入口仅适用于 Windows Chrome/Edge。"; return; }
+        try { BrowserPrivacyResult.Text = BrowserPrivacySupport.Apply(Utils.GetConfigPath("browser-privacy-backup.json"), _config.TunModeItem.EnableTun); }
+        catch (Exception ex) { BrowserPrivacyResult.Text = ex.Message; }
+    }
+
+    private void RestoreBrowserPrivacy_Click(object? sender, RoutedEventArgs e)
+    {
+        if (!OperatingSystem.IsWindows()) { BrowserPrivacyResult.Text = "此入口仅适用于 Windows Chrome/Edge。"; return; }
+        try { BrowserPrivacyResult.Text = BrowserPrivacySupport.Restore(Utils.GetConfigPath("browser-privacy-backup.json")); }
+        catch (Exception ex) { BrowserPrivacyResult.Text = ex.Message; }
+    }
+
     private bool _policiesLoaded;
     private async Task LoadPoliciesAsync()
     {
@@ -174,7 +189,7 @@ public partial class LimitedLearningWindow : Window
             var requiresReload = await TrafficPolicyService.SaveAndApplyAsync(_config, EnableAiPolicy.IsChecked == true,
                 (AiPolicyNode.SelectedItem as TrafficPolicyChoice)?.Id,
                 (DefaultPolicyNode.SelectedItem as TrafficPolicyChoice)?.Id, _manualRules,
-                (DirectProcesses.Text ?? "").Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries), allowNodeRestart);
+                (DirectProcesses.Text ?? "").Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries), allowNodeRestart, EnableCommunityPolicy.IsChecked == true);
             if (requiresReload) Close(true);
             else Status.Text = "规则已热更新：内核未重启，已有连接保持原出口，新连接按新规则匹配。";
         }

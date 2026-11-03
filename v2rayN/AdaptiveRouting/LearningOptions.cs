@@ -5,6 +5,7 @@ public sealed class LearningOptions
     public bool Enabled { get; set; }
     public int ListenerPort { get; set; } = 17880;
     public int ProxyPort { get; set; } = 17881;
+    public int TunDirectPort { get; set; } = 17882;
     public int DirectTimeoutMs { get; set; } = 2500;
     public int ProxyTimeoutMs { get; set; } = 8000;
     public int LifetimeHours { get; set; } = 24;
@@ -16,6 +17,13 @@ public sealed class LearningOptions
         "GameViewerLauncher", "uuyc-cli", "uuyc-mux",
         "NTELauncher", "NTEGame", "NTEBrowser", "NTEWebBooster", "NTEUpdate", "NTEErrRep", "HTGame"
     ];
+
+    public void ValidateTun()
+    {
+        Validate();
+        if (TunDirectPort is < 1024 or > 65535 || TunDirectPort == ListenerPort || TunDirectPort == ProxyPort)
+            throw new ArgumentException("TUN 直连探测端口必须为 1024–65535，且不能与学习端口重复。");
+    }
 
     public void Validate()
     {

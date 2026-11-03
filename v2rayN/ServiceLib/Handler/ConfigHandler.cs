@@ -1582,6 +1582,7 @@ public static class ConfigHandler
         var enableLegacyProtect = config.TunModeItem.EnableLegacyProtect;
         if (node.ConfigType != EConfigType.Custom
             && coreType != ECoreType.sing_box
+            && coreType != ECoreType.Xray
             && config.TunModeItem.EnableTun
             && enableLegacyProtect)
         {

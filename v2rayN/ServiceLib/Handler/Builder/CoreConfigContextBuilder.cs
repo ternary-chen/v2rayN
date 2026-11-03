@@ -39,6 +39,7 @@ public class CoreConfigContextBuilder
         {
             Node = node,
             ApplyTrafficPolicies = applyTrafficPolicies && config.AiPolicy?.Enabled == true,
+            ApplyCommunityPolicy = applyTrafficPolicies && config.AiPolicy?.CommunityProxyToDedicated == true,
             ApplyManualRules = applyTrafficPolicies && config.ManualRules?.Any(x => x.Enabled) == true,
             RunCoreType = runCoreType,
             AllProxiesMap = [],
@@ -56,6 +57,16 @@ public class CoreConfigContextBuilder
             ProtectCoreTypeList = config.TunModeItem.EnableTun ? [ECoreType.Xray, ECoreType.sing_box] : []
         };
         var validatorResult = NodeValidatorResult.Empty();
+        if (context.IsTunEnabled && runCoreType == ECoreType.Xray)
+        {
+            if (config.TunModeItem.RouteExcludeAddress?.Count > 0)
+                validatorResult.Errors.Add("TUN 防泄露模式不支持系统路由排除；请把需要直连的地址改为分流规则。");
+            if (!config.TunModeItem.AutoRoute)
+                validatorResult.Errors.Add("TUN 防泄露模式需要启用自动路由。");
+            if (context.RawDnsItem?.Enabled == true)
+                validatorResult.Errors.Add("TUN 防泄露模式使用接管 DNS；请先关闭自定义 DNS 模板。");
+            if (!validatorResult.Success) return new(context, validatorResult);
+        }
         var (actNode, nodeValidatorResult) = await ResolveNodeAsync(context, node);
         if (!nodeValidatorResult.Success)
         {
@@ -63,17 +74,17 @@ public class CoreConfigContextBuilder
         }
         context = context with { Node = actNode };
         validatorResult.Warnings.AddRange(nodeValidatorResult.Warnings);
-        if (context.ApplyTrafficPolicies || context.ApplyManualRules)
+        if (context.ApplyTrafficPolicies || context.ApplyCommunityPolicy || context.ApplyManualRules)
         {
-            if (runCoreType != ECoreType.Xray || context.IsTunEnabled ||
+            if (runCoreType != ECoreType.Xray ||
                 !ServiceLib.Services.TrafficPolicyService.IsSupportedNode(actNode))
             {
-                validatorResult.Errors.Add("统一规则与双策略仅支持标准 Xray 非 TUN 模式，请为默认代理选择单个节点。");
+                validatorResult.Errors.Add("统一规则与双策略仅支持标准 Xray，请为默认代理选择单个节点；TUN 使用 Xray 原生模式。");
                 return new(context, validatorResult);
             }
         }
-        var needsDedicated = context.ApplyTrafficPolicies || (context.ApplyManualRules && config.ManualRules.Any(x => x.Enabled && x.Target == "ai-policy"));
-        if (needsDedicated || (applyTrafficPolicies && runCoreType == ECoreType.Xray && !context.IsTunEnabled &&
+        var needsDedicated = context.ApplyTrafficPolicies || context.ApplyCommunityPolicy || (context.ApplyManualRules && config.ManualRules.Any(x => x.Enabled && x.Target == "ai-policy"));
+        if (needsDedicated || (applyTrafficPolicies && runCoreType == ECoreType.Xray &&
             ServiceLib.Services.TrafficPolicyService.IsSupportedNode(actNode) && !string.IsNullOrEmpty(config.AiPolicy?.AiProfileId)))
         {
             var aiNode = await AppManager.Instance.GetProfileItem(config.AiPolicy?.AiProfileId ?? "");

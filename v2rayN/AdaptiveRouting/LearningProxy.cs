@@ -8,15 +8,18 @@ using System.Text;
 namespace AdaptiveRouting;
 
 /// <summary>Loopback SOCKS5 CONNECT server. It probes only unknown web hosts and never
-/// decrypts/replays the application's TLS or HTTP request. UDP is deliberately unsupported.</summary>
+/// decrypts/replays application requests. Public IPs use connect-only fallback; UDP is unsupported.</summary>
 public sealed class LearningProxy : IAsyncDisposable
 {
     private readonly LearningOptions _options;
+    private readonly int? _directSocksPort;
     private readonly TcpListener _listener;
     private readonly CancellationTokenSource _stop = new();
     private readonly SemaphoreSlim _slots = new(128);
     private readonly ConcurrentDictionary<int, Task> _tasks = new();
     private readonly LearningDecision _decision;
+    // Instance-local, short-lived hints; TCP reachability must never become permanent IP rules.
+    private readonly ConcurrentDictionary<string, DateTimeOffset> _ipProxyUntil = new();
     private Task? _accept;
     private int _id;
     public LearningStore Store { get; }
@@ -28,10 +31,11 @@ public sealed class LearningProxy : IAsyncDisposable
         try { ConnectionEvent?.Invoke(entry); } catch { /* Diagnostics must never interrupt a tunnel. */ }
     }
 
-    public LearningProxy(LearningOptions options, string storageFile, string routeIdentity)
+    public LearningProxy(LearningOptions options, string storageFile, string routeIdentity, bool coreManagedDialing = false)
     {
         options.Validate();
         _options = options;
+        if (coreManagedDialing) { options.ValidateTun(); _directSocksPort = options.TunDirectPort; }
         Store = new(storageFile, options.MaxEntries);
         _listener = new(IPAddress.Loopback, options.ListenerPort);
         _decision = new(Store, options, routeIdentity, ProbeAsync);
@@ -92,19 +96,46 @@ public sealed class LearningProxy : IAsyncDisposable
                 var port = (portBytes[0] << 8) | portBytes[1];
                 if (port is not (80 or 443)) throw new IOException("Learning listener accepts web ports only");
                 destination = $"{host}:{port}";
-                LogConnection(new(connectionId, destination, null, "开始自动检测"));
                 phase = "本地地址检查";
                 // Never send private/loopback destinations to the remote proxy, even after local DNS resolves a public-looking name.
                 var addresses = await ResolveLocalAsync(host, ct);
                 var isPrivate = addresses.Any(IsPrivate);
+                var publicIp = IPAddress.TryParse(host, out var literal) && !IsPrivate(literal);
+                LogConnection(new(connectionId, destination, null,
+                    publicIp ? "开始公网 IP 建连检测" : "开始自动检测"));
                 if (isPrivate) Message?.Invoke($"{destination}: 解析到本地或私有地址，选择直连，不参与学习。");
                 phase = "路由检测";
-                var route = isPrivate ? ConnectionRoute.Direct : await _decision.DecideAsync(host, port, ct);
+                var route = isPrivate ? ConnectionRoute.Direct : publicIp
+                    ? (_ipProxyUntil.TryGetValue(destination, out var until) && until > DateTimeOffset.UtcNow
+                        ? ConnectionRoute.Proxy : ConnectionRoute.Direct)
+                    : await _decision.DecideAsync(host, port, ct);
                 selectedRoute = route;
                 LogConnection(new(connectionId, destination, route, "出口已选择，正在建连"));
                 TcpClient upstream;
                 phase = $"{(route == ConnectionRoute.Direct ? "直连" : "代理")}通道建连";
-                try { upstream = await OpenAsync(host, port, route, ct); }
+                try
+                {
+                    upstream = publicIp
+                        ? await OpenBoundedAsync(host, port, route, ct)
+                        : await OpenAsync(host, port, route, ct);
+                }
+                catch (Exception e) when (publicIp && !isPrivate && route == ConnectionRoute.Direct &&
+                    !ct.IsCancellationRequested && e is IOException or SocketException or OperationCanceledException)
+                {
+                    // No SOCKS success or application bytes have been forwarded yet. Retain the
+                    // successful proxy socket instead of probing TLS/HTTP or replaying a request.
+                    Message?.Invoke($"{destination}: 公网 IP 直连建连失败（{DescribeFailure(e)}），尝试默认代理；不发送网页探测。");
+                    LogConnection(new(connectionId, destination, ConnectionRoute.Direct, "公网 IP 直连建连失败，尝试默认代理"));
+                    ct.ThrowIfCancellationRequested();
+                    route = ConnectionRoute.Proxy;
+                    selectedRoute = route;
+                    phase = "代理通道建连";
+                    LogConnection(new(connectionId, destination, route, "出口已选择，正在建连"));
+                    upstream = await OpenBoundedAsync(host, port, route, ct);
+                    if (_ipProxyUntil.Count >= _options.MaxEntries) _ipProxyUntil.Clear();
+                    _ipProxyUntil[destination] = DateTimeOffset.UtcNow.AddMinutes(5);
+                    Message?.Invoke($"{destination}: 公网 IP 代理建连成功，缓存 5 分钟，不写入永久学习记录。");
+                }
                 catch
                 {
                     if (route == ConnectionRoute.Proxy)
@@ -211,11 +242,11 @@ public sealed class LearningProxy : IAsyncDisposable
         client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
         try
         {
-            if (route == ConnectionRoute.Direct)
+            if (route == ConnectionRoute.Direct && _directSocksPort is null)
                 await client.ConnectAsync(host, port, ct);
             else
             {
-                await client.ConnectAsync(IPAddress.Loopback, _options.ProxyPort, ct);
+                await client.ConnectAsync(IPAddress.Loopback, route == ConnectionRoute.Direct ? _directSocksPort!.Value : _options.ProxyPort, ct);
                 var stream = client.GetStream();
                 await stream.WriteAsync(new byte[] { 5, 1, 0 }, ct);
                 var reply = new byte[2]; await stream.ReadExactlyAsync(reply, ct);
@@ -234,6 +265,14 @@ public sealed class LearningProxy : IAsyncDisposable
         catch { client.Dispose(); throw; }
     }
 
+    private async Task<TcpClient> OpenBoundedAsync(string host, int port, ConnectionRoute route, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        timeout.CancelAfter(route == ConnectionRoute.Direct ? _options.DirectTimeoutMs : _options.ProxyTimeoutMs);
+        return await OpenAsync(host, port, route, timeout.Token);
+    }
+
     private static async Task<string> ReadHostAsync(Stream stream, byte kind, CancellationToken ct)
     {
         var count = kind switch { 1 => 4, 4 => 16, 3 => 0, _ => throw new IOException("Invalid SOCKS address") };
@@ -244,6 +283,12 @@ public sealed class LearningProxy : IAsyncDisposable
 
     private async Task<IPAddress[]> ResolveLocalAsync(string host, CancellationToken ct)
     {
+        if (_directSocksPort is not null)
+        {
+            // TUN DNS returns synthetic addresses. Do not classify those as LAN or
+            // perform a second OS lookup; Xray resolves through its private DNS.
+            return IPAddress.TryParse(host, out var literal) ? [literal] : [];
+        }
         using var bounded = CancellationTokenSource.CreateLinkedTokenSource(ct);
         bounded.CancelAfter(_options.DirectTimeoutMs);
         try { return await Dns.GetHostAddressesAsync(host, bounded.Token); }
